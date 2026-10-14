@@ -1,0 +1,55 @@
+# Fiche de salle
+
+À remplir avant la séance, à imprimer, à garder sous les yeux. Une page.
+
+## Coordonnées
+
+| | |
+|---|---|
+| Salle et date | |
+| Adresse étudiante | `https://gdac.uqam.ca/ocamltutor/` |
+| Console enseignante | `https://gdac.uqam.ca/ocamltutor/enseignant` |
+| Serveur, machine et compte | |
+| Port | 8081 |
+| Cohorte | |
+| Téléphones : enseignant, auxiliaire, Roger Nkambou | |
+
+## Avant l'arrivée des étudiants
+
+- [ ] `COLLECTE_EN_COURS` créé dans le répertoire de l'instance
+- [ ] Serveur lancé, et la page sert bien le titre OCamlTutor
+- [ ] Aucun bandeau « MODE ESSAI » : `curl -s http://localhost:8081/api/ext/statut` rend `"compilateur_simule": false`
+- [ ] Une inscription d'essai faite, puis une soumission fausse et une juste
+- [ ] Console ouverte sur un second écran, contrats vérifiés
+- [ ] Adresse écrite au tableau
+
+## Relance
+
+    cd FPTutor
+    ./relancer.sh --garder          # garde l'état, donc les dossiers des étudiants
+
+Jamais de remise à zéro en séance. Le journal du serveur est dans `tuteur.log`.
+
+## Les trois pannes probables
+
+**Bandeau « MODE ESSAI ».** Le serveur a été lancé avec `OCAML_BIN` pointant sur
+le substitut. L'environnement d'un processus est figé à son démarrage, donc il
+faut l'arrêter, corriger, relancer :
+
+    unset OCAML_BIN && eval $(opam env) && ./relancer.sh --garder
+
+**Un étudiant ne retrouve pas son dossier.** Son pseudonyme diffère d'un
+caractère. Son identifiant à quatre chiffres est dans la console, qui permet de
+le lui redonner.
+
+**Le service ne répond plus.** Relancer avec `--garder` : l'état est sur disque
+et les dossiers sont conservés. Si la relance échoue en moins de trois minutes,
+le laboratoire reprend son cours, les étudiants continuent dans leur éditeur, et
+on reporte le créneau.
+
+## Après la séance
+
+- [ ] Export des données, hors du dépôt
+- [ ] Sauvegarde de `etat.json` et `journal.jsonl` dans `sauvegardes/`
+- [ ] `COLLECTE_EN_COURS` conservé jusqu'à la sauvegarde vérifiée
+- [ ] Notes du relevé mises au propre le jour même

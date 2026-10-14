@@ -53,10 +53,14 @@ retrouver les mêmes défauts par vous-même.
 
 ### 1. Accorder les exercices au laboratoire 05
 
-Les ancrages actuels reprennent les sections « Compter », « Propriétés » et
-« Collectionner ». Vérifiez un par un : noms de fonctions, type `bintree` avec
-`Leaf` et `Node`, énoncés, valeurs attendues. L'étudiant doit reconnaître son
-laboratoire sans hésiter.
+`docs/CONCORDANCE_LABO.md` donne l'état de la concordance, ancrage par ancrage,
+et les écarts à traiter. Le type et les noms concordent déjà ; les exercices
+servis, non : `bintree_sum` ne figure pas au laboratoire, l'ordre de service ne
+suit pas celui des sections, et les quatre réemplois sont à remplacer par les
+deux que demande la dernière section du laboratoire.
+
+Commencez par là, puis vérifiez un par un : énoncés, amorces, valeurs attendues.
+L'étudiant doit reconnaître son laboratoire sans hésiter.
 
 Les créneaux font vingt minutes. L'ordre des deux ou trois premiers ancrages
 décide donc de ce que la plupart des étudiants verront : placez en tête ceux qui
@@ -79,13 +83,24 @@ Haskell, qui parlent de GHCi, d'équations et du motif `[]`.
 Relisez-les à voix haute en vous mettant à la place d'un étudiant bloqué depuis
 cinq minutes. Un indice qui ne débloque rien est un indice à récrire.
 
-### 3. Arrêter les réglages de politique
+### 3. Monter la deuxième séance
+
+`docs/SEANCE2.md` en donne le plan : quinze minutes au laboratoire 06, trois
+exercices et un questionnaire de trois minutes. Les trois exercices vont dans
+`REEMPLOIS`, le questionnaire passe par le point d'extension de l'instance,
+celui qui porte déjà la séance de suivi. La coquille n'est pas à modifier pour
+cela.
+
+Chronométrez les trois exercices avant de les figer : dix minutes est serré, et
+c'est l'ordre qui décide si le troisième est atteint.
+
+### 4. Arrêter les réglages de politique
 
 Proposez des valeurs pour les deux créneaux, et sachez les justifier. Le point de
 jugement est `off_form` : que faire d'une solution juste mais non comparable.
 Essayez les trois valeurs sur une session complète avant de choisir.
 
-### 4. Éprouver avant la séance
+### 5. Éprouver avant la séance
 
 - La batterie complète au vert.
 - Une session complète par l'interface, du premier exercice au réemploi.
@@ -93,15 +108,52 @@ Essayez les trois valeurs sur une session complète avant de choisir.
 - Un essai à plusieurs postes en même temps, pour voir le service tenir.
 - Un essai dans une salle du LAMISS, avec le compte d'un étudiant.
 
-## À ne jamais faire
+## Le noyau commun, gelé pendant l'expérimentation
 
-- Versionner `etat.json`, `journal.jsonl` ou un export : ce sont des données de
-  séance. `.gitignore` les exclut, ne les forcez pas.
-- Remettre l'état à zéro quand `COLLECTE_EN_COURS` existe dans le répertoire de
-  l'instance. Ce fichier protège les données d'une séance en cours.
-- Servir le substitut de compilateur à des étudiants.
-- Modifier `remontee.py`, ni `decider` et `etat_alignement` dans `noyau.py`.
-  Si vous croyez devoir le faire, écrivez-moi avant.
+`remontee.py` et les fonctions `decider` et `etat_alignement` de `noyau.py` sont
+le mécanisme que l'expérimentation mesure. Les ablations publiées et les
+comparaisons entre les instances OCaml, Racket et Python portent sur cette
+version du code : la modifier rend les données de la séance incomparables au
+reste.
+
+Vous restez libre de les lire, de les instrumenter, d'écrire des tests, et de
+proposer une correction sur une branche séparée. Si vous y trouvez un défaut,
+c'est un résultat : signalez-le, et nous déciderons ensemble de corriger avant ou
+après l'expérimentation. Le seul geste à éviter est un changement non signalé
+dans la branche servie aux étudiants.
+
+Tout le reste de l'environnement est le vôtre : exercices, textes d'aide,
+référentiel, fournisseur de langage, scripts de vérification, outillage.
+
+## Les trois autres règles
+
+- Ne versionnez jamais `etat.json`, `journal.jsonl` ni un export : ce sont des
+  données de séance, et `.gitignore` les exclut déjà.
+- Ne remettez pas l'état à zéro quand `COLLECTE_EN_COURS` existe dans le
+  répertoire de l'instance : ce fichier protège les données d'une séance.
+- Ne servez jamais le substitut de compilateur à des étudiants. S'il est actif,
+  le bandeau « MODE ESSAI » le dit.
+
+## Rôle en séance
+
+Vous serez présente aux deux créneaux. Trois personnes dans la salle sans
+partage explicite produisent des conseils contradictoires, donc la répartition
+est fixée d'avance : l'auxiliaire du cours prend les problèmes de salle et de
+compilateur, je prends la console et les décisions, vous prenez les questions sur
+l'interface et le relevé de ce qui bloque. Une personne et une seule parle du
+contenu des exercices.
+
+L'enseignant vous présentera en une phrase, pour que les étudiants sachent que
+vous n'êtes ni correctrice ni évaluatrice. Vous ne regardez pas les écrans
+par-dessus les épaules et vous ne corrigez rien.
+
+Vous tenez le serveur, puisque c'est vous qui l'aurez préparé. Si le service
+tombe, j'occupe la salle pendant que vous réparez, et le laboratoire reprend son
+cours au bout de trois minutes si la réparation échoue.
+
+À préparer pour cela : `docs/FICHE_SALLE.md`, remplie et imprimée, et
+`docs/GRILLE_RELEVE.md` pour le relevé. Faites une répétition complète dans la
+salle du LAMISS, avec un compte d'étudiant et non le vôtre.
 
 ## Rendre compte
 
