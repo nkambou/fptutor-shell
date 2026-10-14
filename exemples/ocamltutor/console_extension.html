@@ -1,0 +1,62 @@
+<!-- Volet « Séance de suivi », inséré par la coquille dans la console enseignante. -->
+<style>
+ #suivi-volet{background:#fff;border:1px solid #d8dee6;border-radius:5px;padding:12px;margin:14px}
+ #suivi-volet h2{font-size:14px;margin:0 0 8px}
+ #suivi-volet table{border-collapse:collapse;width:100%;font-size:12px}
+ #suivi-volet th,#suivi-volet td{border-bottom:1px solid #e3e8ee;padding:5px;text-align:left}
+ #suivi-volet th{background:#eef2f6}
+ #suivi-volet button{padding:4px 9px;margin-right:6px;cursor:pointer}
+ #suivi-etat{font-weight:bold}
+ .suivi-ouvert{color:#2e7d32} .suivi-ferme{color:#8a4b00}
+</style>
+<div id="suivi-volet">
+ <h2>Séance de suivi</h2>
+ <p class="note">Trois exercices et un questionnaire, vingt minutes. Invisible pour les
+ étudiants tant que vous ne le rendez pas visible, ici ou par une fenêtre programmée.
+ L'aperçu vous montre exactement ce qu'ils verront, sans rien enregistrer dans les
+ résultats.</p>
+ <p>Visibilité pour les étudiants : <span id="suivi-etat">…</span></p>
+ <p><button onclick="suiviApercu()">Aperçu étudiant</button>
+    <button onclick="suiviAction('ouvrir')">Rendre visible maintenant</button>
+    <button onclick="suiviAction('fermer')">Masquer maintenant</button></p>
+ <p><label>Visible à partir de <input id="suivi-debut" type="datetime-local"></label>
+    <label>jusqu'à <input id="suivi-fin" type="datetime-local"></label>
+    <button onclick="suiviProgrammer()">Programmer</button></p>
+ <p class="note">Une fois visible, le suivi apparaît dans la page des étudiants sous la
+ forme d'un bandeau, et à l'adresse <b id="suivi-adresse"></b>.</p>
+ <div id="suivi-liste" class="note"></div>
+</div>
+<script>
+(function(){
+  const API = "api/ext/";
+  const q = id => document.getElementById(id);
+  async function appel(route, corps){
+    const r = await fetch(API + "admin/" + route, {method:"POST",
+      headers:{"Content-Type":"application/json"}, body:JSON.stringify(corps||{})});
+    return r.json();
+  }
+  async function rafraichir(){
+    let r;
+    try { r = await appel("etat"); }
+    catch(e){ q("suivi-etat").textContent = "extension de suivi injoignable"; return; }
+    if(r.erreur){ q("suivi-etat").textContent = r.erreur; return; }
+    q("suivi-etat").textContent = (r.ouvert ? "visible" : "masqué") + " — " + r.motif;
+    q("suivi-etat").className = r.ouvert ? "suivi-ouvert" : "suivi-ferme";
+    if(r.config.debut) q("suivi-debut").value = r.config.debut.slice(0,16);
+    if(r.config.fin) q("suivi-fin").value = r.config.fin.slice(0,16);
+    q("suivi-liste").innerHTML = r.apprenants.length
+      ? "<table><tr><th>pseudonyme</th><th>exercices faits</th><th>réemplois</th><th>questionnaire</th></tr>" +
+        r.apprenants.map(a=>`<tr><td>${a.nom}</td><td>${a.items} sur 3</td><td>${a.reemplois}</td><td>${a.questionnaire?"rempli":"—"}</td></tr>`).join("") + "</table>"
+      : "aucun participant pour le moment";
+  }
+  window.suiviAction = async a => { await appel(a, {par:"enseignant"}); rafraichir(); };
+  window.suiviProgrammer = async () => {
+    await appel("programmer", {par:"enseignant", debut:q("suivi-debut").value||null,
+                               fin:q("suivi-fin").value||null});
+    rafraichir();
+  };
+  window.suiviApercu = () => window.open("suivi?apercu=1", "_blank");
+  q("suivi-adresse").textContent = new URL("suivi", location.href).href;
+  rafraichir(); setInterval(rafraichir, 15000);
+})();
+</script>

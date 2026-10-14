@@ -1,0 +1,26 @@
+<!-- Bandeau inséré par la coquille dans la page des étudiants : il n'apparaît que
+     lorsque l'enseignant a rendu la séance de suivi visible. -->
+<div id="suivi-bandeau" style="display:none;position:fixed;left:0;right:0;bottom:0;
+     background:#16283c;color:#fff;padding:10px 14px;font-size:13px;z-index:50">
+ <b>La séance de suivi est ouverte.</b> Vingt minutes, trois exercices.
+ <a href="suivi" style="color:#fff;background:#2e7d32;padding:4px 10px;border-radius:3px;
+    text-decoration:none;margin-left:10px">Commencer le suivi</a>
+</div>
+<script>
+(function(){
+  async function verifier(){
+    try {
+      const s = await (await fetch("api/ext/statut")).json();
+      document.getElementById("suivi-bandeau").style.display = s.ouvert ? "block" : "none";
+      if (s.compilateur_simule && !document.getElementById("mode-essai")) {
+        const d = document.createElement("div"); d.id = "mode-essai";
+        d.style.cssText = "background:#c62828;color:#fff;padding:8px 12px;font-weight:bold";
+        d.textContent = "MODE ESSAI : compilateur simulé. Le code n'est pas exécuté et toute "
+          + "réponse complétée est acceptée. Ne jamais utiliser en séance.";
+        document.body.insertBefore(d, document.body.firstChild);
+      }
+    } catch(e) {}
+  }
+  verifier(); setInterval(verifier, 30000);
+})();
+</script>

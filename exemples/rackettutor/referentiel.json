@@ -1,0 +1,152 @@
+{
+ "cours": "INF6120 — instance Racket (troisieme instanciation de FPTutor-Shell)",
+ "version_referentiel": "rkt-0.1",
+ "note": "Meme contenu que l'instance OCaml, pour isoler le cout du langage. Structures leaf et node (v l r), absence ecrite #f.",
+ "reglages": {
+  "instances_min": 3,
+  "instances_max": 6,
+  "guidage_apres_echec": true,
+  "seuil_correction_pour_alignement": 1.0,
+  "reemploi_requis": 2,
+  "composition_equipe": "homogene_sur_concept"
+ },
+ "paliers": [
+  {
+   "id": "P1",
+   "titre": "Recursion structurelle sur un type somme",
+   "concepts": [
+    {
+     "id": "arbre-pli",
+     "libelle": "Les definitions recursives sur un arbre partagent une structure",
+     "prerequis": [],
+     "famille": "F-arbre",
+     "generalisation": {
+      "points_de_variation_attendus": 2,
+      "granularite": "blocs",
+      "enonce_attendu": "une definition qui prend en parametres la valeur du cas leaf et l'operation de combinaison"
+     },
+     "acquisition": "instances",
+     "reuse": "employer le schema sur un probleme du meme type sans recursion explicite"
+    }
+   ]
+  },
+  {
+   "id": "P2",
+   "titre": "Propagation de l'absence",
+   "concepts": [
+    {
+     "id": "option-chaine",
+     "libelle": "Les enchainements sur option partagent une structure",
+     "prerequis": [
+      "arbre-pli"
+     ],
+     "famille": "F-option",
+     "generalisation": {
+      "points_de_variation_attendus": 1,
+      "granularite": "blocs",
+      "enonce_attendu": "une definition qui prend l'etape suivante en parametre"
+     },
+     "acquisition": "instances",
+     "reuse": "employer le schema sur un enchainement du meme type"
+    }
+   ]
+  }
+ ],
+ "familles": {
+  "F-arbre": {
+   "concept": "arbre-pli",
+   "chapitre": 5,
+   "regle": "meme type recursif, operations differentes ; le cas de base doit varier",
+   "axes_de_variation_autorises": [
+    "operation de combinaison",
+    "valeur du cas leaf",
+    "type du resultat"
+   ],
+   "axes_interdits": [
+    "parcours non structurel",
+    "modification de la forme de l'arbre"
+   ],
+   "ancrages": [
+    {
+     "exemple": "bintree-count-leaves",
+     "base": "1",
+     "pas": "(+ (f l) (f r))"
+    },
+    {
+     "exemple": "bintree-count-internal-nodes",
+     "base": "0",
+     "pas": "(+ 1 (f l) (f r))"
+    },
+    {
+     "exemple": "bintree-sum",
+     "base": "0",
+     "pas": "(+ v (f l) (f r))"
+    },
+    {
+     "exemple": "bintree-height",
+     "base": "0",
+     "pas": "(+ 1 (max (f l) (f r)))"
+    },
+    {
+     "exemple": "bintree-collect-values",
+     "base": "'()",
+     "pas": "(append (f l) (cons v (f r)))"
+    }
+   ],
+   "obligation": "aucune induite : les cinq ancrages sont interchangeables, en blocs comme en granularite fine (obligations.py, resultat identique en OCaml)",
+   "solution_de_reference": "(define (f t) (match t [(leaf) z] [(node v l r) (op v (f l) (f r))]))",
+   "validation": {
+    "mode": "corps",
+    "granularite": "blocs",
+    "attendu": 2
+   }
+  },
+  "F-option": {
+   "concept": "option-chaine",
+   "chapitre": 3,
+   "regle": "meme enchainement, etapes differentes",
+   "axes_de_variation_autorises": [
+    "nature de l'etape",
+    "type des valeurs"
+   ],
+   "axes_interdits": [
+    "forme du filtrage",
+    "ordre des cas"
+   ],
+   "ancrages": [
+    {
+     "exemple": "double-tete",
+     "base": "#f",
+     "pas": "(* 2 x)"
+    },
+    {
+     "exemple": "cent-sur-tete",
+     "base": "#f",
+     "pas": "(division 100 x)"
+    },
+    {
+     "exemple": "pipeline",
+     "base": "#f",
+     "pas": "trois etapes"
+    },
+    {
+     "exemple": "longueur-premiere",
+     "base": "#f",
+     "pas": "(string-length s)"
+    }
+   ],
+   "obligation": "au moins un enchainement a trois etapes ; justification pedagogique, non induite par le moteur",
+   "solution_de_reference": "(define (f x) (let ([v (g x)]) (and v (h v))))",
+   "validation": {
+    "mode": "corps",
+    "granularite": "blocs",
+    "attendu": 1
+   }
+  }
+ },
+ "groupes": {
+  "taille_min": 2,
+  "taille_max": 4,
+  "formation": "auto_avec_approbation"
+ }
+}

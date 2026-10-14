@@ -1,0 +1,45 @@
+{
+ "fonction": "double-tete",
+ "commentaire": "Enchainement sur l'absence ecrite #f : quatre idiomes Racket qui doivent rendre le meme terme. Sans equivalent dans cas_ml.json, OCaml n'ayant qu'une ecriture naturelle (match ... with None | Some).",
+ "equivalentes": [
+  {
+   "etiquette": "let puis if sur la valeur",
+   "code": "(define (premier l) (if (null? l) #f (first l)))\n(define (double-tete l)\n  (let ([x (premier l)])\n    (if x (* 2 x) #f)))"
+  },
+  {
+   "etiquette": "let puis if sur (not x)",
+   "code": "(define (premier l) (if (null? l) #f (first l)))\n(define (double-tete l)\n  (let ([x (premier l)])\n    (if (not x) #f (* 2 x))))"
+  },
+  {
+   "etiquette": "and court-circuit",
+   "code": "(define (premier l) (if (null? l) #f (first l)))\n(define (double-tete l)\n  (let ([x (premier l)])\n    (and x (* 2 x))))"
+  },
+  {
+   "etiquette": "cond",
+   "code": "(define (premier l) (if (null? l) #f (first l)))\n(define (double-tete l)\n  (let ([x (premier l)])\n    (cond [(not x) #f]\n          [else (* 2 x)])))"
+  },
+  {
+   "etiquette": "match sur #f",
+   "code": "(define (premier l) (if (null? l) #f (first l)))\n(define (double-tete l)\n  (match (premier l)\n    [#f #f]\n    [x (* 2 x)]))"
+  },
+  {
+   "etiquette": "operandes echanges",
+   "code": "(define (premier l) (if (null? l) #f (first l)))\n(define (double-tete l)\n  (let ([n (premier l)])\n    (if n (* n 2) #f)))"
+  }
+ ],
+ "distinctes": [
+  {
+   "etiquette": "etape differente",
+   "code": "(define (premier l) (if (null? l) #f (first l)))\n(define (double-tete l)\n  (let ([x (premier l)])\n    (if x (+ 2 x) #f)))"
+  },
+  {
+   "etiquette": "sans distinction de cas",
+   "code": "(define (premier l) (if (null? l) #f (first l)))\n(define (double-tete l) (* 2 (premier l)))"
+  },
+  {
+   "etiquette": "absence remplacee par zero",
+   "code": "(define (premier l) (if (null? l) #f (first l)))\n(define (double-tete l)\n  (let ([x (premier l)])\n    (if x (* 2 x) 0)))"
+  }
+ ],
+ "messages": []
+}

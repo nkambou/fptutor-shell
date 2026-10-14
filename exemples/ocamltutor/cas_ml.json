@@ -1,0 +1,36 @@
+{
+ "fonction": "somme",
+ "commentaire": "Jeu de cas OCaml pour la famille du pli sur arbre binaire. type 'a arbre = Feuille | Noeud of 'a arbre * 'a * 'a arbre",
+ "equivalentes": [
+  {"etiquette": "ordre direct",
+   "code": "let rec somme a =\n  match a with\n  | Feuille -> 0\n  | Noeud (g, x, d) -> somme g + x + somme d"},
+  {"etiquette": "operandes echanges",
+   "code": "let rec somme a =\n  match a with\n  | Feuille -> 0\n  | Noeud (g, x, d) -> x + somme d + somme g"},
+  {"etiquette": "autres noms de variables",
+   "code": "let rec somme t =\n  match t with\n  | Feuille -> 0\n  | Noeud (gauche, valeur, droite) -> somme gauche + valeur + somme droite"},
+  {"etiquette": "branches inversees",
+   "code": "let rec somme a =\n  match a with\n  | Noeud (g, x, d) -> somme g + x + somme d\n  | Feuille -> 0"},
+  {"etiquette": "annotations de type",
+   "code": "let rec somme (a : int arbre) : int =\n  match a with\n  | Feuille -> 0\n  | Noeud (g, x, d) -> somme g + x + somme d"},
+  {"etiquette": "ecriture avec function",
+   "code": "let rec somme = function\n  | Feuille -> 0\n  | Noeud (g, x, d) -> somme g + x + somme d"}
+ ],
+ "distinctes": [
+  {"etiquette": "pli de bibliotheque",
+   "code": "let somme a = List.fold_left (+) 0 (aplatir a)"},
+  {"etiquette": "accumulateur",
+   "code": "let somme a =\n  let rec aux acc t = match t with\n    | Feuille -> acc\n    | Noeud (g, x, d) -> aux (aux (acc + x) g) d in\n  aux 0 a"},
+  {"etiquette": "sans filtrage par motif",
+   "code": "let rec somme a = if est_feuille a then 0 else valeur a + somme (gauche a) + somme (droite a)"},
+  {"etiquette": "operation differente",
+   "code": "let rec somme a =\n  match a with\n  | Feuille -> 1\n  | Noeud (g, x, d) -> somme g * x * somme d"},
+  {"etiquette": "hauteur, combinaison dissymetrique",
+   "code": "let rec somme a =\n  match a with\n  | Feuille -> 0\n  | Noeud (g, _, d) -> 1 + max (somme g) (somme d)"}
+ ],
+ "messages": [
+  ["Error: This pattern-matching is not exhaustive.", "missing-base-case"],
+  ["Error: Unbound value sommee", "unknown-name"],
+  ["Error: Syntax error", "syntax"],
+  ["Error: This expression has type int but an expression was expected of type string", "incompatible-types"]
+ ]
+}

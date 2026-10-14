@@ -1,0 +1,106 @@
+{
+ "fonction": "somme",
+ "commentaire": "Jeu de cas Racket pour la famille du pli sur arbre binaire. Memes ecritures que cas_ml.json quand elles existent en Racket, plus les variantes propres a Racket : distinction par predicats, filtrage racket/match, ordre libre des operandes d'une somme n-aire.",
+ "equivalentes": [
+  {
+   "etiquette": "cond et predicat du cas vide",
+   "code": "(struct leaf () #:transparent)\n(struct node (v l r) #:transparent)\n(define (somme t)\n  (cond [(leaf? t) 0]\n        [else (+ (node-v t) (somme (node-l t)) (somme (node-r t)))]))"
+  },
+  {
+   "etiquette": "cond et predicat du noeud d'abord",
+   "code": "(struct leaf () #:transparent)\n(struct node (v l r) #:transparent)\n(define (somme t)\n  (cond [(node? t) (+ (node-v t) (somme (node-l t)) (somme (node-r t)))]\n        [else 0]))"
+  },
+  {
+   "etiquette": "if",
+   "code": "(struct leaf () #:transparent)\n(struct node (v l r) #:transparent)\n(define (somme t)\n  (if (leaf? t) 0 (+ (node-v t) (somme (node-l t)) (somme (node-r t)))))"
+  },
+  {
+   "etiquette": "filtrage racket/match",
+   "code": "(struct leaf () #:transparent)\n(struct node (v l r) #:transparent)\n(define (somme t)\n  (match t\n    [(leaf) 0]\n    [(node v l r) (+ v (somme l) (somme r))]))"
+  },
+  {
+   "etiquette": "match, branches inversees, autres noms",
+   "code": "(struct leaf () #:transparent)\n(struct node (v l r) #:transparent)\n(define (somme arbre)\n  (match arbre\n    [(node valeur g d) (+ valeur (somme g) (somme d))]\n    [(leaf) 0]))"
+  },
+  {
+   "etiquette": "operandes echanges (somme n-aire)",
+   "code": "(struct leaf () #:transparent)\n(struct node (v l r) #:transparent)\n(define (somme t)\n  (cond [(leaf? t) 0]\n        [else (+ (somme (node-l t)) (somme (node-r t)) (node-v t))]))"
+  },
+  {
+   "etiquette": "define avec lambda",
+   "code": "(struct leaf () #:transparent)\n(struct node (v l r) #:transparent)\n(define somme\n  (lambda (t)\n    (cond [(leaf? t) 0]\n          [else (+ (node-v t) (somme (node-l t)) (somme (node-r t)))])))"
+  },
+  {
+   "etiquette": "cond avec deux predicats explicites",
+   "code": "(struct leaf () #:transparent)\n(struct node (v l r) #:transparent)\n(define (somme t)\n  (cond [(leaf? t) 0]\n        [(node? t) (+ (node-v t) (somme (node-l t)) (somme (node-r t)))]))"
+  }
+ ],
+ "distinctes": [
+  {
+   "etiquette": "pli de bibliotheque",
+   "code": "(struct leaf () #:transparent)\n(struct node (v l r) #:transparent)\n(define (somme t) (foldl + 0 (aplatir t)))"
+  },
+  {
+   "etiquette": "accumulateur (let nomme)",
+   "code": "(struct leaf () #:transparent)\n(struct node (v l r) #:transparent)\n(define (somme t)\n  (let loop ([t t] [acc 0])\n    (if (leaf? t) acc (loop (node-r t) (loop (node-l t) (+ acc (node-v t)))))))"
+  },
+  {
+   "etiquette": "operation differente",
+   "code": "(struct leaf () #:transparent)\n(struct node (v l r) #:transparent)\n(define (somme t)\n  (cond [(leaf? t) 1]\n        [else (* (node-v t) (somme (node-l t)) (somme (node-r t)))]))"
+  },
+  {
+   "etiquette": "hauteur, combinaison dissymetrique",
+   "code": "(struct leaf () #:transparent)\n(struct node (v l r) #:transparent)\n(define (somme t)\n  (cond [(leaf? t) 0]\n        [else (+ 1 (max (somme (node-l t)) (somme (node-r t))))]))"
+  },
+  {
+   "etiquette": "comptage des noeuds, constante au lieu du champ",
+   "code": "(struct leaf () #:transparent)\n(struct node (v l r) #:transparent)\n(define (somme t)\n  (cond [(leaf? t) 0]\n        [else (+ 1 (somme (node-l t)) (somme (node-r t)))]))"
+  },
+  {
+   "etiquette": "boucle for/sum",
+   "code": "(struct leaf () #:transparent)\n(struct node (v l r) #:transparent)\n(define (somme t) (for/sum ([x (aplatir t)]) x))"
+  }
+ ],
+ "messages": [
+  [
+   "match: no matching clause for (leaf)",
+   "missing-base-case"
+  ],
+  [
+   "node-v: contract violation\n  expected: node?\n  given: #<leaf>",
+   "missing-base-case"
+  ],
+  [
+   "node-v: contract violation\n  expected: node?\n  given: (leaf)",
+   "missing-base-case"
+  ],
+  [
+   "string-length: contract violation\n  expected: string?\n  given: 3",
+   "incompatible-types"
+  ],
+  [
+   "+: contract violation\n  expected: number?\n  given: #<void>",
+   "missing-base-case"
+  ],
+  [
+   "somme.rkt:3:12: sommee: unbound identifier\n  in: sommee",
+   "unknown-name"
+  ],
+  [
+   "somme.rkt:2:0: read-syntax: expected a `)` to close `(`",
+   "syntax"
+  ],
+  [
+   "+: contract violation\n  expected: number?\n  given: \"a\"",
+   "incompatible-types"
+  ],
+  [
+   "somme: arity mismatch;\n the expected number of arguments does not match the given number",
+   "incompatible-types"
+  ],
+  [
+   "",
+   "wrong-result"
+  ]
+ ]
+}

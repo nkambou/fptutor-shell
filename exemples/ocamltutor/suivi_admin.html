@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>OCamlTutor — administration du suivi</title>
+<style>
+ body{font-family:"DejaVu Sans",Arial,sans-serif;font-size:13px;margin:0;padding:14px;background:#f6f8fa}
+ .bandeau{background:#16283c;color:#fff;padding:9px 12px;margin:-14px -14px 14px;font-weight:bold}
+ .carte{background:#fff;border:1px solid #d8dee6;border-radius:5px;padding:14px;margin-bottom:12px;max-width:900px}
+ table{border-collapse:collapse;width:100%;font-size:12px} th,td{border-bottom:1px solid #e3e8ee;padding:5px;text-align:left}
+ th{background:#eef2f6} button{padding:5px 10px;margin-right:6px;cursor:pointer}
+ .etat{font-weight:bold} .note{color:#5a6a7a;font-size:12px}
+</style>
+</head>
+<body>
+<div class="bandeau">OCamlTutor — administration du suivi</div>
+<div class="carte">
+ <p><label>Jeton d'administration <input id="jeton" type="password" size="24"></label>
+    <button onclick="charger()">Afficher</button></p>
+ <p class="note">Réservé à l'enseignant et au chercheur. Le suivi est fermé aux étudiants
+ tant qu'il n'est pas ouvert ici, manuellement ou par une fenêtre programmée.</p>
+</div>
+<div class="carte">
+ <p>État : <span class="etat" id="etat">—</span></p>
+ <p><button onclick="action('ouvrir')">Ouvrir maintenant</button>
+    <button onclick="action('fermer')">Fermer maintenant</button></p>
+ <p><label>Ouverture programmée <input id="debut" type="datetime-local"></label>
+    <label>fermeture <input id="fin" type="datetime-local"></label>
+    <button onclick="programmer()">Programmer</button></p>
+ <p class="note">Programmer une fenêtre annule une ouverture ou une fermeture manuelle.</p>
+</div>
+<div class="carte"><h3>Participants</h3><div id="liste" class="note">—</div></div>
+<script>
+const $=i=>document.getElementById(i);
+async function post(u,d){ return (await fetch(u,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(d)})).json(); }
+async function charger(){
+  const r = await post("api/admin/etat",{jeton:$("jeton").value});
+  if(r.erreur){ $("etat").textContent = r.erreur; return; }
+  $("etat").textContent = (r.ouvert ? "ouvert" : "fermé") + " — " + r.motif;
+  if(r.config.debut) $("debut").value = r.config.debut.slice(0,16);
+  if(r.config.fin) $("fin").value = r.config.fin.slice(0,16);
+  $("liste").innerHTML = r.apprenants.length ? "<table><tr><th>pseudonyme</th><th>items faits</th><th>réemplois</th><th>questionnaire</th></tr>" +
+    r.apprenants.map(a=>`<tr><td>${a.nom}</td><td>${a.items}</td><td>${a.reemplois}</td><td>${a.questionnaire?"oui":"non"}</td></tr>`).join("") + "</table>"
+    : "aucun participant";
+}
+async function action(a){ await post("api/admin/"+a,{jeton:$("jeton").value, par:"admin"}); charger(); }
+async function programmer(){
+  await post("api/admin/programmer",{jeton:$("jeton").value, par:"admin",
+    debut:$("debut").value||null, fin:$("fin").value||null}); charger();
+}
+</script>
+</body>
+</html>

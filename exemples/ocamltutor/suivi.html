@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>OCamlTutor — séance de suivi</title>
+<style>
+ body{font-family:"DejaVu Sans",Arial,sans-serif;font-size:13px;margin:0;padding:14px;background:#f6f8fa;color:#1a1a1a}
+ .bandeau{background:#16283c;color:#fff;padding:9px 12px;margin:-14px -14px 14px;font-weight:bold}
+ .carte{background:#fff;border:1px solid #d8dee6;border-radius:5px;padding:14px;margin-bottom:12px;max-width:860px}
+ h2{font-size:14px;margin:0 0 8px}
+ textarea{width:100%;min-height:200px;font-family:"DejaVu Sans Mono",monospace;font-size:13px;border:1px solid #c3ccd6;border-radius:4px;padding:7px}
+ button.act{background:#16283c;color:#fff;border:0;padding:6px 12px;border-radius:3px;cursor:pointer}
+ button.sec{background:#e6ebf1;border:1px solid #c3ccd6;padding:5px 10px;border-radius:3px;cursor:pointer}
+ .note{color:#5a6a7a;font-size:12px}
+ .ok{background:#eaf6ec;border-left:3px solid #2e7d32;padding:8px;margin-top:8px}
+ .ko{background:#fdecea;border-left:3px solid #c62828;padding:8px;margin-top:8px}
+ .aide{background:#fff8e1;border-left:3px solid #e0b400;padding:8px;margin-top:8px}
+ .mono{font-family:"DejaVu Sans Mono",monospace;font-size:12px;white-space:pre-wrap}
+ label.q{display:block;margin:12px 0 4px;font-weight:bold}
+ textarea.court{min-height:50px}
+</style>
+</head>
+<body>
+<div class="bandeau">OCamlTutor — séance de suivi <span id="qui" style="float:right;font-weight:normal"></span></div>
+
+<div id="ferme" class="carte" style="display:none">
+ <h2>Le suivi n'est pas ouvert</h2>
+ <p id="motif"></p>
+ <p class="note">La page s'ouvrira d'elle-même au moment prévu. Vous pouvez la laisser ouverte.</p>
+</div>
+
+<div id="entree" class="carte" style="display:none">
+ <h2>Séance de suivi, environ vingt minutes</h2>
+ <p>Trois courts exercices en OCaml, puis quelques questions. Entrez le même pseudonyme
+ qu'à la séance précédente.</p>
+ <p><label>Pseudonyme <input id="nom" size="20"></label></p>
+ <p><label><input type="checkbox" id="consent" checked> J'accepte que mes réponses servent
+ à la recherche, comme à la séance précédente. Décocher n'empêche pas de faire le suivi.</label></p>
+ <p><button class="act" onclick="entrer()">Commencer</button></p>
+</div>
+
+<div id="travail" class="carte" style="display:none">
+ <h2 id="titre"></h2>
+ <p id="enonce"></p>
+ <p class="note mono" id="signature"></p>
+ <textarea id="code" spellcheck="false"></textarea>
+ <p><button class="act" onclick="soumettre()">Soumettre</button>
+    <button class="sec" onclick="aide()">Une indication</button>
+    <button class="sec" onclick="laisser()">Laisser cet exercice</button>
+    <span class="note" id="temps"></span></p>
+ <div id="retour"></div>
+</div>
+
+<div id="questions" class="carte" style="display:none">
+ <h2>Quelques questions, trois minutes</h2>
+ <label class="q">1. Ces exercices avaient-ils quelque chose en commun avec ceux de la séance précédente ? Si oui, quoi ?</label>
+ <textarea class="court" id="q1"></textarea>
+ <label class="q">2. Avez-vous réutilisé quelque chose que vous aviez écrit ou appris lors de cette séance ?</label>
+ <label><input type="radio" name="q2" value="oui"> oui</label>
+ <label><input type="radio" name="q2" value="non"> non</label>
+ <textarea class="court" id="q2d" placeholder="Si oui, quoi ?"></textarea>
+ <div id="bloc-q3" style="display:none">
+  <label class="q">3. Pour les exercices où vous avez écrit la récursion vous-même, pourquoi ?</label>
+  <label><input type="radio" name="q3" value="plus_simple"> c'était plus simple ainsi</label><br>
+  <label><input type="radio" name="q3" value="oubli_forme"> je ne me souvenais plus de la forme</label><br>
+  <label><input type="radio" name="q3" value="pas_pense"> je n'y ai pas pensé</label><br>
+  <label><input type="radio" name="q3" value="adaptation"> je ne voyais pas comment l'adapter à ce type</label>
+ </div>
+ <label class="q">4. Lors de la séance précédente, le moment où le tuteur vous a demandé d'écrire ce que vos définitions avaient en commun est arrivé :</label>
+ <label><input type="radio" name="q4" value="trop_tot"> trop tôt</label>
+ <label><input type="radio" name="q4" value="bon_moment"> au bon moment</label>
+ <label><input type="radio" name="q4" value="trop_tard"> trop tard</label>
+ <label><input type="radio" name="q4" value="ne_sait_pas"> je ne m'en souviens pas</label>
+ <label class="q">5. Que retenez-vous de cette activité, en une phrase ? (facultatif)</label>
+ <textarea class="court" id="q5"></textarea>
+ <p><button class="act" onclick="envoyer()">Envoyer</button></p>
+</div>
+
+<div id="merci" class="carte" style="display:none">
+ <h2>Merci</h2><p>Le suivi est terminé. Vous pouvez fermer cette page.</p>
+</div>
+
+<script>
+let NOM=null, ITEM=null, RECMAIN=[];
+// Base de l'API : « api/ » en service autonome, « api/ext/ » quand la page est
+// servie par le tuteur. En apercu, les memes ecrans passent par les routes
+// protegees de l'administration, et rien n'entre dans les resultats.
+const APERCU = new URLSearchParams(location.search).get("apercu") === "1";
+const API = (window.SUIVI_API || "api/") + (APERCU ? "admin/apercu/" : "");
+const $=i=>document.getElementById(i);
+async function get(u){ return (await fetch(u)).json(); }
+async function post(u,d){ return (await fetch(u,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(d)})).json(); }
+async function avertirSimule(){
+  try{
+    const s = await get((window.SUIVI_API || "api/")+"statut");
+    if(s.compilateur_simule){
+      const d=document.createElement("div");
+      d.style.cssText="background:#c62828;color:#fff;padding:8px 12px;margin:0 -14px 12px;font-weight:bold";
+      d.textContent="MODE ESSAI : compilateur simulé. Le code n'est pas exécuté et toute réponse complétée est acceptée. Ne jamais utiliser en séance.";
+      document.body.insertBefore(d, document.body.children[1]);
+    }
+  }catch(e){}
+}
+avertirSimule();
+function montrer(id){ ["ferme","entree","travail","questions","merci"].forEach(x=>$(x).style.display = x===id?"block":"none"); }
+
+async function statut(){
+  if(APERCU){ montrer("entree"); $("nom").value = "apercu";
+    document.querySelector(".bandeau").innerHTML += ' <span style="background:#e0b400;color:#16283c;padding:2px 8px;border-radius:3px">APERÇU — rien n\'est enregistré dans les résultats</span>';
+    return; }
+  const s = await get((window.SUIVI_API || "api/")+"statut");
+  if(!s.ouvert){ montrer("ferme"); $("motif").textContent = s.motif; setTimeout(statut, 20000); return; }
+  if(!NOM) montrer("entree");
+}
+async function entrer(){
+  NOM = $("nom").value.trim(); if(!NOM) return;
+  const r = await post(API+"entrer",{nom:NOM, consentement:$("consent").checked});
+  if(r.ferme){ montrer("ferme"); $("motif").textContent = r.motif; return; }
+  if(r.erreur){ alert(r.erreur); NOM = null; return; }
+  $("qui").textContent = NOM; suivant();
+}
+async function suivant(){
+  const r = await post(API+"courant",{nom:NOM});
+  if(r.ferme){ montrer("ferme"); $("motif").textContent = r.motif; return; }
+  if(r.fini){
+    if(r.questionnaire_fait){ montrer("merci"); return; }
+    RECMAIN = r.recursion_main || [];
+    $("bloc-q3").style.display = RECMAIN.length ? "block" : "none";
+    montrer("questions"); return;
+  }
+  ITEM = r.item; montrer("travail");
+  $("titre").textContent = `Exercice ${r.rang} sur ${r.total}`;
+  $("enonce").textContent = ITEM.enonce;
+  $("signature").textContent = ITEM.signature;
+  $("code").value = ITEM.amorce; $("retour").innerHTML = "";
+  $("temps").textContent = `environ ${r.ecoule_min} min écoulées sur vingt`;
+}
+async function soumettre(){
+  const r = await post(API+"soumettre",{nom:NOM, item:ITEM.id, code:$("code").value});
+  if(r.correct){
+    $("retour").innerHTML = `<div class="ok">Correct. Exercice suivant.</div>`;
+    setTimeout(suivant, 900);
+  } else {
+    $("retour").innerHTML = `<div class="ko">${r.message ? "Le code est refusé ou le résultat diffère." : "Le résultat diffère de ce qui est attendu."}
+      ${r.message?`<div class="mono">${r.message.replace(/</g,"&lt;")}</div>`:""}</div>`;
+  }
+}
+async function aide(){
+  const r = await post(API+"aide",{nom:NOM, item:ITEM.id});
+  $("retour").innerHTML += `<div class="aide">${r.texte}</div>`;
+}
+async function laisser(){
+  if(!confirm("Laisser cet exercice sans le résoudre ?")) return;
+  await post(API+"passer",{nom:NOM, item:ITEM.id}); suivant();
+}
+async function envoyer(){
+  const val = n => (document.querySelector(`input[name="${n}"]:checked`)||{}).value || null;
+  await post(API+"questionnaire",{nom:NOM, reponses:{
+    reconnaissance:$("q1").value, reutilisation:val("q2"), reutilisation_detail:$("q2d").value,
+    raison_recursion_main: RECMAIN.length ? val("q3") : null, items_recursion_main:RECMAIN,
+    moment_generalisation:val("q4"), retenu:$("q5").value}});
+  montrer("merci");
+}
+statut();
+</script>
+</body>
+</html>

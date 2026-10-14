@@ -1,0 +1,20 @@
+# Etat d'execution et donnees de seance : jamais versionnes
+etat.json
+journal.jsonl
+etude.json
+*/etat.json
+*/journal.jsonl
+*/etude.json
+sauvegardes/
+exports/
+*.log
+COLLECTE_EN_COURS
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Fichiers temporaires d'editeur et de systeme
+*~
+.DS_Store

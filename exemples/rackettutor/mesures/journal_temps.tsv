@@ -1,0 +1,23 @@
+horodatage	etape	borne	note
+2026-09-22T01:06:10Z	E0-protocole	debut	
+2026-09-22T01:06:33Z	E0-protocole	fin	
+2026-09-22T01:06:33Z	E1-engendrement	debut	
+2026-09-22T01:06:33Z	E1-engendrement	fin	
+2026-09-22T01:07:17Z	E2-analyse	debut	
+2026-09-22T01:08:20Z	E2-analyse	fin	
+2026-09-22T01:08:20Z	E3-integration	debut	
+2026-09-22T01:08:44Z	E3-integration	fin	
+2026-09-22T01:08:44Z	E4-banc	debut	
+2026-09-22T01:09:57Z	E4-banc	fin	dont 2 modifications du banc (O4, O6) et 1 correction du fournisseur (O5)
+2026-09-22T01:09:57Z	E5-activites	debut	
+2026-09-22T01:10:57Z	E5-activites	fin	
+2026-09-22T01:10:57Z	E6-references	debut	
+2026-09-22T01:11:13Z	E6-references	fin	15/15 du premier coup
+2026-09-22T01:11:13Z	E7-familles	debut	
+2026-09-22T01:12:28Z	E7-familles	fin	dont 1 modification (obligations.py, O7)
+2026-09-22T01:12:28Z	E8-essai	debut	
+2026-09-22T02:50:29Z	E8-essai	fin	dont 2 modifications (schema_employe O9, textes d'etayage O11) et corrections de l'atelier O1-O3, O8
+2026-09-22T02:50:29Z	E9-serveur	debut	
+2026-09-22T02:53:21Z	E9-serveur	fin	dont 1 correction de la politique (O12), independante du langage
+2026-09-22T02:53:21Z	E10-regression	debut	
+2026-09-22T02:54:22Z	E10-regression	fin	
