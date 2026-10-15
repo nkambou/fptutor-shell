@@ -6,16 +6,19 @@
 #   outils/pousser.sh --sans-archive           pousse les modifications locales seules
 #   outils/pousser.sh --archive chemin.zip     applique cette archive-la
 #   outils/pousser.sh --essai                  montre ce qui serait fait, sans rien faire
+#   outils/pousser.sh --garder-archive         n'efface pas l'archive apres envoi
 #
 # Par defaut, le script cherche l'archive maj-*.zip la plus recente dans
 # ~/Downloads, la decompresse a la racine du depot, montre ce qui change, demande
-# confirmation, puis valide et pousse.
+# confirmation, puis valide et pousse. L'archive appliquee est effacee une fois
+# l'envoi reussi, pour qu'un appel suivant ne la reprenne pas.
 set -u
 
 ARCHIVE=""
 AVEC_ARCHIVE=1
 MESSAGE=""
 ESSAI=0
+GARDER=0
 TELECHARGEMENTS="${TELECHARGEMENTS:-$HOME/Downloads}"
 
 while [ $# -gt 0 ]; do
@@ -24,7 +27,8 @@ while [ $# -gt 0 ]; do
     --archive)        ARCHIVE="${2:-}"; shift 2 ;;
     --sans-archive)   AVEC_ARCHIVE=0; shift ;;
     --essai)          ESSAI=1; shift ;;
-    -h|--help)        sed -n '2,12p' "$0"; exit 0 ;;
+    --garder-archive) GARDER=1; shift ;;
+    -h|--help)        sed -n '2,14p' "$0"; exit 0 ;;
     *) echo "Option inconnue : $1"; exit 2 ;;
   esac
 done
@@ -96,6 +100,15 @@ git add -A || echouer "git add a echoue"
 git commit -q -m "$MESSAGE" || echouer "git commit a echoue"
 git pull --rebase --quiet || echouer "Le rebasage a echoue. Resolvez les conflits, puis : git rebase --continue && git push"
 git push --quiet || echouer "git push a echoue. Verifiez l'authentification, puis : git push"
+
+# L'archive n'est effacee qu'ici : apres un envoi reussi, et jamais avant.
+if [ -n "$ARCHIVE" ] && [ -f "$ARCHIVE" ]; then
+  if [ "$GARDER" = 1 ]; then
+    echo "Archive conservee : $ARCHIVE"
+  else
+    rm -f "$ARCHIVE" && echo "Archive effacee : $ARCHIVE"
+  fi
+fi
 
 annoncer "Fait"
 git log --oneline -1
