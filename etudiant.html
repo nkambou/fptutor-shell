@@ -249,6 +249,11 @@ async function inscrire() {
   retenirIdent(ident);
   vue = await api("/api/etat?ident=" + ident);
   etapes(2); ecranRegime();
+  const z = el("identDonne");
+  if (z) z.innerHTML = 'Votre identifiant est <b>' + ident + '</b>. Ce navigateur le ' +
+    'retient : vous reprendrez votre dossier en revenant sur cette page. Notez-le si vous ' +
+    'comptez travailler depuis un autre poste, il est le seul moyen d\'y retrouver votre ' +
+    'dossier, et votre enseignant peut vous le redonner.';
 }
 
 // --------------------------------------------------- reprise d'une session
@@ -294,7 +299,8 @@ function ecranReprise(i, nom) {
    '<button onclick="oublierIdent(); ecranInscription();" ' +
    'style="margin-left:8px;background:#fff;color:#1b2a41">Nouvelle inscription</button></div>' +
    '<div class="note" style="margin-top:12px">Vous travaillez depuis un autre poste ? ' +
-   'Saisissez l\'identifiant que le tuteur vous a donne.</div>' +
+   'Saisissez l\'identifiant donne a l\'inscription, celui qui figure en haut de la page ' +
+   'du parcours, a cote de votre pseudonyme. Votre enseignant peut aussi vous le redonner.</div>' +
    '<input id="identSaisi" placeholder="Identifiant, quatre caracteres">' +
    '<div><button onclick="reprendre(el(\'identSaisi\').value.trim())">Reprendre avec cet identifiant</button></div>' +
    '</div></div></div></div>';
@@ -304,10 +310,11 @@ function ecranReprise(i, nom) {
 
 function ecranRegime() {
   const impose = vue.collaboration_requise;
-  el("ent").textContent = vue.nom + " · " + vue.cohorte;
+  el("ent").textContent = vue.nom + " · " + vue.cohorte + " · code " + ident;
   el("ecran").innerHTML =
    '<div class="rangee"><div class="c"><div class="carte">' +
    '<div class="titre">Régime de travail <b>modifiable à chaque palier</b></div><div class="corps">' +
+   '<div class="note" id="identDonne"></div>' + '' +
    '<div><span class="opt" id="oSolo" onclick="choisirRegime(\'solo\')">seul</span>' +
    '<span class="opt" id="oGroupe" onclick="choisirRegime(\'groupe\')">en groupe</span></div>' +
    '<div class="enonce" style="margin-top:10px">Les activités de production restent ' +
@@ -386,7 +393,8 @@ async function quitterGroupe() { await api("/api/groupe", {ident: ident, action:
 async function rafraichir() {
   vue = await api("/api/etat?ident=" + ident);
   etapes(4);
-  el("ent").textContent = vue.nom + " · " + vue.cohorte + " · " + (vue.palier || "—");
+  el("ent").textContent = vue.nom + " · " + vue.cohorte + " · code " + ident +
+    " · " + (vue.palier || "—");
   el("ecran").innerHTML =
    '<div class="rangee">' +
    '<div class="g"><div class="carte"><div class="titre">Carte des concepts</div>' +
