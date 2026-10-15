@@ -267,6 +267,8 @@ CATALOGUE = {
    "Submit my generalisation",
  "attendre que je continue":
    "wait until I continue",
+ "Voici les fonctions que <b>vous</b> avez écrites. Le tuteur a aligné leurs cas de base et leurs cas récursifs. Écrivez une seule définition qui les remplace toutes.":
+   "These are the functions <b>you</b> have written. The tutor has aligned their base cases and their recursive cases. Write a single definition that replaces them all.",
  "Voici les fonctions que":
    "These are the functions",
  "Après une réussite :":
@@ -467,6 +469,8 @@ CATALOGUE = {
 
  "mode discovery · 1 point(s) de variation":
    "discovery mode · 1 variation point",
+ "Voici les fonctions que <b>vous</b> avez écrites. Le tuteur a aligné leurs cas de base et leurs cas récursifs. Écrivez une seule définition qui les remplace toutes.":
+   "These are the functions <b>you</b> have written. The tutor has aligned their base cases and their recursive cases. Write a single definition that replaces them all.",
  "Voici les fonctions que":
    "These are the functions",
  "point(s) de variation":

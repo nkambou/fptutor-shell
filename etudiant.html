@@ -160,7 +160,8 @@ function selecteurLangue(){
   z.style.cssText = "margin-left:14px;font-size:12px;font-weight:400";
   const lien = (code, nom) => code === LANG
     ? '<b style="color:#fff">' + nom + '</b>'
-    : '<a href="?lang=' + code + '" style="color:#fff;opacity:.7;text-decoration:underline">' + nom + '</a>';
+    : '<a href="?lang=' + code + (ident ? '&ident=' + encodeURIComponent(ident) : '') +
+      '" style="color:#fff;opacity:.7;text-decoration:underline">' + nom + '</a>';
   let etat = "";
   if (LANG === "en" && !CAT) etat = ' <span style="color:#ffd9d9">catalogue indisponible</span>';
   z.innerHTML = lien("en", "EN") + ' <span style="opacity:.5">|</span> ' +
@@ -245,8 +246,58 @@ async function inscrire() {
     {nom: el("nom").value, cohorte: el("cohorte").value});
   if (r.erreur) { alert(r.erreur); return; }
   ident = r.ident;
+  retenirIdent(ident);
   vue = await api("/api/etat?ident=" + ident);
   etapes(2); ecranRegime();
+}
+
+// --------------------------------------------------- reprise d'une session
+// L'identifiant ne vivait que dans la memoire de la page : un rechargement, un
+// changement de langue ou un onglet ferme faisait perdre le dossier. Il est
+// desormais garde dans le navigateur, et accepte en parametre d'URL, ce qui
+// permet aussi de reprendre depuis un autre poste avec l'identifiant affiche
+// par la console enseignante.
+const CLE_IDENT = "fptutor.ident";
+
+function retenirIdent(i) {
+  try { localStorage.setItem(CLE_IDENT, i); } catch (e) {}
+}
+
+function identRetenu() {
+  const p = new URLSearchParams(location.search).get("ident");
+  if (p) return p;
+  try { return localStorage.getItem(CLE_IDENT); } catch (e) { return null; }
+}
+
+function oublierIdent() {
+  try { localStorage.removeItem(CLE_IDENT); } catch (e) {}
+}
+
+async function reprendre(i) {
+  const v = await api("/api/etat?ident=" + encodeURIComponent(i));
+  if (!v || v.erreur || !v.nom) { oublierIdent(); alert(
+    "Cet identifiant est inconnu du tuteur. Inscrivez-vous de nouveau."); ecranInscription(); return; }
+  ident = i; vue = v; retenirIdent(i);
+  const z = document.querySelector(".bandeau .lang");
+  if (z) { z.remove(); selecteurLangue(); }
+  etapes(4); await rafraichir();
+}
+
+function ecranReprise(i, nom) {
+  el("ecran").innerHTML =
+   '<div class="rangee"><div class="c"><div class="carte"><div class="titre">Reprendre votre session</div>' +
+   '<div class="corps">' +
+   '<div class="note">Une session est ouverte sur ce navigateur' +
+   (nom ? ' au pseudonyme <b>' + nom + '</b>' : '') + '. Vous reprenez votre dossier ' +
+   'exactement ou vous en etes.</div>' +
+   '<div><button onclick="reprendre(\'' + i + '\')">Reprendre</button>' +
+   '<button onclick="oublierIdent(); ecranInscription();" ' +
+   'style="margin-left:8px;background:#fff;color:#1b2a41">Nouvelle inscription</button></div>' +
+   '<div class="note" style="margin-top:12px">Vous travaillez depuis un autre poste ? ' +
+   'Saisissez l\'identifiant que le tuteur vous a donne.</div>' +
+   '<input id="identSaisi" placeholder="Identifiant, quatre caracteres">' +
+   '<div><button onclick="reprendre(el(\'identSaisi\').value.trim())">Reprendre avec cet identifiant</button></div>' +
+   '</div></div></div></div>';
 }
 
 // ---------------------------------------------------------------- 2. régime
@@ -792,10 +843,24 @@ async function generaliser() {
   await rafraichir();
 }
 
-chargerTextes().then(() => {
+chargerTextes().then(async () => {
   selecteurLangue();
   verifierServeur();
-  ecranInscription();
+  const garde = identRetenu();
+  if (garde) {
+    const v = await api("/api/etat?ident=" + encodeURIComponent(garde));
+    if (v && v.nom && !v.erreur) {
+      if (new URLSearchParams(location.search).get("ident")) {
+        await reprendre(garde);                 // bascule de langue : reprise directe
+      } else {
+        ecranReprise(garde, v.nom);             // onglet rouvert : on demande
+      }
+    } else {
+      oublierIdent(); ecranInscription();
+    }
+  } else {
+    ecranInscription();
+  }
   traduireDOM();
 });
 </script>

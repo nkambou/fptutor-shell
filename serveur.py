@@ -345,7 +345,13 @@ def _api(chemin, params, corps):
         return fin({"ident": ap["ident"]})
 
     if chemin == "/api/etat":
-        return fin(vue_apprenant(r, e, e["apprenants"][params["ident"][0]]))
+        # identifiant inconnu : la page doit pouvoir le dire a l'apprenant et
+        # proposer une nouvelle inscription, plutot que de recevoir une erreur
+        # de serveur qu'elle ne sait pas lire.
+        ident = (params.get("ident") or [""])[0]
+        if ident not in e["apprenants"]:
+            return {"erreur": "identifiant inconnu"}
+        return fin(vue_apprenant(r, e, e["apprenants"][ident]))
 
     if chemin == "/api/regime":
         ap = e["apprenants"][corps["ident"]]
