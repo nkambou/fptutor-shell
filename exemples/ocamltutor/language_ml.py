@@ -8,6 +8,7 @@ classement des messages du compilateur. Rien du shell n'est modifie.
 import glob
 import os
 import shutil
+import sys
 
 import normalisation_ml as NML
 
@@ -46,12 +47,12 @@ def interprete():
     for c in candidats:
         if os.access(c, os.X_OK):
             return c
-    raise SystemExit(
-        "\nInterprete OCaml introuvable.\n"
-        "  Trois solutions, de la plus simple a la plus sure :\n"
-        "    eval $(opam env)      puis relancer, si OCaml vient d'opam\n"
-        "    export OCAML_BIN=$(which ocaml)   dans le meme terminal\n"
-        "    export OCAML_BIN=$HOME/.opam/4.14.2/bin/ocaml\n")
+    return None
+
+
+ABSENT = ("Interprete OCaml introuvable : le serveur tourne, mais aucune "
+          "soumission ne peut etre compilee. Lancez-le avec OCAML_BIN, ou "
+          "eval $(opam env) si OCaml vient d'opam.")
 
 
 def command(chemin):
@@ -59,7 +60,16 @@ def command(chemin):
     # l'interprete suffit : aucune compilation separee n'est necessaire.
     # -w +8 rend explicite l'avertissement de filtrage non exhaustif, qui est
     # ce que la categorie missing-base-case projette.
-    return [interprete(), "-w", "+8", chemin]
+    #
+    # Sans interprete, le serveur ne doit pas tomber : la commande rendue
+    # echoue proprement avec un message lisible, que la categorisation range
+    # dans « unclassified » et que l'apprenant voit comme une erreur du cadre,
+    # non comme une erreur de son code.
+    ocaml = interprete()
+    if ocaml is None:
+        return [sys.executable, "-c",
+                "import sys; sys.stderr.write(%r); sys.exit(1)" % (ABSENT + "\n")]
+    return [ocaml, "-w", "+8", chemin]
 
 
 GABARIT = """%s
