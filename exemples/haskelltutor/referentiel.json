@@ -1,0 +1,93 @@
+{
+ "cours": "Instance Haskell de FPTutor-Shell, famille du pli a droite sur une liste",
+ "version_referentiel": "hs-0.1",
+ "note": "Quatrieme instanciation : retour au langage dont la coquille est issue. L'analyse est celle de normalisation.py, enveloppee par language_hs.py.",
+ "reglages": {
+  "instances_min": 3,
+  "instances_max": 6,
+  "guidage_apres_echec": true,
+  "seuil_correction_pour_alignement": 1.0,
+  "reemploi_requis": 2,
+  "composition_equipe": "homogene_sur_concept"
+ },
+ "paliers": [
+  {
+   "id": "P1",
+   "titre": "Recursion structurelle sur un type somme",
+   "concepts": [
+    {
+     "id": "liste-pli",
+     "libelle": "Les definitions recursives sur une liste partagent une structure",
+     "prerequis": [],
+     "famille": "F-liste",
+     "generalisation": {
+      "points_de_variation_attendus": 3,
+      "granularite": "fins",
+      "enonce_attendu": "une definition qui prend en parametres la valeur du cas [] et l'operation de combinaison"
+     },
+     "acquisition": "instances",
+     "reuse": "employer le schema sur un probleme du meme type sans recursion explicite"
+    }
+   ]
+  }
+ ],
+ "familles": {
+  "F-liste": {
+   "concept": "arbre-pli",
+   "chapitre": 5,
+   "regle": "une definition recursive sur une liste : un cas [] et un cas (x:xs)",
+   "axes_de_variation_autorises": [
+    "valeur du cas []",
+    "operation de combinaison",
+    "place de l'element dans la combinaison"
+   ],
+   "axes_interdits": [
+    "parcours non structurel",
+    "modification de la forme de l'arbre"
+   ],
+   "ancrages": [
+    {
+     "exemple": "somme",
+     "base": "0",
+     "pas": "x + somme xs"
+    },
+    {
+     "exemple": "longueur",
+     "base": "0",
+     "pas": "1 + longueur xs"
+    },
+    {
+     "exemple": "produit",
+     "base": "1",
+     "pas": "x * produit xs"
+    },
+    {
+     "exemple": "tous_positifs",
+     "base": "True",
+     "pas": "x > 0 && tous_positifs xs"
+    },
+    {
+     "exemple": "aplatir",
+     "base": "[]",
+     "pas": "x ++ aplatir xs"
+    }
+   ],
+   "obligation": "aucune induite : les cinq ancrages sont interchangeables, en blocs comme en granularite fine (obligations.py)",
+   "solution_de_reference": "f [] = z ; f (x:xs) = op x (f xs)",
+   "validation": {
+    "mode": "corps",
+    "granularite": "fins",
+    "attendu": 3
+   },
+   "axes_de_variation_interdits": [
+    "structure de la recursion",
+    "ordre du parcours"
+   ]
+  }
+ },
+ "groupes": {
+  "taille_min": 2,
+  "taille_max": 4,
+  "formation": "auto_avec_approbation"
+ }
+}

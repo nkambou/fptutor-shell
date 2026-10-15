@@ -1,0 +1,70 @@
+{
+ "fonction": "somme",
+ "commentaire": "Jeu de cas de l'instance Haskell. L'analyse est celle de normalisation.py, heritee de HaskellTutor ; le fournisseur n'ajoute que la substitution d'une liaison locale et la traduction du vocabulaire.",
+ "equivalentes": [
+  {
+   "etiquette": "canonique",
+   "code": "somme [] = 0\nsomme (x:xs) = x + somme xs"
+  },
+  {
+   "etiquette": "autres noms de variables",
+   "code": "somme [] = 0\nsomme (t:q) = t + somme q"
+  },
+  {
+   "etiquette": "operandes echanges",
+   "code": "somme [] = 0\nsomme (x:xs) = somme xs + x"
+  },
+  {
+   "etiquette": "espaces et signature",
+   "code": "somme :: [Int] -> Int\nsomme []     =  0\nsomme (x : xs) =  x  +  somme xs"
+  },
+  {
+   "etiquette": "equations inversees",
+   "code": "somme (x:xs) = x + somme xs\nsomme [] = 0"
+  },
+  {
+   "etiquette": "liaison locale (where)",
+   "code": "somme [] = 0\nsomme (x:xs) = x + reste\n  where reste = somme xs"
+  }
+ ],
+ "distinctes": [
+  {
+   "etiquette": "produit, operation differente",
+   "code": "somme [] = 1\nsomme (x:xs) = x * somme xs"
+  },
+  {
+   "etiquette": "longueur, element ignore",
+   "code": "somme [] = 0\nsomme (x:xs) = 1 + somme xs"
+  },
+  {
+   "etiquette": "pli de bibliotheque",
+   "code": "somme xs = foldr (+) 0 xs"
+  },
+  {
+   "etiquette": "accumulateur (pli a gauche)",
+   "code": "somme xs = aux 0 xs\n  where aux acc [] = acc\n        aux acc (y:ys) = aux (acc + y) ys"
+  }
+ ],
+ "messages": [
+  [
+   "Soumission.hs:3:1-21: Non-exhaustive patterns in function somme",
+   "missing-base-case"
+  ],
+  [
+   "Soumission.hs:3:16: error: Variable not in scope: sommee :: [Int] -> Int",
+   "unknown-name"
+  ],
+  [
+   "Soumission.hs:4:1: error: parse error on input '='",
+   "syntax"
+  ],
+  [
+   "Soumission.hs:3:16: error: Couldn't match expected type 'Int' with actual type '[Char]'",
+   "incompatible-types"
+  ],
+  [
+   "",
+   "wrong-result"
+  ]
+ ]
+}

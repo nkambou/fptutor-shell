@@ -18,6 +18,7 @@ l'anti-unificateur.
 | `exemples/ocamltutor` | OCaml 4.14 | servie à l'automne 2026 dans INF6120 |
 | `exemples/rackettutor` | Racket 8.x | troisième instanciation, sous protocole |
 | `exemples/pytutor` | Python | fournisseur de démonstration |
+| `exemples/haskelltutor` | Haskell | quatrième instanciation, analyse héritée |
 
 ## Arborescence
 
