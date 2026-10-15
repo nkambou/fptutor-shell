@@ -1,12 +1,12 @@
 # Grille de relevé
 
-Ce relevé porte sur le dispositif, pas sur les personnes. Le certificat
-d'éthique n'étant pas délivré, ces notes servent à corriger le tuteur et ne
-seront pas exploitées comme données de recherche.
+Ce relevé porte sur le dispositif, pas sur les personnes. Il complète les
+données que le tuteur enregistre de lui-même, sous pseudonyme, et qui sont
+couvertes par le certificat d'éthique délivré pour cette étude.
 
-Aucun nom, aucun code permanent, aucun pseudonyme, aucun numéro de poste. Si une
-observation ne se comprend qu'en désignant une personne, elle n'entre pas dans
-la grille.
+La grille, elle, est tenue à la main dans la salle, hors du tuteur : n'y portez
+aucun nom, aucun code permanent, aucun numéro de poste. Si une observation ne se
+comprend qu'en désignant une personne, elle n'entre pas dans la grille.
 
 ## Blocages
 

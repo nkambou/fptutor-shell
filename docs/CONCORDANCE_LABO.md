@@ -59,8 +59,14 @@ révision, avec l'accord de l'enseignant : quinze minutes en début de séance,
 trois exercices puis un court questionnaire, et les étudiants reviennent ensuite
 au laboratoire prévu. Le détail est dans `docs/SEANCE2.md`.
 
-Une conséquence est à garder en vue. Si la dernière section du laboratoire 05 a
-été faite, les étudiants ont reçu `fold_tree` de la main de l'enseignant. Les
-deux premiers exercices de la deuxième séance mesurent alors la capacité à
-employer le schéma, et le troisième seul mesure son emploi spontané. La
-distinction est à porter dans l'analyse, pas à corriger.
+L'exposition au schéma est contrôlée par trois dispositions, arrêtées avec
+l'enseignant. Le corrigé de sa dernière section n'est pas publié avant la
+fermeture de la phase 1, son énoncé restant en ligne. Le tuteur sert l'exercice
+de transfert dès l'ouverture de l'atelier, donc avant toute présentation en
+classe pour qui généralise pendant le créneau. Et l'heure de cette présentation
+est relevée, ce qui permet d'étiqueter chaque soumission de réemploi en amont ou
+en aval de l'exposition.
+
+Les exercices qui nomment `fold_tree` ne rejoignent le pool qu'à la bascule, la
+veille du laboratoire 06 ; ils mesurent la capacité à employer le schéma et la
+persistance, non son emploi spontané.

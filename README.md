@@ -52,6 +52,7 @@ Apprenant sur `http://localhost:8081/`, console sur `/enseignant`.
 - `exemples/ocamltutor/SUIVI_DEPLOIEMENT.md` : déploiement de l'instance servie
 - `docs/CONCORDANCE_LABO.md` : concordance des ancrages avec le laboratoire du cours
 - `docs/SEANCE2.md` : plan de la deuxième séance et questionnaire
+- `docs/OPTIONS_EXPOSITION.md` : les deux options d'exposition au schéma, à trancher avec l'enseignant
 - `docs/FICHE_SALLE.md` et `docs/GRILLE_RELEVE.md` : conduite d'une séance
 
 ## Données

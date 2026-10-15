@@ -47,6 +47,18 @@ et les dossiers sont conservés. Si la relance échoue en moins de trois minutes
 le laboratoire reprend son cours, les étudiants continuent dans leur éditeur, et
 on reporte le créneau.
 
+## Bascule de phase, la veille du laboratoire 06
+
+- [ ] Fenêtre de la phase 1 fermée à l'heure annoncée aux apprenants
+- [ ] Export et sauvegarde faits avant toute modification
+- [ ] Trois exercices différés ajoutés à `REEMPLOIS` dans `activities_ml.py`
+- [ ] Batterie de vérification relancée
+- [ ] `./relancer.sh --garder`, qui conserve l'état et les dossiers
+- [ ] Un dossier déjà constitué vérifié dans la console : le nouvel exercice est servi, l'historique est intact
+- [ ] Heure de la présentation de `fold_tree` en classe notée, à l'heure près
+- [ ] Corrigé de la dernière section NON publié : il paraît à la fin du second créneau
+- [ ] Option d'exposition retenue vérifiée dans `OPTIONS_EXPOSITION.md`, et libellé de la première question du questionnaire conforme
+
 ## Après la séance
 
 - [ ] Export des données, hors du dépôt

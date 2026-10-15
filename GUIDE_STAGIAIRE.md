@@ -83,16 +83,33 @@ Haskell, qui parlent de GHCi, d'équations et du motif `[]`.
 Relisez-les à voix haute en vous mettant à la place d'un étudiant bloqué depuis
 cinq minutes. Un indice qui ne débloque rien est un indice à récrire.
 
-### 3. Monter la deuxième séance
+### 3. Monter les deux phases du réemploi
 
-`docs/SEANCE2.md` en donne le plan : quinze minutes au laboratoire 06, trois
-exercices et un questionnaire de trois minutes. Les trois exercices vont dans
-`REEMPLOIS`, le questionnaire passe par le point d'extension de l'instance,
-celui qui porte déjà la séance de suivi. La coquille n'est pas à modifier pour
-cela.
+`docs/SEANCE2.md` en donne le plan. Le point à comprendre avant de toucher au
+fichier : le pool `REEMPLOIS` est servi dès l'ouverture de l'atelier, donc son
+contenu décide de ce qui est mesuré avant que l'enseignant ait présenté
+`fold_tree` en classe.
 
-Chronométrez les trois exercices avant de les figer : dix minutes est serré, et
-c'est l'ordre qui décide si le troisième est atteint.
+Avant la première séance, le pool ne contient qu'un exercice, le transfert sans
+consigne de méthode, qui porte la mesure principale. Les exercices qui nomment
+`fold_tree` et le second transfert s'ajoutent à la bascule, la veille du
+laboratoire 06, par mise à jour du fichier et relance conservant l'état.
+
+Éprouvez la bascule sur une copie d'essai : ajouter un exercice en cours de
+route ne doit rien changer à un dossier déjà constitué. Chronométrez aussi les
+exercices du second créneau avant de les figer.
+
+Deux options d'exposition sont préparées, décrites dans
+`docs/OPTIONS_EXPOSITION.md`, et l'une sera retenue après discussion avec
+l'enseignant. Elles ne changent ni les exercices ni les réglages : seuls le
+libellé de la première question du questionnaire et une variable d'analyse en
+dépendent. Montez les deux libellés, et n'en activez qu'un, une fois la décision
+consignée.
+
+Ne touchez pas à `reemploi_requis`, qui vaut deux : en phase 1, le tuteur
+annoncera un réemploi sur deux et s'arrêtera là, et c'est le comportement voulu.
+N'ajoutez aucun verrou de date dans la coquille. Et ne déposez pas le corrigé de
+la dernière section du laboratoire dans ce dépôt.
 
 ### 4. Arrêter les réglages de politique
 
