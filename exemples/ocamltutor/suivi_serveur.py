@@ -82,6 +82,33 @@ def items():
     return [table[n] for n in ORDRE if n in table]
 
 
+# Question d'exposition : son libelle depend de l'option retenue pour l'enonce du
+# laboratoire 05, decrite dans docs/OPTIONS_EXPOSITION.md. Option A, la derniere
+# section reste dans l'enonce et nomme fold_tree ; option B, elle est reportee au
+# laboratoire suivant et rien ne la nomme. La valeur se donne au lancement :
+#   SUIVI_OPTION_EXPOSITION=B
+OPTION_EXPOSITION = (os.environ.get("SUIVI_OPTION_EXPOSITION") or "A").upper()[:1]
+if OPTION_EXPOSITION not in ("A", "B"):
+    OPTION_EXPOSITION = "A"
+
+QUESTIONS_EXPOSITION = {
+    "A": {"libelle": "Avant de faire ces exercices, aviez-vous lu la dernière section "
+                     "de l'énoncé du laboratoire 05, celle qui demande fold_tree ?",
+          "choix": [["oui", "oui"], ["non", "non"], ["ne_sait_pas", "je ne sais plus"]]},
+    "B": {"libelle": "Avant de faire ces exercices, aviez-vous déjà rencontré une "
+                     "fonction qui prend en paramètres une valeur de départ et une "
+                     "opération, et qui parcourt l'arbre à votre place ?",
+          "choix": [["oui_cours", "oui, dans ce cours"], ["oui_ailleurs", "oui, ailleurs"],
+                    ["non", "non"], ["ne_sait_pas", "je ne sais plus"]]},
+}
+
+RESSOURCES = [["doc_ocaml", "la documentation d'OCaml"],
+              ["notes_labo", "les notes ou l'énoncé du laboratoire"],
+              ["condisciple", "un ou une condisciple"],
+              ["assistant", "un assistant conversationnel"],
+              ["web", "une recherche sur le web"],
+              ["aucune", "aucune"]]
+
 # L'aide porte sur l'erreur, jamais sur le schema.
 AIDE = {
     "syntax": ["Le compilateur s'arrête sur la forme du code : relisez la ligne "
@@ -254,6 +281,9 @@ def api(chemin, p, corps):
         o, motif = ouvert()
         c = config()
         return {"ouvert": o, "motif": motif, "duree_min": c.get("duree_min", 20),
+                "option_exposition": OPTION_EXPOSITION,
+                "question_exposition": QUESTIONS_EXPOSITION[OPTION_EXPOSITION],
+                "ressources": RESSOURCES,
                 "compilateur_simule": "faux_compilateur" in (os.environ.get("OCAML_BIN") or "")}
 
     # ------------------------------------------------------ administration

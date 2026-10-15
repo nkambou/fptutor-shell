@@ -40,6 +40,8 @@ avant la fin du second créneau. Rien d'autre.
 > Avant de faire ces exercices, aviez-vous lu la dernière section de l'énoncé du
 > laboratoire 05, celle qui demande `fold_tree` ? (oui, non, je ne sais plus)
 
+C'est le libellé par défaut : aucune variable à poser.
+
 **Ce qui change dans l'analyse.** La réponse sert de covariable : le taux de
 réemploi est rapporté séparément pour ceux qui avaient lu la section et pour les
 autres, à titre descriptif, les groupes n'étant ni assignés ni équilibrés.
@@ -66,6 +68,17 @@ demander tôt : une semaine avant la séance, l'opération est simple.
 **Ce qui change dans l'analyse.** La partition sur la provenance du schéma
 disparaît, et avec elle une source d'hétérogénéité. L'échantillon est homogène,
 donc la mesure principale se lit directement.
+
+## Mise en œuvre
+
+Les deux libellés sont dans le tuteur, servis par `suivi_serveur.py` et affichés
+par `suivi.html`. L'option se donne au lancement du serveur :
+
+    SUIVI_OPTION_EXPOSITION=B
+
+Sans la variable, l'option A s'applique. La valeur retenue figure dans la
+réponse de `/api/ext/statut`, donc vérifiable d'un coup d'œil avant la séance, et
+la clé `exposition` de chaque questionnaire porte la réponse.
 
 ## Comparaison
 

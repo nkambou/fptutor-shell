@@ -79,39 +79,44 @@ fermeture.
 
 ## Questionnaire
 
-Trois à quatre minutes, sept questions, dans la page du tuteur après le
-troisième exercice. Aucune donnée nominative : le pseudonyme sert de clé, rien
-d'autre n'est demandé.
+Servi par l'extension de l'instance, dans `suivi.html`, dès les trois exercices
+terminés, et enregistré par la route `/api/questionnaire` dans l'état du suivi.
+Huit questions, trois à quatre minutes. Le pseudonyme sert de clé, rien d'autre
+n'est demandé.
 
-1. Question d'exposition, dont la formulation dépend de l'option retenue pour
-   l'énoncé du laboratoire 05. Les deux libellés sont dans
-   `OPTIONS_EXPOSITION.md`, et l'un d'eux est repris tel quel ici une fois
-   l'option tranchée.
-2. Au troisième exercice, avez-vous pensé à employer `fold_tree` avant de
-   commencer à écrire ? (oui, non, j'y ai pensé en cours d'écriture)
-3. Si vous ne l'avez pas employé, pourquoi ? (une ligne)
-4. Quelles ressources avez-vous consultées pour ces exercices ? Plusieurs
-   réponses possibles, et aucune n'est un problème : la documentation d'OCaml,
-   les notes ou le corrigé du laboratoire, un ou une condisciple, un assistant
-   conversationnel, une recherche sur le web, aucune.
-5. L'écran qui montrait vos solutions côte à côte vous a-t-il aidé à voir ce
-   qu'elles avaient en commun ? (échelle à quatre degrés)
-6. Les indices reçus vous ont-ils débloqué ? (échelle à quatre degrés, plus
-   « je n'en ai pas demandé »)
-7. Une chose à changer dans l'outil. (une ligne)
+| # | Question | Clé enregistrée |
+|---|---|---|
+| 1 | Exposition au schéma avant ces exercices ; le libellé dépend de l'option retenue | `exposition` |
+| 2 | Ces exercices avaient-ils quelque chose en commun avec ceux de la séance précédente, et quoi | `reconnaissance` |
+| 3 | Avez-vous réutilisé quelque chose écrit ou appris lors de cette séance, et quoi | `reutilisation`, `reutilisation_detail` |
+| 4 | Pour les exercices où vous avez écrit la récursion vous-même, pourquoi | `raison_recursion_main`, `items_recursion_main` |
+| 5 | Quelles ressources avez-vous consultées, plusieurs réponses possibles | `ressources` |
+| 6 | Le moment où le tuteur a demandé d'écrire ce que vos définitions avaient en commun est arrivé trop tôt, au bon moment, trop tard | `moment_generalisation` |
+| 7 | Les indices reçus vous ont-ils débloqué | `aide_utile` |
+| 8 | Que retenez-vous de cette activité, en une phrase, facultatif | `retenu` |
 
-La première question renseigne sur ce que l'apprenant connaissait du schéma
-avant de généraliser, et sert de covariable sous l'option A. La quatrième
-renseigne sur les conditions de travail hors séance, que la fenêtre ouverte rend
-inégales d'un apprenant à l'autre.
+La quatrième ne s'affiche que si l'apprenant a effectivement écrit une récursion
+à la main, ce que la page sait de ses soumissions, et la liste de ces exercices
+part avec la réponse.
 
-Trois règles de rédaction pour la quatrième, à tenir si elle est reformulée.
-Elle est factuelle et ne qualifie jamais la conduite : ni « aide extérieure »,
-ni « seul », et surtout aucun mot du registre de la triche. Elle propose la
-réponse plutôt qu'elle ne l'extorque, en énumérant les ressources, y compris
-celles que personne n'hésiterait à déclarer, ce qui normalise les autres. Et
-elle dit en toutes lettres qu'aucune réponse n'est un problème, la participation
-étant sans effet sur la note.
+La première renseigne sur ce que l'apprenant connaissait du schéma avant de
+généraliser. Son libellé et ses choix viennent du serveur, selon l'option
+d'exposition retenue, donnée au lancement :
+
+    SUIVI_OPTION_EXPOSITION=B
+
+Sans cette variable, l'option A s'applique. Les deux libellés sont dans
+`OPTIONS_EXPOSITION.md`.
+
+La cinquième renseigne sur les conditions de travail hors séance, que la fenêtre
+ouverte rend inégales d'un apprenant à l'autre. Elle est factuelle et ne
+qualifie jamais la conduite : ni « aide extérieure », ni « seul », et aucun mot
+du registre de la triche. Elle énumère les ressources, y compris celles que
+personne n'hésiterait à déclarer, et dit en toutes lettres qu'aucune réponse
+n'est un problème.
+
+La sixième et la septième portent sur la réception du dispositif, la sixième
+renseignant directement sur la condition de déclenchement de l'atelier.
 
 ## Statut des données
 
@@ -128,11 +133,18 @@ référence : ce document ne s'y substitue pas.
 ## Mise en œuvre
 
 Les exercices vont dans `REEMPLOIS` de `activities_ml.py`, celui de phase 1
-avant la première séance, les trois autres à la bascule. Le questionnaire passe
-par le point d'extension de l'instance, celui qui porte déjà la séance de suivi,
-sans modification de la coquille.
+avant la première séance, les autres à la bascule. L'extension de l'instance
+choisit ceux qu'elle sert, et leur ordre, dans sa propre liste `ORDRE` : elle
+sert aujourd'hui `bintree_count_even`, puis `bintree_all_positive`, puis
+`ubtree_count_bin`, gradation voulue où la forme reste celle du laboratoire,
+puis le type du résultat change, puis le type de l'arbre change. Aucun des trois
+ne nomme `fold_tree`.
 
-L'export doit porter, pour chaque soumission de réemploi, une étiquette de
-phase : avant exposition, après exposition, ou différée. Elle se calcule en
-comparant l'horodatage de la soumission à l'heure relevée de la présentation en
-classe. Voir le protocole de recherche pour l'usage qui en est fait.
+Le questionnaire est servi et enregistré par l'extension, sans modification de
+la coquille. Reste à l'exporter : `table_questionnaire` dans
+`export_donnees.py`, qui lit l'état du suivi et sort une ligne par participant,
+la question des ressources éclatée en colonnes binaires.
+
+L'export doit aussi porter, pour chaque soumission de réemploi, une étiquette de
+phase : immédiate, différée, ou post-exposition. Voir le protocole de recherche
+pour l'usage qui en est fait.

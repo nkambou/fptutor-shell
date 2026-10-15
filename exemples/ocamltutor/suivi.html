@@ -53,25 +53,36 @@
 
 <div id="questions" class="carte" style="display:none">
  <h2>Quelques questions, trois minutes</h2>
- <label class="q">1. Ces exercices avaient-ils quelque chose en commun avec ceux de la séance précédente ? Si oui, quoi ?</label>
+ <label class="q" id="lib-q0">1. </label>
+ <div id="choix-q0"></div>
+ <label class="q">2. Ces exercices avaient-ils quelque chose en commun avec ceux de la séance précédente ? Si oui, quoi ?</label>
  <textarea class="court" id="q1"></textarea>
- <label class="q">2. Avez-vous réutilisé quelque chose que vous aviez écrit ou appris lors de cette séance ?</label>
+ <label class="q">3. Avez-vous réutilisé quelque chose que vous aviez écrit ou appris lors de cette séance ?</label>
  <label><input type="radio" name="q2" value="oui"> oui</label>
  <label><input type="radio" name="q2" value="non"> non</label>
  <textarea class="court" id="q2d" placeholder="Si oui, quoi ?"></textarea>
  <div id="bloc-q3" style="display:none">
-  <label class="q">3. Pour les exercices où vous avez écrit la récursion vous-même, pourquoi ?</label>
+  <label class="q">4. Pour les exercices où vous avez écrit la récursion vous-même, pourquoi ?</label>
   <label><input type="radio" name="q3" value="plus_simple"> c'était plus simple ainsi</label><br>
   <label><input type="radio" name="q3" value="oubli_forme"> je ne me souvenais plus de la forme</label><br>
   <label><input type="radio" name="q3" value="pas_pense"> je n'y ai pas pensé</label><br>
   <label><input type="radio" name="q3" value="adaptation"> je ne voyais pas comment l'adapter à ce type</label>
  </div>
- <label class="q">4. Lors de la séance précédente, le moment où le tuteur vous a demandé d'écrire ce que vos définitions avaient en commun est arrivé :</label>
+ <label class="q">5. Quelles ressources avez-vous consultées pour ces exercices ?
+  Plusieurs réponses possibles, et aucune n'est un problème.</label>
+ <div id="choix-ressources"></div>
+ <label class="q">6. Lors de la séance précédente, le moment où le tuteur vous a demandé d'écrire ce que vos définitions avaient en commun est arrivé :</label>
  <label><input type="radio" name="q4" value="trop_tot"> trop tôt</label>
  <label><input type="radio" name="q4" value="bon_moment"> au bon moment</label>
  <label><input type="radio" name="q4" value="trop_tard"> trop tard</label>
  <label><input type="radio" name="q4" value="ne_sait_pas"> je ne m'en souviens pas</label>
- <label class="q">5. Que retenez-vous de cette activité, en une phrase ? (facultatif)</label>
+ <label class="q">7. Les indices que le tuteur vous a donnés vous ont-ils débloqué ?</label>
+ <label><input type="radio" name="q7" value="beaucoup"> beaucoup</label>
+ <label><input type="radio" name="q7" value="un_peu"> un peu</label>
+ <label><input type="radio" name="q7" value="pas_vraiment"> pas vraiment</label>
+ <label><input type="radio" name="q7" value="pas_du_tout"> pas du tout</label>
+ <label><input type="radio" name="q7" value="aucun_demande"> je n'en ai pas demandé</label>
+ <label class="q">8. Que retenez-vous de cette activité, en une phrase ? (facultatif)</label>
  <textarea class="court" id="q5"></textarea>
  <p><button class="act" onclick="envoyer()">Envoyer</button></p>
 </div>
@@ -102,6 +113,15 @@ async function avertirSimule(){
   }catch(e){}
 }
 avertirSimule();
+// Libelles servis par le serveur, y compris en apercu, ou statut() rend la main
+// avant d'interroger l'API.
+async function libelles(){
+  try{
+    const s = await get((window.SUIVI_API || "api/")+"statut");
+    if(s.question_exposition) poserExposition(s.question_exposition, s.ressources);
+  }catch(e){}
+}
+libelles();
 function montrer(id){ ["ferme","entree","travail","questions","merci"].forEach(x=>$(x).style.display = x===id?"block":"none"); }
 
 async function statut(){
@@ -112,6 +132,16 @@ async function statut(){
   if(!s.ouvert){ montrer("ferme"); $("motif").textContent = s.motif; setTimeout(statut, 20000); return; }
   if(!NOM) montrer("entree");
 }
+// La question d'exposition et la liste des ressources viennent du serveur :
+// leur libelle depend de l'option retenue pour l'enonce du laboratoire 05.
+function poserExposition(q, ressources){
+  $("lib-q0").textContent = "1. " + q.libelle;
+  $("choix-q0").innerHTML = q.choix.map(([v, t]) =>
+    `<label><input type="radio" name="q0" value="${v}"> ${t}</label>`).join("<br>");
+  if(ressources) $("choix-ressources").innerHTML = ressources.map(([v, t]) =>
+    `<label><input type="checkbox" name="ressources" value="${v}"> ${t}</label><br>`).join("");
+}
+
 async function entrer(){
   NOM = $("nom").value.trim(); if(!NOM) return;
   const r = await post(API+"entrer",{nom:NOM, consentement:$("consent").checked});
@@ -158,7 +188,9 @@ async function envoyer(){
   await post(API+"questionnaire",{nom:NOM, reponses:{
     reconnaissance:$("q1").value, reutilisation:val("q2"), reutilisation_detail:$("q2d").value,
     raison_recursion_main: RECMAIN.length ? val("q3") : null, items_recursion_main:RECMAIN,
-    moment_generalisation:val("q4"), retenu:$("q5").value}});
+    moment_generalisation:val("q4"), retenu:$("q5").value,
+    exposition:val("q0"), aide_utile:val("q7"),
+    ressources:[...document.querySelectorAll('input[name="ressources"]:checked')].map(e=>e.value)}});
   montrer("merci");
 }
 statut();
