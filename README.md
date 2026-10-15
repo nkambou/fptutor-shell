@@ -33,6 +33,7 @@ l'anti-unificateur.
     fptutor-shell/        atelier : creer_tuteur.py, gabarits, banc_essai.py
     exemples/<instance>/  fournisseur, ancrages, référentiel, scripts de l'instance
     outils/verifier.sh    batterie de vérification d'une instance
+    outils/pousser.sh     mise à jour du dépôt en une commande
 
 ## Démarrage
 
