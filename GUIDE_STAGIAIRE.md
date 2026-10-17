@@ -2,14 +2,12 @@
 
 ## Objet du stage
 
-OCamlTutor est servi dans les séances de laboratoire d'INF6120. L'expérimentation
-se tient en deux créneaux courts de vingt minutes pris en séance. Votre travail
-est de rendre l'instance OCaml prête pour ces créneaux : exercices accordés au
+OCamlTutor est expérimenté dans les séances de laboratoire du cours INF6120. L'expérimentation se déroule en deux créneaux courts de vingt minutes pris en séance mais aussi en ligne pour les étudiants à distance. Votre travail
+est de rendre l'instance OCaml prête pour ces créneaux : exercices proposés au
 laboratoire du cours, textes d'aide écrits pour OCaml, réglages de politique
-arrêtés, et toute la batterie de vérification au vert.
+arrêtés, validation du comportement du système, etc.
 
-Vous ne travaillez pas sur la coquille. Si un réglage demande de la modifier,
-c'est un résultat à signaler, pas un détour à prendre.
+Vous ne travaillez pas sur la coquille. Si un réglage demande de la modifier, il faut en discuter au préalable.
 
 ## Prise en main
 
@@ -51,7 +49,7 @@ retrouver les mêmes défauts par vous-même.
 
 ## Travaux à mener
 
-### 1. Accorder les exercices au laboratoire 05
+### 1. Arrimer les exercices au laboratoire 05 du cours (https://inf6120.uqam.ca/labos/labo05/)
 
 `docs/CONCORDANCE_LABO.md` donne l'état de la concordance, ancrage par ancrage,
 et les écarts à traiter. Le type et les noms concordent déjà ; les exercices
@@ -119,11 +117,11 @@ Essayez les trois valeurs sur une session complète avant de choisir.
 
 ### 5. Éprouver avant la séance
 
-- La batterie complète au vert.
+- La batterie complète
 - Une session complète par l'interface, du premier exercice au réemploi.
 - Une session avec une erreur de chaque catégorie, pour lire les six textes.
 - Un essai à plusieurs postes en même temps, pour voir le service tenir.
-- Un essai dans une salle du LAMISS, avec le compte d'un étudiant.
+- Un essai dans une salle du LAMISS, avec le compte d'un étudiant (à voir avec le démonstrateur - son compte plutôt que celui d’un étudiant??)
 
 ## Le noyau commun, gelé pendant l'expérimentation
 
@@ -135,7 +133,7 @@ reste.
 
 Vous restez libre de les lire, de les instrumenter, d'écrire des tests, et de
 proposer une correction sur une branche séparée. Si vous y trouvez un défaut,
-c'est un résultat : signalez-le, et nous déciderons ensemble de corriger avant ou
+signalez-le, et nous déciderons ensemble de corriger avant ou
 après l'expérimentation. Le seul geste à éviter est un changement non signalé
 dans la branche servie aux étudiants.
 
@@ -153,24 +151,20 @@ référentiel, fournisseur de langage, scripts de vérification, outillage.
 
 ## Rôle en séance
 
-Vous serez présente aux deux créneaux. Trois personnes dans la salle sans
-partage explicite produisent des conseils contradictoires, donc la répartition
-est fixée d'avance : l'auxiliaire du cours prend les problèmes de salle et de
-compilateur, je prends la console et les décisions, vous prenez les questions sur
-l'interface et le relevé de ce qui bloque. Une personne et une seule parle du
-contenu des exercices.
+Vous serez présente aux deux créneaux. Deux personnes dans la salle : l'auxiliaire du cours prend les problèmes de salle et de
+compilateur (s’il y a lieu), vous prenez la console et les décisions, vous prenez les questions sur 'interface et le relevé de ce qui bloque. L’auxilliaire parle du
+contenu des exercices. Un protocole sera élébaoré.
 
-L'enseignant vous présentera en une phrase, pour que les étudiants sachent que
+L’auxilliare vous présentera en une phrase, pour que les étudiants sachent que
 vous n'êtes ni correctrice ni évaluatrice. Vous ne regardez pas les écrans
 par-dessus les épaules et vous ne corrigez rien.
 
 Vous tenez le serveur, puisque c'est vous qui l'aurez préparé. Si le service
-tombe, j'occupe la salle pendant que vous réparez, et le laboratoire reprend son
-cours au bout de trois minutes si la réparation échoue.
+tombe (ce qui est oeu probable), l’auxilliaire occupe la salle pendant que vous réparez, et le laboratoire reprend son cours au bout de trois minutes si la réparation échoue.
 
 À préparer pour cela : `docs/FICHE_SALLE.md`, remplie et imprimée, et
 `docs/GRILLE_RELEVE.md` pour le relevé. Faites une répétition complète dans la
-salle du LAMISS, avec un compte d'étudiant et non le vôtre.
+salle du LAMISS, avec un compte d'étudiant (ou de l’auxilliare) et non le vôtre.
 
 ## Rendre compte
 
