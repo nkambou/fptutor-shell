@@ -90,6 +90,13 @@ def analyse(function_name, code):
     return NML.analyser(function_name, code)
 
 
+def reemploi(function_name, code):
+    """Facultatif : consulte par noyau.schema_employe s'il existe. Meme regle que
+    l'extension de suivi : pas de recursion propre, et une fonction passee a une
+    abstraction."""
+    return NML.reemploi(function_name, code)[0]
+
+
 def categorise(message, compile_mais_faux=False):
     if compile_mais_faux:
         return "wrong-result"

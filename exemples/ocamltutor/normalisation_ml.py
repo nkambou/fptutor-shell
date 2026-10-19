@@ -433,3 +433,69 @@ def analyser(nom, source):
            else next((e for c, e in equations.items() if c not in bases), None))
     return {"forme": "constructors", "equations": equations,
             "base": equations[bases[0]] if bases else None, "pas": pas}
+
+
+# reemploi
+# Règle de reemploi de l'instance OCaml, d'abord écrite dans l'extension de suivi
+# (suivi_serveur.reemploi), rangee ici pour que le fournisseur la declare au
+# noyau et que l'extension s'en serve aussi : une seule regle pour les deux
+# pages. Sans elle, noyau.schema_employe appliquait la regle commune, qui
+# comptait comme reemploi une enveloppe « let f a = aux a ».
+
+def _parcourir(t):
+    if isinstance(t, tuple):
+        yield t
+        for x in t[1:]:
+            yield from _parcourir(x)
+    elif isinstance(t, list):
+        for x in t:
+            yield from _parcourir(x)
+
+
+def _appelle(corps, nom):
+    return any(n[0] == "var" and len(n) > 1 and n[1] == nom for n in _parcourir(corps))
+
+
+def _filtre_un_arbre(corps):
+    """Le corps filtre-t-il sur les constructeurs d'un type d'arbre ?"""
+    motifs = repr(corps)
+    return any(c in motifs for c in ("'Leaf'", "'Node'", "'UbLeaf'", "'Un'", "'Bin'"))
+
+
+def reemploi(nom, source):
+    """Rend (reemploi, forme, pli_arbre).
+
+    Une solution compte comme reemploi si la fonction demandee ne s'appelle pas
+    elle-meme, et si elle passe une fonction en argument a une abstraction : une
+    lambda, un operateur prefixe, ou une fonction nommee. Sans cette derniere
+    condition, une enveloppe autour d'une recursion ecrite a la main, du type
+    « let f a = aux a », serait prise a tort pour un reemploi.
+
+    pli_arbre precise si l'abstraction employee est un pli defini sur l'arbre
+    lui-meme, qui est le schema vise, plutot qu'une fonction de bibliotheque.
+    Une forme non analysable n'est jamais un reemploi."""
+    try:
+        defs = {d[1]: (d[2], d[3], d[4]) for d in P(lex(source)).parse_program()
+                if d[0] == "def"}
+    except Exception:
+        defs = None
+    if not defs or nom not in defs:
+        return False, "non analysable", False
+    _params, _rec, corps = defs[nom]
+    if _appelle(corps, nom):
+        return False, "recursion explicite", False
+    for n in _parcourir(corps):
+        if n[0] != "app":
+            continue
+        tete, args = n[1], n[2]
+        fonctionnels = [a for a in args if isinstance(a, tuple) and (
+            a[0] == "fun" or
+            (a[0] == "var" and (str(a[1]).startswith("__op_") or a[1] in defs)))]
+        if not fonctionnels:
+            continue
+        pli = False
+        if tete[0] == "var" and tete[1] in defs:
+            _p, rec, c = defs[tete[1]]
+            pli = bool(rec) and _appelle(c, tete[1]) and _filtre_un_arbre(c)
+        return True, ("pli sur l'arbre" if pli else "abstraction d'ordre superieur"), pli
+    return False, "sans abstraction ni recursion propre", False

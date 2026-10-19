@@ -197,36 +197,6 @@ def inscrits_seance_principale():
             for ap in (e.get("apprenants") or {}).values() if ap.get("nom")}
 
 
-def _defs(code):
-    """Definitions de premier niveau : nom -> (parametres, rec, corps)."""
-    import normalisation_ml as NML
-    try:
-        return {d[1]: (d[2], d[3], d[4]) for d in NML.P(NML.lex(code)).parse_program()
-                if d[0] == "def"}
-    except Exception:
-        return None
-
-
-def _parcourir(t):
-    if isinstance(t, tuple):
-        yield t
-        for x in t[1:]:
-            yield from _parcourir(x)
-    elif isinstance(t, list):
-        for x in t:
-            yield from _parcourir(x)
-
-
-def _appelle(corps, nom):
-    return any(n[0] == "var" and len(n) > 1 and n[1] == nom for n in _parcourir(corps))
-
-
-def _filtre_un_arbre(corps):
-    """Le corps filtre-t-il sur les constructeurs d'un type d'arbre ?"""
-    motifs = repr(corps)
-    return any(c in motifs for c in ("'Leaf'", "'Node'", "'UbLeaf'", "'Un'", "'Bin'"))
-
-
 def reemploi(nom, code):
     """Rend (reemploi, forme, pli_arbre).
 
@@ -238,28 +208,12 @@ def reemploi(nom, code):
 
     pli_arbre precise si l'abstraction employee est un pli defini sur l'arbre
     lui-meme, qui est le schema vise, plutot qu'une fonction de bibliotheque.
-    Une forme non analysable n'est jamais un reemploi."""
-    defs = _defs(code)
-    if not defs or nom not in defs:
-        return False, "non analysable", False
-    params, _rec, corps = defs[nom]
-    if _appelle(corps, nom):
-        return False, "recursion explicite", False
-    for n in _parcourir(corps):
-        if n[0] != "app":
-            continue
-        tete, args = n[1], n[2]
-        fonctionnels = [a for a in args if isinstance(a, tuple) and (
-            a[0] == "fun" or
-            (a[0] == "var" and (str(a[1]).startswith("__op_") or a[1] in defs)))]
-        if not fonctionnels:
-            continue
-        pli = False
-        if tete[0] == "var" and tete[1] in defs:
-            _p, rec, c = defs[tete[1]]
-            pli = bool(rec) and _appelle(c, tete[1]) and _filtre_un_arbre(c)
-        return True, ("pli sur l'arbre" if pli else "abstraction d'ordre superieur"), pli
-    return False, "sans abstraction ni recursion propre", False
+    Une forme non analysable n'est jamais un reemploi.
+
+    La regle est dans normalisation_ml, partagee avec le fournisseur : la page
+    principale (noyau.schema_employe) et le suivi appliquent la meme."""
+    import normalisation_ml as NML
+    return NML.reemploi(nom, code)
 
 
 # -------------------------------------------------------------------- api
