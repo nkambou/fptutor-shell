@@ -36,14 +36,16 @@ PRELUDE_OPTION = ("let premier (l : int list) : int option =\n"
 ARBRES = ("let t0 = Leaf\n"
           "let t1 = Node (3, Leaf, Leaf)\n"
           "let t2 = Node (2, Node (1, Leaf, Leaf), Node (4, Leaf, Leaf))\n"
-          "let t3 = Node (2, Node (1, Node (5, Leaf, Leaf), Leaf), Leaf)\n\n")
+          "let t3 = Node (2, Node (1, Node (5, Leaf, Leaf), Leaf), Leaf)\n"
+          "let example_tree = Node (2, Node (2, Leaf, Node (6, Node (5, Leaf, Leaf), Node (6, Leaf, Leaf))),\n"
+          "                           Node (4, Leaf, Node (1, Node (2, Leaf, Leaf), Leaf)))\n\n")
 
 
 def _amorce_arbre(signature, nom, params="a"):
     return "%s%s(* %s *)\nlet rec %s %s = failwith \"a completer\"\n" % (
         TYPE_ARBRE, ARBRES, signature, nom, params)
 
-
+# différentes sections : compter, collecter et propriétés
 ACTIVITES = {
  "F-arbre": [
   ("bintree_count_leaves",
@@ -53,7 +55,8 @@ ACTIVITES = {
    _amorce_arbre("bintree_count_leaves : bintree -> int", "bintree_count_leaves"),
    [("string_of_int (bintree_count_leaves t0)", "1"),
     ("string_of_int (bintree_count_leaves t1)", "2"),
-    ("string_of_int (bintree_count_leaves t2)", "4")]),
+    ("string_of_int (bintree_count_leaves t2)", "4"),
+    ("string_of_int (bintree_count_leaves example_tree)", "9")]),
 
   ("bintree_count_internal_nodes",
    "Le meme arbre : combien a-t-il de noeuds internes ?",
@@ -62,17 +65,11 @@ ACTIVITES = {
                  "bintree_count_internal_nodes"),
    [("string_of_int (bintree_count_internal_nodes t0)", "0"),
     ("string_of_int (bintree_count_internal_nodes t1)", "1"),
-    ("string_of_int (bintree_count_internal_nodes t2)", "3")]),
+    ("string_of_int (bintree_count_internal_nodes t2)", "3"),
+    ("string_of_int (bintree_count_internal_nodes example_tree)", "8")]),
 
-  ("bintree_sum",
-   "Un arbre binaire sur les entiers : donnez le total des entiers portes par "
-   "ses noeuds internes.",
-   "bintree_sum : bintree -> int",
-   _amorce_arbre("bintree_sum : bintree -> int", "bintree_sum"),
-   [("string_of_int (bintree_sum t0)", "0"),
-    ("string_of_int (bintree_sum t1)", "3"),
-    ("string_of_int (bintree_sum t2)", "7")]),
-
+# height en troisième
+# avec une operation de combinaison qui varie (+ puis max pour augmenter les points de variation) (voir JOURNAL_STAGE.md pour détails)
   ("bintree_height",
    "Le meme arbre : donnez sa hauteur, c'est-a-dire la plus grande profondeur "
    "parmi tous ses noeuds. Une feuille est de hauteur zero.",
@@ -80,17 +77,31 @@ ACTIVITES = {
    _amorce_arbre("bintree_height : bintree -> int", "bintree_height"),
    [("string_of_int (bintree_height t0)", "0"),
     ("string_of_int (bintree_height t1)", "1"),
-    ("string_of_int (bintree_height t3)", "3")]),
+    ("string_of_int (bintree_height t3)", "3"),
+    ("string_of_int (bintree_height example_tree)", "4")]),
+
+# remplacement de bintree_sum par les différents candidats pour le banc d'essai
+  ("bintree_count_nodes",
+   "Le même arbre : combien a-t-il de noeuds? "
+   ,
+   "bintree_count_nodes : bintree -> int",
+   _amorce_arbre("bintree_count_nodes : bintree -> int", "bintree_count_nodes"),
+   [("string_of_int (bintree_count_nodes t0)", "1"),
+    ("string_of_int (bintree_count_nodes t1)", "3"),
+    ("string_of_int (bintree_count_nodes t2)", "7"),
+    ("string_of_int (bintree_count_nodes example_tree)", "17")]),
 
   ("bintree_collect_values",
    "Le meme arbre : donnez la liste des entiers portes par ses noeuds internes, "
-   "le sous-arbre gauche d'abord, puis le noeud, puis le sous-arbre droit.",
+   "dans un ordre quelconque.",
    "bintree_collect_values : bintree -> int list",
    _amorce_arbre("bintree_collect_values : bintree -> int list",
                  "bintree_collect_values"),
-   [("String.concat \";\" (List.map string_of_int (bintree_collect_values t0))", ""),
-    ("String.concat \";\" (List.map string_of_int (bintree_collect_values t1))", "3"),
-    ("String.concat \";\" (List.map string_of_int (bintree_collect_values t2))", "1;2;4")]),
+   # la liste est triee avant comparaison car le laboratoire accepte tout ordre
+   [("String.concat \";\" (List.map string_of_int (List.sort compare (bintree_collect_values t0)))", ""),
+    ("String.concat \";\" (List.map string_of_int (List.sort compare (bintree_collect_values t1)))", "3"),
+    ("String.concat \";\" (List.map string_of_int (List.sort compare (bintree_collect_values t2)))", "1;2;4"),
+    ("String.concat \";\" (List.map string_of_int (List.sort compare (bintree_collect_values example_tree)))", "1;2;2;2;4;5;6;6")]),
  ],
 
  "F-option": [

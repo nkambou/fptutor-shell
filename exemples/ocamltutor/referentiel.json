@@ -78,9 +78,9 @@
      "pas": "1 + g + d"
     },
     {
-     "exemple": "bintree_sum",
-     "base": "0",
-     "pas": "x + g + d"
+     "exemple": "bintree_count_nodes",
+     "base": "1",
+     "pas": "1 + g + d"
     },
     {
      "exemple": "bintree_height",
