@@ -21,17 +21,23 @@ os.environ.setdefault("TUTOR_LANGUAGE", "language_ml")
 import noyau as N
 from compiler_references import SOL, preambule
 
-# ce que l'apprenant soumet, dans l'ordre, pour le concept arbre-pli
+# ce que l'apprenant soumet, dans l'ordre, pour le concept arbre-pli(fold_tree)
 SCENARIO = [
     ("bintree_count_leaves", "reference"),
+    ("bintree_count_internal_nodes", "bibliotheque"),   # correcte mais non comparable
     ("bintree_count_internal_nodes", "reference"),
-    ("bintree_sum", "bibliotheque"),        # correcte mais non comparable
-    ("bintree_sum", "reference"),
     ("bintree_height", "reference"),
+    ("bintree_count_nodes", "reference"),
 ]
-BIBLIO = {"bintree_sum":
-          "let bintree_sum a =\n"
-          "  List.fold_left (+) 0 (bintree_collect_values a)\n"}
+# solutions sans recursion sur l'arbre : une par valeur collectee, soit un par
+# noeud interne ; un arbre ayant n noeuds internes porte n + 1 feuilles, donc
+# 2n + 1 noeuds
+BIBLIO = {"bintree_count_internal_nodes":
+          "let bintree_count_internal_nodes a =\n"
+          "  List.fold_left (fun n _ -> n + 1) 0 (bintree_collect_values a)\n",
+          "bintree_count_nodes":
+          "let bintree_count_nodes a =\n"
+          "  List.fold_left (fun n _ -> n + 2) 1 (bintree_collect_values a)\n"}
 
 
 def activite(nom, pool="instances"):
@@ -65,6 +71,7 @@ def main():
 
     for nom, variante in SCENARIO:
         famille, act = activite(nom)
+        # SOL dans compiler_references qui contient les implémentations récursives des fonctions
         if variante == "reference":
             code = preambule(act[3], nom) + "\n" + SOL[nom] + "\n"
         else:

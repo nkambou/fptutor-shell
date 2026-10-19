@@ -119,7 +119,7 @@ def _references():
     except Exception:
         return {}
     familles = {
-        "F-arbre": ["bintree_count_leaves", "bintree_count_internal_nodes", "bintree_sum",
+        "F-arbre": ["bintree_count_leaves", "bintree_count_internal_nodes", "bintree_count_nodes",
                     "bintree_height", "bintree_collect_values"],
         "F-option": ["double_tete", "cent_sur_tete", "pipeline", "longueur_premiere"],
     }

@@ -12,7 +12,8 @@ import language_ml as L
 SOL = {
  "bintree_count_leaves": "let rec bintree_count_leaves a =\n  match a with\n  | Leaf -> 1\n  | Node (_, g, d) -> bintree_count_leaves g + bintree_count_leaves d",
  "bintree_count_internal_nodes": "let rec bintree_count_internal_nodes a =\n  match a with\n  | Leaf -> 0\n  | Node (_, g, d) -> 1 + bintree_count_internal_nodes g + bintree_count_internal_nodes d",
- "bintree_sum": "let rec bintree_sum a =\n  match a with\n  | Leaf -> 0\n  | Node (x, g, d) -> x + bintree_sum g + bintree_sum d",
+ # à modif pour les tests
+ "bintree_count_nodes": "let rec bintree_count_nodes a =\n  match a with\n  | Leaf -> 1\n  | Node (_, g, d) -> 1 + bintree_count_nodes g + bintree_count_nodes d",
  "bintree_height": "let rec bintree_height a =\n  match a with\n  | Leaf -> 0\n  | Node (_, g, d) -> 1 + max (bintree_height g) (bintree_height d)",
  "bintree_collect_values": "let rec bintree_collect_values a =\n  match a with\n  | Leaf -> []\n  | Node (x, g, d) -> bintree_collect_values g @ (x :: bintree_collect_values d)",
  "double_tete": "let double_tete l =\n  match premier l with\n  | None -> None\n  | Some x -> Some (2 * x)",
