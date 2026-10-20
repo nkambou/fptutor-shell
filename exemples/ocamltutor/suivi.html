@@ -2,7 +2,7 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<title>OCamlTutor — séance de suivi</title>
+<title>OCamlTutor : Séance de suivi</title>
 <style>
  body{font-family:"DejaVu Sans",Arial,sans-serif;font-size:13px;margin:0;padding:14px;background:#f6f8fa;color:#1a1a1a}
  .bandeau{background:#16283c;color:#fff;padding:9px 12px;margin:-14px -14px 14px;font-weight:bold}
@@ -21,7 +21,7 @@
 </style>
 </head>
 <body>
-<div class="bandeau">OCamlTutor — séance de suivi <span id="qui" style="float:right;font-weight:normal"></span></div>
+<div class="bandeau">OCamlTutor : Séance de suivi <span id="qui" style="float:right;font-weight:normal"></span></div>
 
 <div id="ferme" class="carte" style="display:none">
  <h2>Le suivi n'est pas ouvert</h2>
@@ -126,7 +126,7 @@ function montrer(id){ ["ferme","entree","travail","questions","merci"].forEach(x
 
 async function statut(){
   if(APERCU){ montrer("entree"); $("nom").value = "apercu";
-    document.querySelector(".bandeau").innerHTML += ' <span style="background:#e0b400;color:#16283c;padding:2px 8px;border-radius:3px">APERÇU — rien n\'est enregistré dans les résultats</span>';
+    document.querySelector(".bandeau").innerHTML += ' <span style="background:#e0b400;color:#16283c;padding:2px 8px;border-radius:3px">APERÇU : rien n\'est enregistré dans les résultats</span>';
     return; }
   const s = await get((window.SUIVI_API || "api/")+"statut");
   if(!s.ouvert){ montrer("ferme"); $("motif").textContent = s.motif; setTimeout(statut, 20000); return; }

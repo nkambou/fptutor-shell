@@ -497,5 +497,6 @@ def reemploi(nom, source):
         if tete[0] == "var" and tete[1] in defs:
             _p, rec, c = defs[tete[1]]
             pli = bool(rec) and _appelle(c, tete[1]) and _filtre_un_arbre(c)
+            # distinction
         return True, ("pli sur l'arbre" if pli else "abstraction d'ordre superieur"), pli
     return False, "sans abstraction ni recursion propre", False

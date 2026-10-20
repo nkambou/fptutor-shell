@@ -26,7 +26,7 @@ def _repertoire_tuteur():
     if v:
         d = v if os.path.isabs(v) else os.path.join(ICI, v)
         if not os.path.isdir(d):
-            raise SystemExit("\nLe repertoire de tuteur \"%s\" n'existe pas.\n"
+            raise SystemExit("\nLe répertoire de tuteur \"%s\" n'existe pas.\n"
                              "  cherche ici : %s\n" % (v, d))
         return d
     # dossier plat : le fournisseur est a cote du noyau
@@ -69,7 +69,7 @@ VERSION = "3.8"
 
 ICI = os.path.dirname(os.path.abspath(__file__))
 def _chemin(nom):
-    """Cherche d'abord dans le repertoire du tuteur, puis a cote du noyau."""
+    """Cherche d'abord dans le répertoire du tuteur, puis a côté du noyau."""
     a = os.path.join(TUTEUR, nom)
     return a if os.path.exists(a) else os.path.join(ICI, nom)
 
@@ -184,39 +184,39 @@ FORMES_ATTENDUES = {
 
 AIDES_ERREUR = {
  "missing-base-case": [
-   "Le compilateur signale un motif non couvert. Quelle forme d'entree votre "
-   "definition ne traite-t-elle pas ?",
-   "Une liste est soit vide, soit un element suivi d'une liste. Vous avez ecrit "
-   "une equation pour la seconde forme seulement.",
-   "Il vous manque une equation dont le motif est [] . Sa valeur est celle qui ne "
-   "change rien a l'operation que vous employez."],
+   "Le compilateur signale un motif non couvert. Quelle forme d'entrée votre "
+   "définition ne traite-t-elle pas ?",
+   "Une liste est soit vide, soit un élément suivi d'une liste. Vous avez écrit "
+   "une équation pour la seconde forme seulement.",
+   "Il vous manque une équation dont le motif est [] . Sa valeur est celle qui ne "
+   "change rien à l'opération que vous employez."],
  "incompatible-types": [
-   "Lisez le message de bas en haut : la derniere ligne dit ou, l'avant-derniere "
+   "Lisez le message de bas en haut : la dernière ligne dit ou, l'avant-derniere "
    "dans quel argument de quelle fonction.",
    "Comparez le type attendu et le type trouve, puis demandez a GHCi le type de la "
-   "fonction citee, avec :t .",
-   "Le desaccord porte sur l'argument que le message nomme. Verifiez ce que votre "
-   "expression rend a cet endroit precis."],
+   "fonction citée, avec :t .",
+   "Le désaccord porte sur l'argument que le message nomme. Vérifiez ce que votre "
+   "expression rend à cet endroit précis."],
  "int-double-mix": [
-   "Une division exige des nombres fractionnaires des deux cotes.",
+   "Une division exige des nombres fractionnaires des deux côtés.",
    "length et les comptages rendent un Int. Une division sur un Int n'est pas la "
-   "meme operation.",
-   "Enveloppez chaque operande entier dans fromIntegral avant de diviser."],
+   "même opération.",
+   "Enveloppez chaque opérande entier dans fromIntegral avant de diviser."],
  "wrong-result": [
    "Votre code compile : l'erreur n'est pas de forme mais de calcul.",
-   "Comparez le resultat obtenu et le resultat attendu sur le premier test qui "
-   "echoue, et demandez-vous quel cas produit cet ecart.",
-   "Deroulez votre definition a la main sur l'entree du test qui echoue, en "
-   "commencant par le cas de base."],
+   "Comparez le résultat obtenu et le résultat attendu sur le premier test qui "
+   "échoue, et demandez-vous quel cas produit cet écart.",
+   "Déroulez votre définition à la main sur l'entrée du test qui échoue, en "
+   "commençant par le cas de base."],
  "unknown-name": [
-   "Un nom employe n'est pas defini.",
-   "Verifiez l'orthographe et la casse : un nom de fonction commence par une "
+   "Un nom employé n'est pas défini.",
+   "Vérifiez l'orthographe et la casse : un nom de fonction commence par une "
    "minuscule.",
-   "Si la fonction vient d'un module, il faut l'importer en tete de fichier."],
+   "Si la fonction vient d'un module, il faut l'importer en tête de fichier."],
  "syntax": [
-   "Le fichier ne s'analyse pas : le probleme est en amont du sens.",
-   "Verifiez l'indentation et les parentheses de la ligne signalee.",
-   "Une equation tient sur une ligne, ou ses suites sont indentees davantage que "
+   "Le fichier ne s'analyse pas : le problème est en amont du sens.",
+   "Vérifiez l'indentation et les parenthèses de la ligne signalée.",
+   "Une équation tient sur une ligne, ou ses suites sont indentées davantage que "
    "le nom de la fonction."],
 }
 
@@ -240,12 +240,13 @@ AIDES_FAMILLE = {
 }
 
 AIDES_REMONTEE = [
-  "Ecrivez vos definitions les unes sous les autres et rayez tout ce qui est "
+  "Écrivez vos définitions les unes sous les autres et rayez tout ce qui est "
   "identique dans toutes. Combien de choses restent ?",
-  "Le tuteur a fait l'alignement pour vous : les colonnes ci-dessus montrent le cas "
-  "de base et le cas recursif de chacune. Les trous notes ?n sont ce qui varie.",
-  "Ecrivez une definition qui recoit en arguments ce qui varie, et qui garde tel "
-  "quel ce qui ne varie pas. Donnez-lui une signature avant d'ecrire son corps.",
+  "Le tuteur a fait l'alignement pour vous : le tableau montre, pour chacune de vos "
+  "fonctions, le cas de base et le cas récursif, ou REC désigne un appel récursif. "
+  "Comparez les lignes : qu'est-ce qui change d'une fonction à l'autre ?",
+  "Écrivez une définition qui reçoit en arguments ce qui varie, et qui garde tel "
+  "quel ce qui ne varie pas. Donnez-lui une signature avant d'écrire son corps.",
 ]
 
 NIVEAUX_MAX = 3
@@ -254,14 +255,14 @@ NIVEAUX_MAX = 3
 # pas dans l'etayage : elle dit seulement, en francais, ce que GHC vient de signaler,
 # pour que l'apprenant ne reste pas seul devant un message brut.
 LECTURES = {
- "missing-base-case": "Le compilateur signale qu'une forme d'entree n'est pas traitee.",
- "incompatible-types": "Le compilateur a trouve un type la ou il en attendait un autre.",
- "int-double-mix": "Un entier et un nombre fractionnaire se rencontrent dans la meme "
-                       "operation.",
- "unknown-name": "Un nom employe dans votre code n'est defini nulle part.",
- "syntax": "Le fichier ne s'analyse pas : le probleme est en amont du sens.",
+ "missing-base-case": "Le compilateur signale qu'une forme d'entrée n'est pas traitée.",
+ "incompatible-types": "Le compilateur a trouvé un type là où il en attendait un autre.",
+ "int-double-mix": "Un entier et un nombre fractionnaire se rencontrent dans la même "
+                       "opération.",
+ "unknown-name": "Un nom employé dans votre code n'est défini nulle part.",
+ "syntax": "Le fichier ne s'analyse pas : le problème est en amont du sens.",
  "wrong-result": "Votre code compile. L'erreur n'est pas de forme mais de calcul.",
- "unclassified": "Le compilateur a refuse votre definition.",
+ "unclassified": "Le compilateur a refusé votre définition.",
 }
 
 # Les categories sont communes a tous les langages ; les textes qui leur sont
@@ -273,7 +274,7 @@ AIDES_ERREUR.update(getattr(LANGUE, "AIDES_ERREUR", {}) or {})
 LECTURES.update(getattr(LANGUE, "LECTURES", {}) or {})
 
 ENCOURAGEMENTS = [
- "C'est juste.", "Correct.", "Ca passe.", "Bien vu.", "Votre definition tient.",
+ "C'est juste.", "Correct.", "Ça passe.", "Bien vu.", "Votre définition tient.",
  "Compile et passe les tests.",
 ]
 
@@ -287,13 +288,13 @@ def lecture(categorie):
 # pourquoi, sans jamais nommer le schema vise.
 
 RAISONS = {
- "no-pattern": "elle ne distingue pas les cas : on n'y voit ni ce que vaut le resultat "
-               "sur une liste vide, ni ce que vous faites du premier element",
- "accumulateur": "elle applique l'operation avant l'appel recursif et non apres, "
-                 "ce qui en fait une autre facon de parcourir",
- "sans recursion explicite": "elle s'appuie sur une fonction toute faite, donc elle "
-                             "ne montre pas ce que vous auriez ecrit vous-meme",
- "aucun cas recursif reconnu": "elle ne se decompose pas en un cas de base et un cas "
+ "no-pattern": "elle ne distingue pas les cas : on n'y voit ni ce que vaut le résultat "
+               "dans le cas de base, ni ce que vous faites dans le cas récursif",
+ "accumulateur": "elle applique l'opération avant l'appel récursif et non après, "
+                 "ce qui en fait une autre façon de parcourir",
+ "sans récursion explicite": "elle s'appuie sur une fonction toute faite, donc elle "
+                             "ne montre pas ce que vous auriez écrit vous-même",
+ "aucun cas récursif reconnu": "elle ne se décompose pas en un cas de base et un cas "
                                "qui se rappelle",
 }
 
@@ -302,7 +303,24 @@ def raison(motif):
     for cle, texte in RAISONS.items():
         if cle in motif:
             return texte
-    return "elle ne se compare pas terme a terme avec les autres"
+    return "elle ne se compare pas terme à terme avec les autres"
+
+
+# La forme demandee, dite dans le vocabulaire du type traite. Le texte par defaut
+# vaut pour tout type somme ; un fournisseur la precise (pour un arbre : le cas
+# Leaf et le cas Node). Les textes ci-dessus et les questions de verification
+# etaient ecrits pour les listes de Haskell (liste vide, premier element, [] et
+# True) : ils sont desormais neutres, et un fournisseur peut les remplacer.
+CONSIGNE_FORME = "en distinguant explicitement le cas de base et le cas récursif"
+VERIF_BASE = "Que rend votre fonction dans le cas de base ?"
+DISTRACTEURS_BASE = ("0", "1", "[]", "True", "-1")
+
+CONSIGNE_FORME = getattr(LANGUE, "CONSIGNE_FORME", None) or CONSIGNE_FORME
+VERIF_BASE = getattr(LANGUE, "VERIF_BASE", None) or VERIF_BASE
+DISTRACTEURS_BASE = getattr(LANGUE, "DISTRACTEURS_BASE", None) or DISTRACTEURS_BASE
+RAISONS.update(getattr(LANGUE, "RAISONS", {}) or {})
+if getattr(LANGUE, "AIDES_REMONTEE", None):
+    AIDES_REMONTEE = list(LANGUE.AIDES_REMONTEE)
 
 
 # ------------------------------------------------------------ verification
@@ -320,15 +338,23 @@ def questions_sur(nom, code, autres_bases=()):
     qs = []
     base = a.get("base")
     if base:
-        distracteurs = [b for b in ("0", "1", "[]", "True", "-1") if b != base][:3]
+        distracteurs = [b for b in DISTRACTEURS_BASE if b != base][:3]
+        # L'ancienne explication renvoyait a l'element neutre de l'operation, ce
+        # qui contredit une reponse juste (Leaf -> 1 pour compter les feuilles).
         qs.append({"id": "base",
-                   "question": "Que rend votre fonction sur l'entree vide ?",
+                   "question": VERIF_BASE,
                    "options": [base] + distracteurs,
                    "reponse": base,
-                   "suite": "Cette valeur est celle qui ne change rien a l'operation que "
-                            "vous employez : c'est ainsi qu'on la trouve."})
-    # l'appel recursif, tel qu'il figure dans le code de l'apprenant
-    appels = re.findall(r"\b%s\s+([A-Za-z_][\w']*)" % re.escape(nom), code)
+                   "suite": "C'est la valeur de votre cas de base : ce que la fonction "
+                            "doit rendre sur l'entrée la plus simple, d'après l'énoncé."})
+    # Les appels recursifs, tels qu'ils figurent dans le code de l'apprenant. La
+    # ligne de definition (« let rec f a = ») est exclue. Un arbre en a deux (un
+    # par sous-arbre) : la bonne reponse les reunit, au lieu de n'en garder qu'un.
+    appels = []
+    for x in re.findall(r"\b%s\s+([A-Za-z_][\w']*)\b(?!\s*=(?!=))" % re.escape(nom), code):
+        if x not in appels:
+            appels.append(x)
+    param = re.search(r"\blet\s+(?:rec\s+)?%s\s+([A-Za-z_][\w']*)" % re.escape(nom), code)
     equations = [l for l in code.splitlines() if l.strip().startswith(nom)]
     tete = None
     for l in equations:
@@ -337,16 +363,33 @@ def questions_sur(nom, code, autres_bases=()):
             tete = m.group(1)
             break
     if appels:
-        vrai = "%s %s" % (nom, appels[-1])
-        faux = [x for x in [tete, base, "%s %s" % (nom, tete or "x")] if x and x != vrai][:2]
+        vrai = " et ".join("%s %s" % (nom, x) for x in appels)
+        candidats = [tete, base, "%s %s" % (nom, param.group(1)) if param else None,
+                     "%s %s" % (nom, tete or "x")]
+        faux = []
+        for x in candidats:
+            if x and x != vrai and x not in faux:
+                faux.append(x)
+        plusieurs = len(appels) > 1
         qs.append({"id": "pas",
-                   "question": "Dans votre cas recursif, quelle expression designe le "
-                               "resultat deja calcule sur le reste de l'entree ?",
-                   "options": [vrai] + faux,
+                   "question": ("Dans votre cas récursif, quelles expressions désignent les "
+                                "résultats déjà calculés sur les parties plus petites de "
+                                "l'entrée ?") if plusieurs else
+                               ("Dans votre cas récursif, quelle expression désigne le "
+                                "résultat déjà calculé sur la partie plus petite de "
+                                "l'entrée ?"),
+                   "options": [vrai] + faux[:2],
                    "reponse": vrai,
-                   "suite": "C'est l'appel recursif : vous supposez que la fonction sait "
-                            "deja repondre sur le reste, et vous vous contentez de "
-                            "combiner ce resultat avec le premier element."})
+                   "suite": ("Ce sont les appels récursifs : vous supposez que la fonction "
+                             "sait déjà répondre sur les parties plus petites, et vous "
+                             "combinez ces résultats.") if plusieurs else
+                            ("C'est l'appel récursif : vous supposez que la fonction sait "
+                             "déjà répondre sur la partie plus petite, et vous combinez ce "
+                             "résultat avec le reste.")})
+    # La bonne reponse etait toujours le premier choix : on melange l'ordre.
+    import random
+    for q in qs:
+        random.shuffle(q["options"])
     return qs[:2]
 
 
@@ -354,36 +397,34 @@ def signaux_de_doute(secondes, echecs, aides, code):
     """Indices, jamais une preuve. Le seuil est reglable par l'enseignant."""
     s = []
     if secondes is not None and secondes < 25:
-        s.append("soumission tres rapide apres l'ouverture de l'activite")
+        s.append("soumission très rapide après l'ouverture de l'activité")
     if echecs == 0 and aides == 0 and secondes is not None and secondes < 60:
-        s.append("aucune tentative intermediaire, aucun etayage")
+        s.append("aucune tentative intermédiaire, aucun étayage")
     if len(code.splitlines()) > 2 and "  " in code and code.count("\n\n") > 1:
-        s.append("mise en forme inhabituelle pour une saisie au fil de l'ecriture")
+        s.append("mise en forme inhabituelle pour une saisie au fil de l'écriture")
     return s
 
 
 def commentaire_hors_forme(motif, politique, n_resolutions):
-    """Reconnaitre la reussite, expliquer le besoin, dire la suite."""
+    """Reconnaître la réussite, expliquer le besoin, dire la suite."""
     tete = ("C'est juste, et votre solution fonctionne. C'est la %de fois que vous "
-            "resolvez un probleme autrement que ce que la comparaison attend. "
+            "résolvez un problème autrement que ce que la comparaison attend. "
             % n_resolutions) if n_resolutions > 1 else \
            "C'est juste, et votre solution fonctionne. "
-    besoin = ("Pour la suite, le tuteur a besoin de solutions ecrites de la meme "
-              "maniere, parce qu'il va vous les montrer cote a cote : c'est en les "
+    besoin = ("Pour la suite, le tuteur a besoin de solutions écrites de la même "
+              "manière, parce qu'il va vous les montrer côte à côte : c'est en les "
               "comparant que vous trouverez ce qu'elles ont en commun. La votre est "
               "correcte mais " + raison(motif) + ".")
     suites = {
      "explain_and_rewrite":
-        " Reecrivez la meme fonction en distinguant explicitement le cas de la liste "
-        "vide et le cas ou elle a au moins un element. Votre version actuelle est "
-        "conservee : vous la retrouverez dans vos solutions.",
+        " Réécrivez la même fonction " + CONSIGNE_FORME + ". Votre version actuelle "
+        "est conservée : vous la retrouverez dans vos solutions.",
      "explain_and_continue":
-        " Le tuteur passe a un autre probleme de meme nature. Ecrivez-le en distinguant "
-        "le cas de la liste vide et le cas ou elle a au moins un element : c'est cette "
-        "forme-la qu'il faut pour la suite.",
+        " Le tuteur passe à un autre problème de même nature. Écrivez-le " +
+        CONSIGNE_FORME + " : c'est cette forme-la qu'il faut pour la suite.",
      "confront":
-        " Vous savez visiblement deja obtenir ce resultat sans le detailler. Ecrivez "
-        "maintenant la meme fonction en la detaillant : vous aurez les deux versions "
+        " Vous savez visiblement déjà obtenir ce résultat sans le détailler. Écrivez "
+        "maintenant la même fonction en la détaillant : vous aurez les deux versions "
         "sous les yeux, et la comparaison vaudra la peine.",
     }
     return tete + besoin + suites.get(politique, suites["explain_and_continue"])
@@ -424,10 +465,10 @@ POURQUOI = {
 }
 
 POURQUOI_DEFAUT = (
- "Votre solution est juste. La forme demandee n'est pas une question de style : le "
- "tuteur va vous montrer plusieurs de vos solutions cote a cote, et seules des "
- "solutions ecrites de la meme maniere peuvent se comparer terme a terme. Ce que vous "
- "avez a trouver est ce qu'elles ont en commun ; il faut donc qu'elles aient une forme "
+ "Votre solution est juste. La forme demandée n'est pas une question de style : le "
+ "tuteur va vous montrer plusieurs de vos solutions côte à côte, et seules des "
+ "solutions écrites de la même manière peuvent se comparer terme à terme. Ce que vous "
+ "avez à trouver est ce qu'elles ont en commun ; il faut donc qu'elles aient une forme "
  "commune ou chercher.")
 
 
@@ -442,33 +483,44 @@ def commentaire_reussite(n, minimum, points, attendu, stable, admise, motif=""):
     tete = random.choice(ENCOURAGEMENTS)
     if not admise:
         return (tete + " Elle est correcte, mais elle n'entre pas dans la comparaison : "
-                + motif + ". Elle est conservee a part.")
+                + motif + ". Elle est conservée à part.")
     if attendu is None:
-        return tete + " Votre solution est enregistree."
+        return tete + " Votre solution est enregistrée."
     if n < minimum:
         return (tete + " %d solution%s au dossier ; le tuteur en attend au moins %d "
                 "avant de vous les montrer ensemble."
                 % (n, "s" if n > 1 else "", minimum))
     if points != attendu:
         return (tete + " %d solutions au dossier. En les comparant, le tuteur y voit "
-                "%d chose%s qui change%s d'une solution a l'autre. Il en cherche %d : "
-                "une solution de plus devrait faire apparaitre la derniere."
+                "%d chose%s qui change%s d'une solution à l'autre. Il en cherche %d : "
+                "une solution de plus devrait faire apparaître la dernière."
                 % (n, points, "s" if points > 1 else "", "nt" if points > 1 else "", attendu))
     if not stable:
         return (tete + " %d solutions, et %d chose%s qui varie%s : c'est le compte attendu. "
-                "Le tuteur verifie sur une solution de plus que ce compte ne bouge pas."
+                "Le tuteur vérifie sur une solution de plus que ce compte ne bouge pas."
                 % (n, points, "s" if points > 1 else "", "nt" if points > 1 else ""))
     return (tete + " %d solutions, %d point%s de variation, et le compte ne bouge plus. "
             "Vous allez pouvoir les regarder ensemble."
             % (n, points, "s" if points > 1 else ""))
 
 
-def aide(famille, categorie, niveau, contexte="activite"):
+# Indices propres a un exercice, declares par le fournisseur :
+#   AIDES_EXERCICE = {"nom_exercice": {"categorie": [niveau1, niveau2, niveau3]}}
+# Un niveau a None garde l'indice general. Ils servent quand un exercice demande
+# une notion que les autres n'emploient pas (max pour la hauteur d'un arbre, par
+# exemple), qu'un indice general ne peut pas nommer sans egarer sur les autres.
+AIDES_EXERCICE = getattr(LANGUE, "AIDES_EXERCICE", {}) or {}
+
+
+def aide(famille, categorie, niveau, contexte="activite", activite=None):
     """Renvoie le texte du niveau demande, ou None si le plafond est atteint."""
     if niveau > NIVEAUX_MAX:
         return None
     if contexte == "abstraction":
         return AIDES_REMONTEE[niveau - 1]
+    propres = AIDES_EXERCICE.get(activite, {}).get(categorie) or []
+    if niveau <= len(propres) and propres[niveau - 1]:
+        return propres[niveau - 1]
     if niveau == 1 and categorie in AIDES_ERREUR:
         return AIDES_ERREUR[categorie][0]
     echelle = AIDES_FAMILLE.get(famille)
@@ -505,7 +557,7 @@ def concept(ref, cid):
     return None, None
 
 def concepts_ouverts(ref, etats):
-    """Un concept est ouvert quand tous ses prerequis sont acquis."""
+    """Un concept est ouvert quand tous ses prérequis sont acquis."""
     ouverts = []
     for p in ref["paliers"]:
         for c in p["concepts"]:
@@ -529,15 +581,26 @@ def evaluer(code, tests, delai=25):
             p = subprocess.run(LANGUE.command(chemin), capture_output=True, text=True,
                                timeout=delai, cwd=d)
         except subprocess.TimeoutExpired:
-            return {"compile": False, "reussite": False, "message": "delai depasse",
+            return {"compile": False, "reussite": False,
+                    "message": "délai dépassé : l'exécution ne s'est pas terminée en %d "
+                               "secondes, votre fonction s'appelle peut-etre sans fin" % delai,
                     "obtenu": [], "attendu": [a for _, a in tests]}
+        # Le chemin du repertoire temporaire (/tmp/tmpXXXX/) n'apprend rien a
+        # l'apprenant : on ne garde que le nom du fichier.
+        message = p.stderr.strip().replace(d + os.sep, "").replace(d + "/", "")
         if p.returncode != 0:
-            return {"compile": False, "reussite": False, "message": p.stderr.strip(),
+            return {"compile": False, "reussite": False, "message": message,
                     "obtenu": [], "attendu": [a for _, a in tests]}
-        obtenu = [l.strip() for l in p.stdout.strip().splitlines()]
+        # Une ligne par test. On ne retire que le dernier saut de ligne : l'ancien
+        # p.stdout.strip() supprimait aussi une premiere ligne vide, et un test dont
+        # la valeur attendue est vide (collect_values sur Leaf) ne passait jamais.
+        lignes = p.stdout.split("\n")
+        if lignes and lignes[-1] == "":
+            lignes.pop()
+        obtenu = [l.strip() for l in lignes]
         attendu = [a for _, a in tests]
         ok = len(obtenu) == len(attendu) and all(o == a for o, a in zip(obtenu, attendu))
-        return {"compile": True, "reussite": ok, "message": p.stderr.strip(),
+        return {"compile": True, "reussite": ok, "message": message,
                 "obtenu": obtenu, "attendu": attendu}
 
 
@@ -551,10 +614,10 @@ def admettre(nom, code, famille, verdict):
         return {"admis": False,
                 "motif": "correcte mais non alignable (%s)" % a["forme"], "canon": None}
     if a["pas"] is None:
-        return {"admis": False, "motif": "aucun cas recursif reconnu", "canon": None}
+        return {"admis": False, "motif": "aucun cas récursif reconnu", "canon": None}
     if "REC" not in a["pas"]:
         return {"admis": False,
-                "motif": "correcte mais sans recursion explicite (schema deja employe)",
+                "motif": "correcte mais sans récursion explicite (schéma déjà employé)",
                 "canon": a["pas"]}
     return {"admis": True, "motif": "", "canon": a["pas"], "base": a["base"]}
 
@@ -657,7 +720,7 @@ def schema_employe(nom, code):
     return not (a["pas"] and "REC" in a["pas"])
 
 def alignement_affichable(corpus):
-    """Ce que l'atelier de remontee montre : les equations, ce qui est identique barre."""
+    """Ce que l'atelier de remontée montre : les équations, ce qui est identique barre."""
     lignes = []
     for x in corpus:
         a = LANGUE.analyse(x["nom"], x["code"])
@@ -741,7 +804,7 @@ def squelette(forme):
 
 
 def etat_des_familles(ref):
-    """Le controle que la console enseignante affiche."""
+    """Le contrôle que la console enseignante affiche."""
     import generateur as G
     out = []
     for nom, spec in ref["familles"].items():

@@ -49,8 +49,8 @@ def _amorce_arbre(signature, nom, params="a"):
 ACTIVITES = {
  "F-arbre": [
   ("bintree_count_leaves",
-   "Un arbre binaire sur les entiers : combien a-t-il de feuilles ? Ecrivez la "
-   "definition en distinguant le cas de la feuille du cas du noeud interne.",
+   "Un arbre binaire sur les entiers : combien a-t-il de feuilles ? Écrivez la "
+   "définition en distinguant le cas de la feuille du cas du nœud interne.",
    "bintree_count_leaves : bintree -> int",
    _amorce_arbre("bintree_count_leaves : bintree -> int", "bintree_count_leaves"),
    [("string_of_int (bintree_count_leaves t0)", "1"),
@@ -59,7 +59,7 @@ ACTIVITES = {
     ("string_of_int (bintree_count_leaves example_tree)", "9")]),
 
   ("bintree_count_internal_nodes",
-   "Le meme arbre : combien a-t-il de noeuds internes ?",
+   "Le même arbre : combien a-t-il de nœuds internes ?",
    "bintree_count_internal_nodes : bintree -> int",
    _amorce_arbre("bintree_count_internal_nodes : bintree -> int",
                  "bintree_count_internal_nodes"),
@@ -68,22 +68,13 @@ ACTIVITES = {
     ("string_of_int (bintree_count_internal_nodes t2)", "3"),
     ("string_of_int (bintree_count_internal_nodes example_tree)", "8")]),
 
-# height en troisième
-# avec une operation de combinaison qui varie (+ puis max pour augmenter les points de variation) (voir JOURNAL_STAGE.md pour détails)
-  ("bintree_height",
-   "Le meme arbre : donnez sa hauteur, c'est-a-dire la plus grande profondeur "
-   "parmi tous ses noeuds. Une feuille est de hauteur zero.",
-   "bintree_height : bintree -> int",
-   _amorce_arbre("bintree_height : bintree -> int", "bintree_height"),
-   [("string_of_int (bintree_height t0)", "0"),
-    ("string_of_int (bintree_height t1)", "1"),
-    ("string_of_int (bintree_height t3)", "3"),
-    ("string_of_int (bintree_height example_tree)", "4")]),
-
-# remplacement de bintree_sum par les différents candidats pour le banc d'essai
+# Ordre du laboratoire 05 : les trois exercices de la section « Compter », puis
+# height (section « Proprietes »), puis collect_values (« Collectionner »).
+# L'atelier s'ouvre a la 4e solution comparable : height, avec son max, figure
+# donc parmi les solutions comparees (voir JOURNAL_STAGE.md, « Details sur l'ordre »).
+# bintree_count_nodes remplace bintree_sum, absent du laboratoire.
   ("bintree_count_nodes",
-   "Le même arbre : combien a-t-il de noeuds? "
-   ,
+   "Le même arbre : combien a-t-il de nœuds ?",
    "bintree_count_nodes : bintree -> int",
    _amorce_arbre("bintree_count_nodes : bintree -> int", "bintree_count_nodes"),
    [("string_of_int (bintree_count_nodes t0)", "1"),
@@ -91,8 +82,20 @@ ACTIVITES = {
     ("string_of_int (bintree_count_nodes t2)", "7"),
     ("string_of_int (bintree_count_nodes example_tree)", "17")]),
 
+  ("bintree_height",
+   # definition de la profondeur reprise du laboratoire 05
+   "Le même arbre : donnez sa hauteur, c'est-à-dire la plus grande profondeur "
+   "parmi tous ses nœuds. La profondeur de la racine est 0, celle de ses éventuels "
+   "enfants est 1, etc. Une feuille seule est donc de hauteur zéro.",
+   "bintree_height : bintree -> int",
+   _amorce_arbre("bintree_height : bintree -> int", "bintree_height"),
+   [("string_of_int (bintree_height t0)", "0"),
+    ("string_of_int (bintree_height t1)", "1"),
+    ("string_of_int (bintree_height t3)", "3"),
+    ("string_of_int (bintree_height example_tree)", "4")]),
+
   ("bintree_collect_values",
-   "Le meme arbre : donnez la liste des entiers portes par ses noeuds internes, "
+   "Le même arbre : donnez la liste des entiers portés par ses nœuds internes, "
    "dans un ordre quelconque.",
    "bintree_collect_values : bintree -> int list",
    _amorce_arbre("bintree_collect_values : bintree -> int list",
@@ -106,9 +109,9 @@ ACTIVITES = {
 
  "F-option": [
   ("double_tete",
-   "Une liste d'entiers eventuellement vide. En utilisant premier, donnez le "
-   "double du premier entier, ou l'absence de resultat si la liste est vide. "
-   "Ecrivez le filtrage de motifs a la main, sans les fonctions du module Option.",
+   "Une liste d'entiers éventuellement vide. En utilisant premier, donnez le "
+   "double du premier entier, ou l'absence de résultat si la liste est vide. "
+   "Écrivez le filtrage de motifs à la main, sans les fonctions du module Option.",
    "double_tete : int list -> int option",
    PRELUDE_OPTION + "(* double_tete : int list -> int option *)\n"
    "let double_tete (l : int list) : int option = failwith \"a completer\"\n",
@@ -116,8 +119,8 @@ ACTIVITES = {
     ("(match double_tete [4; 1] with None -> \"rien\" | Some x -> string_of_int x)", "8")]),
 
   ("cent_sur_tete",
-   "La meme liste. En utilisant premier puis division, donnez cent divise par le "
-   "premier entier. La liste peut etre vide, et cet entier peut etre nul.",
+   "La même liste. En utilisant premier puis division, donnez cent divisé par le "
+   "premier entier. La liste peut être vide, et cet entier peut être nul.",
    "cent_sur_tete : int list -> int option",
    PRELUDE_OPTION + "(* cent_sur_tete : int list -> int option *)\n"
    "let cent_sur_tete (l : int list) : int option = failwith \"a completer\"\n",
@@ -126,9 +129,9 @@ ACTIVITES = {
     ("(match cent_sur_tete [4] with None -> \"rien\" | Some x -> string_of_int x)", "25")]),
 
   ("pipeline",
-   "Une liste de chaines. En utilisant premiere, puis vers_entier, puis division, "
-   "donnez cent divise par l'entier ecrit dans la premiere chaine. Chacune des "
-   "trois etapes peut echouer.",
+   "Une liste de chaînes. En utilisant premiere, puis vers_entier, puis division, "
+   "donnez cent divisé par l'entier écrit dans la premiere chaîne. Chacune des "
+   "trois étapes peut échouer.",
    "pipeline : string list -> int option",
    PRELUDE_OPTION + "(* pipeline : string list -> int option *)\n"
    "let pipeline (l : string list) : int option = failwith \"a completer\"\n",
@@ -138,8 +141,8 @@ ACTIVITES = {
     ("(match pipeline [\"5\"] with None -> \"rien\" | Some x -> string_of_int x)", "20")]),
 
   ("longueur_premiere",
-   "Une liste de chaines. En utilisant premiere, donnez la longueur de la "
-   "premiere chaine.",
+   "Une liste de chaînes. En utilisant premiere, donnez la longueur de la "
+   "premiere chaîne.",
    "longueur_premiere : string list -> int option",
    PRELUDE_OPTION + "(* longueur_premiere : string list -> int option *)\n"
    "let longueur_premiere (l : string list) : int option = failwith \"a completer\"\n",
@@ -148,8 +151,13 @@ ACTIVITES = {
  ],
 }
 
-
-REEMPLOIS = {
+# ---------------------------------------------------------------- reemplois
+# EXERCICES_REEMPLOI est la reserve de tous les exercices proposes apres l'atelier.
+# Le tuteur ne sert que ceux de REEMPLOIS, defini plus bas selon la phase ;
+# l'extension de suivi (seance 2) choisit les siens dans cette reserve (liste
+# ORDRE de suivi_serveur.py). Avant, l'extension lisait REEMPLOIS : reduire la
+# phase 1 lui aurait retire ses exercices.
+EXERCICES_REEMPLOI = {
  "F-arbre": [
   ("bintree_count_even",
    "Un arbre binaire sur les entiers : combien de ses nœuds internes portent un "
@@ -165,8 +173,8 @@ REEMPLOIS = {
 
   ("bintree_min",
    "Un arbre binaire sur les entiers : donnez le plus petit entier porte par un "
-   "noeud interne, ou l'absence de resultat si l'arbre est une feuille. Vous "
-   "pouvez employer ce que vous venez d'ecrire, ou reprendre la recursion a la main.",
+   "nœud interne, ou l'absence de résultat si l'arbre est une feuille. Vous "
+   "pouvez employer ce que vous venez d'écrire, ou reprendre la récursion à la main.",
    "bintree_min : bintree -> int option",
    _amorce_arbre("bintree_min : bintree -> int option", "bintree_min"),
    [("(match bintree_min t0 with None -> \"rien\" | Some x -> string_of_int x)", "rien"),
@@ -177,7 +185,7 @@ REEMPLOIS = {
     ("(match bintree_min (Node (1, Node (5, Leaf, Leaf), Node (8, Leaf, Leaf))) with None -> \"rien\" | Some x -> string_of_int x)", "1")]),
 
   ("bintree_all_positive",
-   "Le meme arbre : tous les entiers portes par ses noeuds internes sont-ils "
+   "Le même arbre : tous les entiers portés par ses nœuds internes sont-ils "
    "strictement positifs ?",
    "bintree_all_positive : bintree -> bool",
    _amorce_arbre("bintree_all_positive : bintree -> bool", "bintree_all_positive"),
@@ -189,8 +197,8 @@ REEMPLOIS = {
     ("string_of_bool (bintree_all_positive (Node (2, Node (0, Leaf, Leaf), Leaf)))", "false")]),
 
   ("ubtree_count_bin",
-   "On considere maintenant un arbre dont chaque noeud a un ou deux sous-arbres. "
-   "Combien a-t-il de noeuds a deux sous-arbres ?",
+   "On considère maintenant un arbre dont chaque nœud a un ou deux sous-arbres. "
+   "Combien a-t-il de nœuds à deux sous-arbres ?",
    "ubtree_count_bin : ubtree -> int",
    TYPE_ARBRE_UB +
    "let u0 = UbLeaf\nlet u1 = Bin (UbLeaf, UbLeaf)\n"
@@ -202,12 +210,48 @@ REEMPLOIS = {
     ("string_of_int (ubtree_count_bin u2)", "1"),
     ("string_of_int (ubtree_count_bin (Bin (Bin (UbLeaf, UbLeaf), Un (Bin (UbLeaf, UbLeaf)))))", "3"),
     ("string_of_int (ubtree_count_bin (Un (Un UbLeaf)))", "0")]),
+
+  # Les deux exercices de la derniere section du laboratoire 05 (« Fonctions
+  # d'ordre superieur »), servis seulement apres la bascule : ils nomment
+  # fold_tree. Suffixe _fold pour les distinguer, dans les donnees, des exercices
+  # de meme sujet du debut. Aucune solution employant fold_tree n'est deposee
+  # dans le depot (consigne du guide : le corrige n'y figure pas).
+  ("bintree_count_internal_nodes_fold",
+   "Réécrivez la fonction qui compte les nœuds internes en employant fold_tree. "
+   "Définissez d'abord fold_tree (vous pouvez reprendre la définition que vous "
+   "avez écrite), puis bintree_count_internal_nodes_fold, qui ne doit pas "
+   "s'appeler elle-même.",
+   "bintree_count_internal_nodes_fold : bintree -> int",
+   TYPE_ARBRE + ARBRES +
+   "(* Definissez fold_tree, puis la fonction ci-dessous en l'employant *)\n"
+   "(* bintree_count_internal_nodes_fold : bintree -> int *)\n"
+   "let bintree_count_internal_nodes_fold a = failwith \"a completer\"\n",
+   [("string_of_int (bintree_count_internal_nodes_fold t0)", "0"),
+    ("string_of_int (bintree_count_internal_nodes_fold t1)", "1"),
+    ("string_of_int (bintree_count_internal_nodes_fold t2)", "3"),
+    ("string_of_int (bintree_count_internal_nodes_fold example_tree)", "8")]),
+
+  ("bintree_collect_internal_nodes_fold",
+   "Réécrivez la fonction qui donne la liste des entiers portés par les nœuds "
+   "internes, dans un ordre quelconque, en employant fold_tree. Définissez d'abord "
+   "fold_tree, puis bintree_collect_internal_nodes_fold, qui ne doit pas "
+   "s'appeler elle-même.",
+   "bintree_collect_internal_nodes_fold : bintree -> int list",
+   TYPE_ARBRE + ARBRES +
+   "(* Definissez fold_tree, puis la fonction ci-dessous en l'employant *)\n"
+   "(* bintree_collect_internal_nodes_fold : bintree -> int list *)\n"
+   "let bintree_collect_internal_nodes_fold a = failwith \"a completer\"\n",
+   # liste triee avant comparaison, comme pour collect_values
+   [("String.concat \";\" (List.map string_of_int (List.sort compare (bintree_collect_internal_nodes_fold t0)))", ""),
+    ("String.concat \";\" (List.map string_of_int (List.sort compare (bintree_collect_internal_nodes_fold t1)))", "3"),
+    ("String.concat \";\" (List.map string_of_int (List.sort compare (bintree_collect_internal_nodes_fold t2)))", "1;2;4"),
+    ("String.concat \";\" (List.map string_of_int (List.sort compare (bintree_collect_internal_nodes_fold example_tree)))", "1;2;2;2;4;5;6;6")]),
  ],
 
  "F-option": [
   ("mille_sur_tete",
-   "Une liste d'entiers : donnez mille divise par le premier. Vous pouvez employer "
-   "ce que vous venez d'ecrire, ou reprendre les cas a la main.",
+   "Une liste d'entiers : donnez mille divisé par le premier. Vous pouvez employer "
+   "ce que vous venez d'écrire, ou reprendre les cas à la main.",
    "mille_sur_tete : int list -> int option",
    PRELUDE_OPTION + "(* mille_sur_tete : int list -> int option *)\n"
    "let mille_sur_tete (l : int list) : int option = failwith \"a completer\"\n",
@@ -228,4 +272,33 @@ REEMPLOIS = {
    [("montrer (lier (Ok 4) (fun x -> Ok (2 * x)))", "8"),
     ("montrer (lier (Erreur \"vide\") (fun x -> Ok (2 * x)))", "vide")]),
  ],
+}
+
+
+# ------------------------------------------------- phases du reemploi
+# Phase 1 (labo 05) : un seul exercice, le transfert sans consigne de methode,
+# qui porte la mesure principale (docs/SEANCE2.md). Le tuteur annoncera alors un
+# reemploi sur deux et s'arretera la : c'est voulu, reemploi_requis reste a 2.
+#
+# Bascule (la veille du labo 06) : passer BASCULE_FAITE a True, relancer la
+# batterie, puis relancer le serveur en gardant l'etat (./relancer.sh --garder).
+# S'ajoutent alors, dans cet ordre, les deux reecritures du laboratoire avec
+# fold_tree (la forme est donnee) puis le second transfert, sans consigne de
+# methode. Le tuteur sert un exercice que l'apprenant n'a pas encore recu : les
+# dossiers deja constitues ne changent pas.
+BASCULE_FAITE = False
+
+PHASE_1 = ["bintree_count_even"]
+PHASE_2 = ["bintree_count_internal_nodes_fold", "bintree_collect_internal_nodes_fold",
+           "bintree_all_positive"]
+
+
+def _selection(famille, noms):
+    par_nom = {a[0]: a for a in EXERCICES_REEMPLOI[famille]}
+    return [par_nom[n] for n in noms]
+
+
+REEMPLOIS = {
+ "F-arbre": _selection("F-arbre", PHASE_1 + (PHASE_2 if BASCULE_FAITE else [])),
+ "F-option": EXERCICES_REEMPLOI["F-option"],
 }

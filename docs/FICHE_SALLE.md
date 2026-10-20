@@ -20,7 +20,10 @@
 - [ ] Serveur lancé, et la page sert bien le titre OCamlTutor
 - [ ] Aucun bandeau « MODE ESSAI » : `curl -s http://localhost:8081/api/ext/statut` rend `"compilateur_simule": false`
 - [ ] Une inscription d'essai faite, puis une soumission fausse et une juste
-- [ ] Console ouverte sur un second écran, contrats vérifiés
+- [ ] Console ouverte sur un second écran, contrats vérifiés (onglet Contrats, concept
+      `arbre-pli`) : assistance `on-request`, abstraction `discovery`, régime `free`,
+      séquence `free`, off_form `explain_and_continue`, vérification `never`, délai 0
+- [ ] Phase 1 : `BASCULE_FAITE = False` dans `exemples/ocamltutor/activities_ml.py`
 - [ ] Adresse écrite au tableau
 
 ## Relance
@@ -51,7 +54,10 @@ on reporte le créneau.
 
 - [ ] Fenêtre de la phase 1 fermée à l'heure annoncée aux apprenants
 - [ ] Export et sauvegarde faits avant toute modification
-- [ ] Trois exercices différés ajoutés à `REEMPLOIS` dans `activities_ml.py`
+- [ ] Trois exercices différés ajoutés : passer `BASCULE_FAITE = True` dans
+      `exemples/ocamltutor/activities_ml.py` (une seule ligne). S'ajoutent, dans cet
+      ordre, `bintree_count_internal_nodes_fold`, `bintree_collect_internal_nodes_fold`
+      et `bintree_all_positive` ; le suivi (séance 2) sert les mêmes
 - [ ] Batterie de vérification relancée
 - [ ] `./relancer.sh --garder`, qui conserve l'état et les dossiers
 - [ ] Un dossier déjà constitué vérifié dans la console : le nouvel exercice est servi, l'historique est intact

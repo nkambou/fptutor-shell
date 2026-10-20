@@ -281,10 +281,14 @@ async function vueCohorte() {
   el("vue").innerHTML =
    '<div class="carte"><div class="titre ve">Cohorte <b>' + d.apprenants +
    ' inscrit(s)</b></div><div class="corps">' +
-   '<table class="t"><tr><th>apprenant</th><th>concept</th><th>état</th><th>inst.</th>' +
-   '<th>hors forme</th><th>étayages</th><th>non expliquées</th>' +
+   // L'identifiant est affiche a cote du pseudonyme : c'est lui qu'il faut redonner
+   // a un etudiant qui ne retrouve pas son dossier (voir docs/FICHE_SALLE.md). Le
+   // serveur l'envoyait deja, mais la console ne l'affichait pas.
+   '<table class="t"><tr><th>apprenant</th><th>identifiant</th><th>concept</th><th>état</th>' +
+   '<th>inst.</th><th>hors forme</th><th>étayages</th><th>non expliquées</th>' +
     '<th>généralisation produite</th></tr>' +
-   d.lignes.map(l => '<tr><td>' + l.apprenant + '</td><td>' + l.concept + '</td><td>' +
+   d.lignes.map(l => '<tr><td>' + l.apprenant + '</td><td><b>' + (l.ident || "") +
+     '</b></td><td>' + l.concept + '</td><td>' +
      l.etat + '</td><td class="m">' + l.instances + '</td><td class="m">' + l.ecartes +
      '</td><td class="m">' + l.aides + '</td><td class="' +
      (l.non_expliquees ? "ko" : "") + '">' + (l.non_expliquees || "") + '</td><td>' +

@@ -2,13 +2,19 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<title>HaskellTutor — parcours</title>
+<title>HaskellTutor · parcours</title>
 <style>
   body{font-family:"DejaVu Sans",Arial,sans-serif;font-size:13px;margin:0;padding:14px;
        background:#f6f8fa;color:#1a1a1a}
   .bandeau{background:#16283c;color:#fff;padding:9px 12px;border-radius:5px;font-size:14px;
            margin-bottom:12px;overflow:hidden}
-  .bandeau span{float:right;font-size:12px;opacity:.9}
+  /* Seuls l'identite (#ent) et le choix de langue (.lang) vont a droite. La regle
+     visait tous les span du bandeau, y compris la barre entre EN et FR : ils se
+     collaient et les espaces disparaissaient. */
+  .bandeau #ent, .bandeau .lang{float:right;font-size:12.5px;opacity:.95}
+  /* .lang flotte a gauche de #ent : l'espace qui les separe est a sa droite */
+  .bandeau .lang{margin-right:22px}
+  .bandeau .lang .sep{opacity:.5;margin:0 7px}
   .etapes{margin-bottom:11px;font-size:11.5px;color:#5c6b7a}
   .etapes b{display:inline-block;padding:3px 10px;border-radius:12px;background:#e3e9ef;
             color:#8fa3b8;margin-right:6px;font-weight:normal}
@@ -79,16 +85,226 @@
   .sol .a{color:#16283c;cursor:pointer;text-decoration:underline}
   .minuteur{float:right;font-size:11.5px;color:#5c6b7a}
   .minuteur.court{color:#3f5d7d;font-weight:bold}
+  /* ---------------------------------------------------------------- parcours
+     Une seule colonne centree, des textes plus grands, et une barre de
+     progression fixee en haut : l'essentiel reste visible en tout temps. */
+  .page{max-width:960px;margin:0 auto}
+  .page, .page .corps{font-size:15px;line-height:1.55}
+  .page .carte{border-radius:8px;margin-bottom:16px}
+  .page .titre{font-size:15px;padding:9px 14px;border-radius:7px 7px 0 0}
+  .page .corps{padding:14px 16px}
+  .page .enonce{font-size:16px;padding:12px 14px;margin:4px 0 12px}
+  .page .note{font-size:13.5px}
+  .page button{font-size:15px;padding:9px 18px;border-radius:6px}
+  .page pre{font-size:13.5px}
+  .page .tuteur{font-size:15px;padding:11px 14px}
+  .page .etat{font-size:14px}
+  .page table.al{font-size:14px}
+  .page table.al td{padding:6px 8px}
+  .page table.al td.n{width:auto;font-size:13.5px}
+  /* barre de progression, collee en haut de l'ecran */
+  .suivi{position:sticky;top:0;z-index:20;background:#16283c;color:#fff;border-radius:8px;
+         padding:10px 16px;margin-bottom:16px;box-shadow:0 2px 8px rgba(22,40,60,.25)}
+  .suivi .ligne{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+  .suivi .etapes3{display:flex;gap:6px;flex:1 1 320px}
+  .suivi .etapes3 div{flex:1;text-align:center;padding:6px 4px;border-radius:5px;font-size:14px;
+                      background:rgba(255,255,255,.12);color:#c3cdd8}
+  .suivi .etapes3 div.on{background:#fff;color:#16283c;font-weight:bold}
+  .suivi .etapes3 div.fait{background:#3f5d7d;color:#fff}
+  .suivi .compte{font-size:15px;flex:1 1 240px}
+  .suivi .compte b{font-size:17px}
+  .suivi .jauge{background:rgba(255,255,255,.18);height:8px;margin:6px 0 0}
+  .suivi .jauge i{background:#8fd18f}
+  .suivi button.sec{background:transparent;color:#fff;border:1.5px solid #8fa3b8;
+                    font-size:13px;padding:5px 12px;margin:0}
+  .suivi .minuteur{float:none;color:#fff;font-size:14px}
+  /* le reste, replie sous l'exercice */
+  details.plus{margin-top:6px}
+  details.plus > summary{cursor:pointer;font-size:15px;color:#16283c;padding:10px 4px;
+                         list-style-position:inside}
+  .bas{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;
+       align-items:start;margin-top:8px}
+  /* Code fourni (non modifiable) et zone ou l'etudiant ecrit sa fonction. */
+  .lbl{font-size:14px;color:#3f5d7d;margin:14px 0 6px}
+  .lbl.ecrire{color:#16283c;font-weight:bold;font-size:16px}
+  pre.fourni{background:#eef2f6;border:1px dashed #8fa3b8;border-radius:6px;padding:10px 12px;
+             color:#5c6b7a;font-size:13.5px;line-height:1.5}
+  textarea.code{border:2px solid #16283c;background:#fff;resize:none;overflow:hidden;
+                min-height:170px;font-size:15px;padding:10px 12px;border-radius:6px}
+  textarea.code:focus{outline:3px solid #8fa3b8}
+  details.tech summary{cursor:pointer;font-size:13px;color:#5c6b7a;margin-top:6px}
+  .legende{font-size:13px;color:#5c6b7a;margin-top:6px;line-height:1.45}
+  table.al th{text-align:left;font-family:"DejaVu Sans",Arial,sans-serif;font-weight:normal;
+              font-size:13px;color:#5c6b7a;padding:6px 8px;border-bottom:1px solid #c3cdd8}
+  .actions{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap}
+  .actions button{margin:0}
+
+  /* ------------------------------------------------ couleurs et mise en page v3
+     Moins de bleu fonce, et des couleurs qui ont un sens : bleu pour agir, vert
+     pour la progression et la reussite, orange pour les indices, rouge pale pour
+     les erreurs. */
+  .page{max-width:1400px}
+  .page textarea, .page pre, .page input{box-sizing:border-box}
+  body{background:#f3f5f9}
+  .page .carte{border:1px solid #dde3ea;box-shadow:0 1px 3px rgba(22,40,60,.06)}
+  .page .titre{background:#fff;color:#16283c;border-bottom:1px solid #e3e8ef;font-weight:bold}
+  .page .titre b{color:#5c6b7a}
+  .page .titre.gr, .page .titre.ve, .page .titre.or{background:#fff;color:#16283c}
+  .page .enonce{background:#f7f9fc;border-left:4px solid #2563eb;color:#16283c}
+  .page button{background:#2563eb}
+  .page button:hover{background:#1d4ed8}
+  .page button.sec{background:#fff;color:#1d4ed8;border:1.5px solid #93b4f5}
+  .page button.sec:hover{background:#eef4ff}
+  .page button.indice{background:#fff;color:#b45309;border:1.5px solid #f2b866}
+  .page button.indice:hover{background:#fff7e6}
+  .page button:disabled, .page button.indice:disabled{background:#e5e9ef;color:#8fa3b8;
+    border-color:#e5e9ef}
+  .page .tuteur{background:#eef4ff;border-left:5px solid #2563eb;color:#16283c}
+  .page .tuteur.ko{background:#fdf0f0;border-left-color:#d14b4b}
+  .page .tuteur.hf{background:#fff7e6;border-left:5px solid #d99a1e}
+  .page .etat.ok{color:#15803d;font-weight:bold}
+  .page .etat.err{color:#b42318}
+  .page pre.err{background:#fbfbfc;border:1px solid #e3e8ef;border-radius:6px;padding:10px 12px;
+                color:#3a4655}
+  .page .enonce b{color:#b45309}
+  .suivi{background:#16283c}
+  .suivi .jauge i{background:#4ade80}
+  .suivi .etapes3 div.fait{background:#15803d}
+  /* l'exercice en deux colonnes : a gauche ce qu'on lit, a droite ce qu'on ecrit */
+  .exo{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:22px;
+       align-items:start}
+  .exo > div{min-width:0}
+  @media (max-width:1100px){ .exo{grid-template-columns:1fr} }
+  .lbl.ecrire{display:inline-block;background:#e8f0fe;color:#1d4ed8;border-radius:5px;
+              padding:4px 10px;margin-top:0}
+  textarea.code{border:2px solid #2563eb;min-height:120px}
+  textarea.code:focus{outline:3px solid #bfd3fb}
+  pre.fourni{max-height:none}
+
+  /* ------------------------------------------------ contrastes renforces v4 */
+  .page .titre{border-left:5px solid #2563eb;font-size:16px}
+  .page .enonce{background:#e8f0fe;border-left:5px solid #2563eb;color:#0f1f33}
+  .page .enonce code{color:#0f1f33;font-weight:bold}
+  .page .lbl{color:#334155;font-weight:bold}
+  pre.fourni{background:#f1f5f9;border:1px solid #cbd5e1;color:#1e293b}
+  .lbl.ecrire{background:#2563eb;color:#fff;padding:6px 12px}
+  .lbl.ecrire code{color:#fff;background:rgba(255,255,255,.18);padding:0 4px;border-radius:3px}
+  textarea.code{color:#0f1f33;border-color:#2563eb;background:#fff}
+  .page button.indice{background:#fff7e6;color:#9a4a00;border:2px solid #f59e0b;font-weight:bold}
+  .page button.indice:hover{background:#ffedc2}
+  .page .legende{color:#475569}
+  /* barre du haut : deux lignes bien espacees, les etapes puis le compte */
+  .suivi{padding:14px 20px}
+  .suivi .ligne{display:block}
+  .suivi .etapes3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:12px}
+  .suivi .etapes3 div{padding:9px 10px;font-size:15px;background:#2c4560;color:#e2e8f0;
+                      border-radius:6px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .suivi .etapes3 div.on{background:#2563eb;color:#fff;font-weight:bold}
+  .suivi .etapes3 div.fait{background:#15803d;color:#fff}
+  .suivi .bas2{display:flex;align-items:center;gap:20px;flex-wrap:wrap}
+  .suivi .compte{flex:1 1 300px;font-size:15px}
+  .suivi .compte b{font-size:18px}
+  .suivi .jauge{height:12px;background:#3b5672;border-radius:6px;margin:8px 0 4px}
+  .suivi .jauge i{background:#4ade80;border-radius:6px}
+  .suivi .aide-ligne{font-size:13px;color:#cbd5e1}
+  .suivi button.sec{background:transparent;border-color:#cbd5e1;color:#fff;font-size:14px;
+                    padding:6px 16px}
+  .suivi button.sec:hover{background:rgba(255,255,255,.12)}
+  @media (max-width:800px){ .suivi .etapes3 div{white-space:normal} }
+
+  /* ------------------------------------------------ inscription et reprise */
+  .accueil{max-width:640px;margin:20px auto}
+  .accueil .corps{padding:20px 24px}
+  .accueil label{display:block;font-size:14px;font-weight:bold;color:#334155;margin:4px 0 6px}
+  .accueil input{width:100%;box-sizing:border-box;font-size:16px;padding:11px 12px;
+                 margin-bottom:18px;border:1.5px solid #cbd5e1;border-radius:6px}
+  .accueil input:focus{outline:3px solid #bfd3fb;border-color:#2563eb}
+  .accueil .actions{margin-top:6px}
+  .memo{background:#fff7e6;border:2px solid #f59e0b;border-radius:8px;padding:12px 14px;
+        margin:4px 0 18px;color:#5b3a00;font-size:15px;line-height:1.5}
+  .memo b.gros{display:block;font-size:16px;margin-bottom:4px;color:#7a4300}
+  .memo .code{font-family:"DejaVu Sans Mono",monospace;font-size:20px;font-weight:bold;
+              background:#fff;border:1px dashed #f59e0b;border-radius:5px;padding:2px 10px;
+              color:#16283c;letter-spacing:2px}
+  .accueil .note{font-size:13.5px;margin-top:10px}
+  .accueil .opt{font-size:15px;padding:9px 18px;border-radius:6px;margin:0 8px 8px 0;
+                color:#1d4ed8;border:1.5px solid #93b4f5}
+  .accueil .opt.on{background:#2563eb;color:#fff;border-color:#2563eb}
+  /* ------------------------------------------------ palette sobre v5
+     Fond papier, encre anthracite, une seule couleur d'action (vert sarcelle),
+     ocre pour les indices. Remplace le bleu vif et le bleu marine. */
+  body{background:#f5f3ee;color:#1f2933}
+  .bandeau{background:#26323d}
+  .page .carte, .accueil .carte{background:#fff;border:1px solid #e2ddd3;box-shadow:none}
+  .page .titre{background:#fff;color:#1f2933;border-left:4px solid #0f6e66;
+               border-bottom:1px solid #ebe6dc}
+  .page .titre.gr, .page .titre.ve, .page .titre.or{background:#fff;color:#1f2933}
+  .page button, .accueil button{background:#0f6e66}
+  .page button:hover, .accueil button:hover{background:#0b5a53}
+  .page button.sec, .accueil button.sec{background:#fff;color:#0f6e66;border:1.5px solid #9cc7c1}
+  .page button.sec:hover, .accueil button.sec:hover{background:#eef6f5}
+  .page button.indice{background:#fdf6e9;color:#8a4b0f;border:1.5px solid #d9a35a}
+  .page button.indice:hover{background:#f9ebd2}
+  .lbl.ecrire{background:#0f6e66}
+  textarea.code{border-color:#0f6e66}
+  textarea.code:focus{outline:3px solid #cfe5e2}
+  .accueil input:focus{outline:3px solid #cfe5e2;border-color:#0f6e66}
+  .accueil .opt{color:#0f6e66;border-color:#9cc7c1}
+  .accueil .opt.on{background:#0f6e66;border-color:#0f6e66;color:#fff}
+  .page .enonce{background:#f3f8f7;border-left:4px solid #0f6e66}
+  .page .tuteur{background:#f3f8f7;border-left:5px solid #0f6e66}
+  .page .tuteur.ko{background:#fbf1ee;border-left-color:#b5513c}
+  .page .tuteur.hf{background:#fdf6e9;border-left-color:#c98a2b}
+  .memo{background:#fdf6e9;border-color:#d9a35a;color:#5a3a12}
+  .memo .code{border-color:#d9a35a}
+  pre.fourni{background:#f7f6f2;border:1px solid #e2ddd3;color:#2d3a45}
+  .suivi{background:#26323d;box-shadow:none}
+  .suivi .etapes3 div{background:#34424f;color:#d7dde3}
+  .suivi .etapes3 div.on{background:#0f6e66;color:#fff}
+  .suivi .etapes3 div.fait{background:#4d7c5a;color:#fff}
+  .suivi .jauge{background:#3d4b58}
+  .suivi .jauge i{background:#7fc4a0}
+  /* v6 : harmonie. La barre de progression devient claire (comme les cartes) au
+     lieu d'un bloc gris-bleu froid qui jurait avec le fond papier et le vert
+     sarcelle ; le bandeau passe a un gris fonce neutre, sans bleu. */
+  .bandeau{background:#2b2f31}
+  .suivi{background:#fff;color:#1f2933;border:1px solid #e2ddd3}
+  .suivi .etapes3 div{background:#f1eee7;color:#5f6b72}
+  .suivi .etapes3 div.on{background:#0f6e66;color:#fff}
+  .suivi .etapes3 div.fait{background:#dcebe8;color:#0f5a53}
+  .suivi .compte b{color:#0f6e66}
+  .suivi .jauge{background:#ebe7de}
+  .suivi .jauge i{background:#0f6e66}
+  .suivi .aide-ligne{color:#5f6b72}
+  .suivi .minuteur{color:#5f6b72}
+  .suivi button.sec, .page .suivi button.sec{background:#fff;color:#0f6e66;
+    border:1.5px solid #9cc7c1}
+  .suivi button.sec:hover, .page .suivi button.sec:hover{background:#eef6f5}
+  /* la consigne, en haut de l'exercice et sur toute la largeur */
+  .consigne{background:#f3f8f7;border:1px solid #cfe5e2;border-left:6px solid #0f6e66;
+            border-radius:6px;padding:14px 18px;margin:2px 0 18px}
+  .consigne .etiq{display:inline-block;font-size:12.5px;font-weight:bold;letter-spacing:.06em;
+                  text-transform:uppercase;color:#0f6e66;margin-bottom:6px}
+  .consigne .texte{font-size:18px;line-height:1.5;color:#1f2933}
+  .consigne .sig{display:inline-block;margin-top:10px;font-family:"DejaVu Sans Mono",monospace;
+                 font-size:15px;background:#fff;border:1px solid #cfe5e2;border-radius:5px;
+                 padding:4px 10px;color:#1f2933}
+  /* tableau des resultats des tests */
+  table.tests{margin:8px 0 4px;background:#fff;border:1px solid #e3e8ef;border-radius:6px}
+  table.tests td{padding:6px 10px}
+  table.tests tr.rate td:first-child{color:#b42318;font-weight:bold}
+  table.tests tr.rate{background:#fdf0f0}
+  table.tests tr.reussi td:first-child{color:#15803d;font-weight:bold}
 </style>
 </head>
 <body>
 
-<div class="bandeau">HaskellTutor — parcours vers la programmation fonctionnelle
+<div class="bandeau">HaskellTutor · parcours vers la programmation fonctionnelle
   <span id="ent">non inscrit</span></div>
 
 <div class="etapes" id="etapes" style="display:none">
-  <b id="et1">1 · Inscription</b><b id="et2">2 · Régime</b><b id="et3">3 · Groupe</b>
-  <b id="et4">4 · Parcours</b></div>
+  <b id="et1">1 · Inscription</b><b id="et2">2 · Mode de travail</b><b id="et3">3 · Groupe</b>
+  <b id="et4">4 · Exercices</b></div>
 
 <div id="ecran"></div>
 
@@ -157,14 +373,14 @@ function selecteurLangue(){
   if (!b || b.querySelector(".lang")) return;
   const z = document.createElement("span");
   z.className = "lang";
-  z.style.cssText = "margin-left:14px;font-size:12px;font-weight:400";
+  z.style.cssText = "font-weight:400";
   const lien = (code, nom) => code === LANG
     ? '<b style="color:#fff">' + nom + '</b>'
     : '<a href="?lang=' + code + (ident ? '&ident=' + encodeURIComponent(ident) : '') +
       '" style="color:#fff;opacity:.7;text-decoration:underline">' + nom + '</a>';
   let etat = "";
   if (LANG === "en" && !CAT) etat = ' <span style="color:#ffd9d9">catalogue indisponible</span>';
-  z.innerHTML = lien("en", "EN") + ' <span style="opacity:.5">|</span> ' +
+  z.innerHTML = lien("en", "EN") + '<span class="sep">|</span>' +
                 lien("fr", "FR") + etat;
   b.appendChild(z);
 }
@@ -209,7 +425,7 @@ async function api(route, corps) {
     throw e;
   }
   if (d && d.erreur) {
-    alerteServeur("<b>" + d.erreur + "</b> — la page attend une version plus récente " +
+    alerteServeur("<b>" + d.erreur + "</b> : la page attend une version plus récente " +
       "du serveur. Arrêtez le processus en cours et relancez <code>python3 serveur.py</code> " +
       "depuis le dossier contenant les nouveaux fichiers.");
   }
@@ -226,34 +442,51 @@ function etapes(n) {
 
 function ecranInscription() {
   el("ecran").innerHTML =
-   '<div class="rangee"><div class="c"><div class="carte"><div class="titre">S\'inscrire</div>' +
+   '<div class="page accueil"><div class="carte"><div class="titre">S\'inscrire</div>' +
    '<div class="corps">' +
-   '<input id="nom" placeholder="Pseudonyme, sans votre nom" value="">' +
+   '<label for="nom">Pseudonyme</label>' +
+   '<input id="nom" placeholder="Un pseudonyme, sans votre nom" value="" autocomplete="off">' +
+   '<div id="msgInscription"></div>' +
+   '<label for="cohorte">Code du cours</label>' +
    '<input id="cohorte" placeholder="Code du cours" value="' + (window.COHORTE_DEFAUT || '') + '">' +
+   '<div class="memo"><b class="gros">Retenez bien votre pseudonyme.</b>' +
+   'Il vous servira à reprendre votre travail, et à la séance de suivi la semaine ' +
+   'prochaine. Notez-le quelque part dès maintenant.</div>' +
+   '<div class="note"><b>Chaque pseudonyme ne peut servir qu\'une fois</b> : s\'il est déjà ' +
+   'pris, le tuteur vous demandera d\'en choisir un autre.</div>' +
    '<div class="note"><b>Choisissez un pseudonyme qui ne permet pas de vous identifier</b> : ' +
-   'ni votre nom, ni votre code permanent, ni votre adresse. Retenez-le, il vous servira ' +
-   'pour la séance de suivi. Aucune autre information personnelle n\'est demandée.</div>' +
+   'ni votre nom, ni votre code permanent, ni votre adresse. Aucune autre information ' +
+   'personnelle n\'est demandée.</div>' +
    '<div class="note">Le cours enregistre vos soumissions, leur résultat de compilation et ' +
    'l\'état de chaque concept. Vos soumissions sont réellement compilées par GHC. ' +
    'Vos coéquipiers voient votre pseudonyme et votre état sur le concept en cours ; ' +
    'les autres apprenants ne voient rien.</div>' +
-   '<div><button onclick="inscrire()">Continuer</button></div>' +
-   '</div></div></div></div>';
+   '<div class="actions"><button onclick="inscrire()">Continuer</button></div>' +
+   '</div></div></div>';
 }
 
 async function inscrire() {
   const r = await api("/api/inscription",
     {nom: el("nom").value, cohorte: el("cohorte").value});
-  if (r.erreur) { alert(r.erreur); return; }
+  // le refus (pseudonyme deja pris, ou qui ressemble a un nom) s'affiche sous le
+  // champ, au lieu d'une fenetre d'alerte
+  if (r.refus || r.erreur) {
+    const z = el("msgInscription");
+    if (z) z.innerHTML = '<div class="tuteur ko">' + echapper(r.refus || r.erreur) + '</div>';
+    el("nom").focus();
+    return;
+  }
   ident = r.ident;
   retenirIdent(ident);
   vue = await api("/api/etat?ident=" + ident);
   etapes(2); ecranRegime();
   const z = el("identDonne");
-  if (z) z.innerHTML = 'Votre identifiant est <b>' + ident + '</b>. Ce navigateur le ' +
-    'retient : vous reprendrez votre dossier en revenant sur cette page. Notez-le si vous ' +
-    'comptez travailler depuis un autre poste, il est le seul moyen d\'y retrouver votre ' +
-    'dossier, et votre enseignant peut vous le redonner.';
+  if (z) z.innerHTML = '<div class="memo"><b class="gros">Notez votre identifiant : ' +
+    '<span class="code">' + ident + '</span></b>' +
+    'Avec votre pseudonyme <b>' + echapper(vue.nom || "") + '</b>, il vous permet de ' +
+    'retrouver votre travail depuis un autre poste, et à la séance de suivi. Ce navigateur ' +
+    's\'en souvient, mais un autre poste ne le saura pas. Votre enseignant peut vous le ' +
+    'redonner si vous l\'oubliez.</div>';
 }
 
 // --------------------------------------------------- reprise d'une session
@@ -290,20 +523,23 @@ async function reprendre(i) {
 
 function ecranReprise(i, nom) {
   el("ecran").innerHTML =
-   '<div class="rangee"><div class="c"><div class="carte"><div class="titre">Reprendre votre session</div>' +
+   '<div class="page accueil"><div class="carte"><div class="titre">Reprendre votre session</div>' +
    '<div class="corps">' +
-   '<div class="note">Une session est ouverte sur ce navigateur' +
-   (nom ? ' au pseudonyme <b>' + nom + '</b>' : '') + '. Vous reprenez votre dossier ' +
-   'exactement ou vous en etes.</div>' +
-   '<div><button onclick="reprendre(\'' + i + '\')">Reprendre</button>' +
-   '<button onclick="oublierIdent(); ecranInscription();" ' +
-   'style="margin-left:8px;background:#fff;color:#1b2a41">Nouvelle inscription</button></div>' +
-   '<div class="note" style="margin-top:12px">Vous travaillez depuis un autre poste ? ' +
-   'Saisissez l\'identifiant donne a l\'inscription, celui qui figure en haut de la page ' +
-   'du parcours, a cote de votre pseudonyme. Votre enseignant peut aussi vous le redonner.</div>' +
-   '<input id="identSaisi" placeholder="Identifiant, quatre caracteres">' +
-   '<div><button onclick="reprendre(el(\'identSaisi\').value.trim())">Reprendre avec cet identifiant</button></div>' +
-   '</div></div></div></div>';
+   '<div class="enonce">Une session est ouverte sur ce navigateur' +
+   (nom ? ' au pseudonyme <b>' + echapper(nom) + '</b>' : '') + ', avec l\'identifiant ' +
+   '<b>' + echapper(i) + '</b>. Vous reprenez votre travail exactement où vous en êtes.</div>' +
+   '<div class="actions"><button onclick="reprendre(\'' + i + '\')">Reprendre</button>' +
+   '<button class="sec" onclick="oublierIdent(); ecranInscription();">' +
+   'Nouvelle inscription</button></div>' +
+   '<div class="memo" style="margin-top:22px"><b class="gros">Vous travaillez depuis un ' +
+   'autre poste ?</b>Saisissez l\'identifiant de quatre caractères reçu à l\'inscription. ' +
+   'Il figure aussi en haut de la page des exercices, à côté de votre pseudonyme. Votre ' +
+   'enseignant peut vous le redonner.</div>' +
+   '<label for="identSaisi">Identifiant</label>' +
+   '<input id="identSaisi" placeholder="Quatre caractères, par exemple a3f9" autocomplete="off">' +
+   '<div class="actions"><button onclick="reprendre(el(\'identSaisi\').value.trim())">' +
+   'Reprendre avec cet identifiant</button></div>' +
+   '</div></div></div>';
 }
 
 // ---------------------------------------------------------------- 2. régime
@@ -312,9 +548,9 @@ function ecranRegime() {
   const impose = vue.collaboration_requise;
   el("ent").textContent = vue.nom + " · " + vue.cohorte + " · code " + ident;
   el("ecran").innerHTML =
-   '<div class="rangee"><div class="c"><div class="carte">' +
-   '<div class="titre">Régime de travail <b>modifiable à chaque palier</b></div><div class="corps">' +
-   '<div class="note" id="identDonne"></div>' + '' +
+   '<div class="page accueil"><div class="carte">' +
+   '<div class="titre">Mode de travail <b>modifiable à chaque palier</b></div><div class="corps">' +
+   '<div id="identDonne"></div>' +
    '<div><span class="opt" id="oSolo" onclick="choisirRegime(\'solo\')">seul</span>' +
    '<span class="opt" id="oGroupe" onclick="choisirRegime(\'groupe\')">en groupe</span></div>' +
    '<div class="enonce" style="margin-top:10px">Les activités de production restent ' +
@@ -323,8 +559,8 @@ function ecranRegime() {
    (impose ? '<div class="enonce att">Sur le concept <b>' + vue.libelle +
      '</b>, votre enseignant a fixé le régime « ' + vue.contrat.regime +
      ' » : votre choix ne s\'appliquera pas à cette activité.</div>' : '') +
-   '<div><button onclick="suiteRegime()">Continuer</button></div>' +
-   '</div></div></div></div>';
+   '<div class="actions"><button onclick="suiteRegime()">Continuer</button></div>' +
+   '</div></div></div>';
   majRegime();
 }
 function majRegime() {
@@ -376,7 +612,7 @@ async function ecranGroupe() {
   }
   el("ecran").innerHTML =
    '<div class="rangee"><div class="c"><div class="carte">' +
-   '<div class="titre ve">Constituer votre groupe <b>concept : ' + (vue.libelle || "—") +
+   '<div class="titre ve">Constituer votre groupe <b>concept : ' + (vue.libelle || "aucun") +
    '</b></div><div class="corps">' + corps + '</div></div></div></div>';
 }
 
@@ -394,32 +630,36 @@ async function rafraichir() {
   vue = await api("/api/etat?ident=" + ident);
   etapes(4);
   el("ent").textContent = vue.nom + " · " + vue.cohorte + " · code " + ident +
-    " · " + (vue.palier || "—");
+    (vue.palier ? " · " + vue.palier : "");
+  // Une seule colonne : la barre de progression (collee en haut de l'ecran),
+  // puis l'exercice. Tout le reste est replie dans « Plus d'informations ».
+  el("etapes").style.display = "none";
   el("ecran").innerHTML =
-   '<div class="rangee">' +
-   '<div class="g"><div class="carte"><div class="titre">Carte des concepts</div>' +
-   '<div class="corps" id="carte"></div></div>' +
-   '<div class="carte"><div class="titre ve">Groupe</div><div class="corps dec" id="grp"></div></div>' +
-   '</div>' +
-   '<div class="c"><div class="carte"><div class="titre gr">Séance ' +
-   '<b id="tagseance"></b></div><div class="corps dec" id="seance"></div></div>' +
-   '<div id="centre"></div></div>' +
-   '<div class="d">' +
-   '<div class="carte"><div class="titre or">Décision du tuteur <b id="tagdec"></b></div>' +
-   '<div class="corps dec" id="dec"></div></div>' +
-   '<div class="carte"><div class="titre gr">Corpus</div><div class="corps dec" id="corpus"></div></div>' +
-   '<div class="carte"><div class="titre ve">Ma progression <b id="tagprog"></b></div>' +
-   '<div class="corps dec" id="progres"></div></div>' +
+   '<div class="page">' +
+   '<div class="suivi"><div class="ligne">' +
+   '<div class="etapes3" id="progres"></div>' +
+   '<div class="bas2"><div class="compte" id="compte"></div>' +
+   '<span id="chrono" class="minuteur"></span>' +
+   '<span id="seance"></span></div></div><div id="msgseance"></div></div>' +
+   '<div id="centre"></div>' +
+   '<details class="plus"><summary>Plus d\'informations : mes solutions, ce que ' +
+   'j\'apprends, mon groupe</summary>' +
+   '<div class="bas">' +
    '<div class="carte"><div class="titre gr">Mes solutions <b id="tagsol"></b></div>' +
    '<div class="corps dec" id="solutions"></div></div>' +
-   '<div class="carte"><div class="titre ve">Étayage <b id="tagaide"></b></div>' +
-   '<div class="corps dec" id="etayage"></div></div>' +
+   '<div class="carte"><div class="titre">Ce que vous apprenez</div>' +
+   '<div class="corps" id="carte"></div></div>' +
+   '<div class="carte"><div class="titre ve">Groupe</div><div class="corps dec" id="grp"></div></div>' +
    '<div class="carte"><div class="titre gr">Mon activité</div>' +
-   '<div class="corps dec" id="histo">…</div></div>' +
-   '</div></div>';
+   '<div class="corps dec" id="histo">…</div>' +
+   '<div class="corps dec"><details class="tech"><summary>Détails techniques ' +
+   '(pour l\'enseignant)</summary><div id="dec"></div><div id="corpus"></div>' +
+   '<span id="tagdec" style="display:none"></span></details></div></div>' +
+   '</div></details></div>';
   dessinerCarte(); dessinerCentre(); dessinerDecision(); dessinerGroupe();
   dessinerEtayage(); dessinerHistorique(); dessinerProgres(); dessinerSolutions();
   dessinerSeance(); lancerMinuteur();
+  ajusterZones();
   traduireDOM();
 }
 
@@ -427,22 +667,43 @@ function classeEtat(e) {
   if (e === "acquired") return "e3"; if (e === "generalised") return "e2";
   if (e === "verrou") return "e0"; return "e1";
 }
+// Les etats viennent du serveur sous leur nom interne (instance, generalised,
+// acquired, verrou) : on les dit en mots d'etudiant.
+function libelleEtat(e) {
+  if (e === "acquired") return "acquis";
+  if (e === "generalised") return "trouvé";
+  if (e === "verrou") return "plus tard";
+  return String(e).replace("instance(s)", "solution(s)");
+}
+// Les categories d'erreur, dites en mots d'etudiant (indices, historique).
+const CATEGORIES = {
+  "missing-base-case": "cas non traité", "incompatible-types": "types incompatibles",
+  "int-float-mix": "entier et nombre à virgule", "unknown-name": "nom inconnu",
+  "syntax": "erreur d'écriture", "wrong-result": "résultat faux",
+  "unclassified": "autre erreur", "none": "aucune erreur"};
+function libelleCategorie(c) { return CATEGORIES[c] || c; }
+function echapper(t) {
+  return String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
 function dessinerCarte() {
   el("carte").innerHTML = vue.carte.map(p =>
     '<div class="palier"><span class="p">' + p.palier + ' · ' + p.titre + '</span>' +
     p.concepts.map(c => '<span class="cpt"><span class="etat ' +
       (c.executable ? classeEtat(c.etat) : "eh") + '">' +
-      (c.executable ? c.etat : "hors ligne") + '</span>' + c.libelle + '</span>').join("") +
+      (c.executable ? libelleEtat(c.etat) : "hors ligne") + '</span>' + c.libelle + '</span>').join("") +
     '</div>').join("") +
-    '<div class="note">Un concept passe à « acquis » au réemploi spontané du schéma, ' +
-    'pas à la réussite de l\'activité.</div>';
+    '<div class="note">Les paliers s\'ouvrent dans l\'ordre : un palier marqué « plus tard » ' +
+    's\'ouvre quand le précédent est acquis. Un palier est acquis quand vous réutilisez ' +
+    'par vous-même ce que vous avez découvert, pas seulement quand vous réussissez ' +
+    'les exercices.</div>';
 }
 function dessinerGroupe() {
   const g = vue.groupe;
   el("grp").innerHTML = (g ?
     'Groupe <b>' + g.id + '</b> · ' + g.statut + '<br>' + g.membres.length + ' membre(s)' :
     'Aucun groupe sur ce concept.') +
-    '<div class="note">Régime : ' + vue.regime +
+    '<div class="note">Mode de travail : ' + (vue.regime === "solo" ? "seul" :
+      vue.regime === "groupe" ? "en groupe" : vue.regime) +
     (vue.collaboration_requise ? ' · imposé par l\'enseignant : ' + vue.contrat.regime : '') +
     '</div><button class="sec" onclick="etapes(3);ecranGroupe()">Gérer mon groupe</button>';
 }
@@ -450,14 +711,91 @@ function dessinerGroupe() {
 function libelleAide() {
   if (!vue.aides_max) return "Aide fermée par l'enseignant";
   const reste = vue.aides_max - (vue.aides_prises || 0);
-  if (reste <= 0) return "Étayage épuisé (" + vue.aides_max + "/" + vue.aides_max + ")";
-  return "Demander un étayage (" + (vue.aides_prises || 0) + "/" + vue.aides_max + ")";
+  if (reste <= 0) return "Indices épuisés (" + vue.aides_max + "/" + vue.aides_max + ")";
+  return "Demander un indice (" + (vue.aides_prises || 0) + "/" + vue.aides_max + ")";
 }
 
 function tableauAlignement(r) {
-  return '<table class="al">' + r.lignes.map(l =>
-    '<tr><td class="n">' + l.nom + '</td><td>' + (l.base || "—") +
-    '</td><td>' + (l.pas || "—") + '</td></tr>').join("") + '</table>';
+  return '<table class="al"><tr><th>Votre fonction</th><th>Cas de base</th>' +
+    '<th>Cas récursif</th></tr>' + r.lignes.map(l =>
+    '<tr><td class="n">' + l.nom + '</td><td>' + echapper(l.base || "(aucun)") +
+    '</td><td>' + echapper(l.pas || "(aucun)") + '</td></tr>').join("") + '</table>' +
+    '<div class="legende"><b>REC</b> désigne un appel récursif de la fonction sur une ' +
+    'partie plus petite de l\'entrée. Les valeurs propres à chaque fonction sont gardées ' +
+    'telles que vous les avez écrites.</div>';
+}
+
+// ------------------------------------------------- zone de code
+// Le code de depart melange ce qui est fourni (le type, les donnees de test) et la
+// fonction a ecrire. On les separe : le code fourni s'affiche en lecture seule, et
+// la zone d'ecriture ne contient que la fonction. A la soumission, les deux parties
+// sont recollees : le serveur recoit exactement le meme texte qu'avant.
+const MARQUEURS_A_COMPLETER = ["a completer", "undefined"];
+const DEBUTS_COMMENTAIRE = ["(*", "--", ";", "#"];
+let CODE_FOURNI = "";
+
+function decouperAmorce(amorce) {
+  const lignes = String(amorce || "").split("\n");
+  let i = -1;
+  for (let k = lignes.length - 1; k >= 0; k--)
+    if (MARQUEURS_A_COMPLETER.some(m => lignes[k].indexOf(m) >= 0)) { i = k; break; }
+  if (i < 0) return {fourni: "", aEcrire: String(amorce || "")};
+  // la fonction commence a sa ligne « let ... » et au commentaire qui la precede
+  while (i > 0 && !/^\s*(let|define|\(define|def)\b/.test(lignes[i])
+         && lignes[i - 1].trim() !== "") i--;
+  while (i > 0 && DEBUTS_COMMENTAIRE.some(c => lignes[i - 1].trim().startsWith(c))) i--;
+  return {fourni: lignes.slice(0, i).join("\n"), aEcrire: lignes.slice(i).join("\n")};
+}
+
+// Pour une solution deja ecrite : on retire le code fourni s'il figure en tete.
+function decouperSolution(code, amorceOrigine) {
+  const d = decouperAmorce(amorceOrigine);
+  if (d.fourni && String(code).startsWith(d.fourni + "\n"))
+    return {fourni: d.fourni, aEcrire: String(code).slice(d.fourni.length + 1)};
+  return {fourni: "", aEcrire: String(code)};
+}
+
+// Le code fourni (colonne de gauche, sous l'enonce) et la zone d'ecriture
+// (colonne de droite) sont produits separement, pour la mise en deux colonnes.
+function blocFourni(d) {
+  CODE_FOURNI = d.fourni;
+  return d.fourni ?
+    '<div class="lbl">Code fourni : il est déjà là, vous n\'avez pas à le modifier.</div>' +
+    '<pre class="fourni">' + echapper(d.fourni.replace(/\s+$/, "")) + '</pre>' +
+    '<div class="legende">Dans les messages d\'erreur, les numéros de ligne comptent ' +
+    'aussi les lignes de ce code fourni.</div>' : "";
+}
+function blocEcriture(d) {
+  return '<div class="lbl ecrire">Écrivez votre fonction ici' +
+    (d.aEcrire.indexOf("a completer") >= 0 ?
+      ', à la place de <code>failwith "a completer"</code>' : "") + '</div>' +
+    '<textarea id="code" class="code" spellcheck="false" autocomplete="off" ' +
+    'autocapitalize="off" oninput="ajusterZone(this)" onkeydown="tabulation(event)">' +
+    echapper(d.aEcrire) + '</textarea>';
+}
+function blocCode(d) { return blocFourni(d) + blocEcriture(d); }
+
+function codeComplet() {
+  const ecrit = el("code").value;
+  return CODE_FOURNI ? CODE_FOURNI + "\n" + ecrit : ecrit;
+}
+
+// La zone s'agrandit avec son contenu : pas de barre de defilement a l'interieur.
+function ajusterZone(t) {
+  if (!t) return;
+  t.style.height = "auto";
+  t.style.height = (t.scrollHeight + 6) + "px";
+}
+function ajusterZones() { ajusterZone(el("code")); ajusterZone(el("gen")); }
+
+// La touche Tab insere deux espaces au lieu de quitter la zone.
+function tabulation(ev) {
+  if (ev.key !== "Tab") return;
+  ev.preventDefault();
+  const t = ev.target, a = t.selectionStart, b = t.selectionEnd;
+  t.value = t.value.slice(0, a) + "  " + t.value.slice(b);
+  t.selectionStart = t.selectionEnd = a + 2;
+  ajusterZone(t);
 }
 
 function dessinerCentre() {
@@ -486,10 +824,11 @@ function dessinerCentre() {
     const r = vue.abstraction, guide = r.guide, mode = r.mode;
     centre.innerHTML =
      '<div class="carte"><div class="titre or">' +
-     (guide ? "Guidage" : "Atelier de remontée") +
-     ' <b>' + (guide ? "la remontée ne s\'est pas déclenchée" :
-               "mode " + mode + " · " + r.points + " point(s) de variation") + '</b></div>' +
-     '<div class="corps">' +
+     (guide ? "Comparer vos solutions, avec le tuteur" :
+              "Atelier : ce que vos fonctions ont en commun") +
+     ' <b>' + (guide ? "le tuteur vous guide" :
+               r.points + " élément(s) qui changent d'une fonction à l'autre") + '</b></div>' +
+     '<div class="corps"><div class="exo"><div>' +
      '<div class="enonce">' +
      (guide ? vue.motif + '. Le tuteur fait donc l\'alignement avec vous.' :
       mode === "exposed" ?
@@ -502,24 +841,48 @@ function dessinerCentre() {
      '</div>' +
      tableauAlignement(r) +
      (mode === "discovery" && !guide ? "" :
-       '<div class="note">Forme commune obtenue par alignement : <code>' + r.forme +
-       '</code>. Les trous notés ?n sont les points de variation.</div>') +
-     (r.squelette ? '<div class="enonce"><b>Charpente attendue</b><pre>' + r.squelette +
+       '<div class="note">Forme commune de vos fonctions : <code>' + echapper(r.forme) +
+       '</code>. Les marques ?1, ?2… montrent ce qui change d\'une fonction à l\'autre.</div>') +
+     (r.squelette ? '<div class="enonce"><b>Forme attendue</b><pre>' + echapper(r.squelette) +
        '</pre></div>' : "") +
-     '<div class="note">Écrivez votre définition ci-dessous. Elle est conservée et servira ' +
-     'à l\'atelier d\'équipe.</div>' +
-     '<textarea id="gen" class="court">' + (vue.generalisation || "") + '</textarea>' +
-     '<div><button onclick="generaliser()">Valider ma généralisation</button>' +
-     '<button class="sec" onclick="demanderAide(\'remontee\')">' + libelleAide() + '</button>' +
-     '<button class="sec" onclick="refuserAtelier()">Pas encore</button></div>' +
+     '</div><div>' +
+     '<div class="lbl ecrire">Écrivez ici une seule fonction qui peut remplacer toutes ' +
+     'celles du tableau</div>' +
+     '<textarea id="gen" class="code" spellcheck="false" autocomplete="off" ' +
+     'autocapitalize="off" oninput="ajusterZone(this)" onkeydown="tabulation(event)">' +
+     echapper(vue.generalisation || "") + '</textarea>' +
+     '<div class="legende">Elle est conservée, et servira si vous travaillez en groupe.</div>' +
+     '<div class="actions"><button onclick="generaliser()">Valider ma fonction</button>' +
+     '<button class="indice" onclick="demanderAide(\'remontee\')">' + libelleAide() + '</button>' +
+     '<button class="sec" onclick="refuserAtelier()">Pas encore : un exercice de plus</button></div>' +
      '<div id="aide"></div><div id="msg"></div>' +
-     '</div></div>';
+     '</div></div></div></div>';
     return;
   }
 
   if (!vue.activite) {
-    centre.innerHTML = '<div class="carte"><div class="titre gr">Rien à faire pour le moment</div>' +
-      '<div class="corps">' + vue.motif + '</div></div>';
+    // Fin des exercices de reemploi (phase 1 : un seul) : un ecran de fin clair,
+    // qui ne donne aucune consigne de methode pour la suite.
+    if (vue.fin_reemplois) {
+      centre.innerHTML = '<div class="carte"><div class="titre">Terminé pour aujourd\'hui</div>' +
+        '<div class="corps"><div class="enonce"><b>Bravo, vous avez fait tous les exercices ' +
+        'prévus pour cette séance.</b><br>Votre travail est enregistré. D\'autres exercices ' +
+        'vous seront proposés lors de la prochaine séance : gardez votre pseudonyme et votre ' +
+        'identifiant.</div>' +
+        '<div class="note">Vous pouvez revoir vos solutions dans « Plus d\'informations », ' +
+        'plus bas, ou retourner au laboratoire.</div></div></div>';
+      return;
+    }
+    // Plus d'exercice, et pas assez de solutions comparables : le plus souvent, les
+    // solutions ont ete ecrites autrement (List.fold_left...). On dit quoi faire,
+    // au lieu de « Rien a faire pour le moment ».
+    centre.innerHTML = '<div class="carte"><div class="titre">Plus de nouvel exercice</div>' +
+      '<div class="corps"><div class="enonce">Vous avez résolu les exercices, mais d\'une ' +
+      'autre manière que celle que le tuteur peut comparer. Pour continuer, reprenez un ou ' +
+      'deux exercices et réécrivez-les ' + (vue.texte_consigne_forme ||
+        'en distinguant explicitement le cas de base et le cas récursif') + '.</div>' +
+      '<div class="actions"><button onclick="ouvrirSolutions()">Choisir un exercice à ' +
+      'reprendre</button></div></div></div>';
     return;
   }
   centre.innerHTML = blocActivite();
@@ -527,22 +890,34 @@ function dessinerCentre() {
 
 function blocActivite() {
   const a = vue.activite;
+  const d = decouperAmorce(a.amorce);
   return '<div class="carte"><div class="titre">' +
-    (vue.decision === "reuse" ? "Activité de réemploi" : "Activité engendrée") +
-    ' <b>' + vue.famille + ' · ' + a.id + '</b></div><div class="corps">' +
-    '<div class="enonce">' + a.enonce + '<br><code>' + a.signature + '</code></div>' +
+    (vue.decision === "reuse" ? "Nouvel exercice" : "Exercice") +
+    ' <b>' + a.id + '</b></div><div class="corps">' +
+    // la consigne, en haut et sur toute la largeur, pour qu'on la lise en premier
+    '<div class="consigne"><div class="etiq">Consigne</div>' +
+    '<div class="texte">' + a.enonce + '</div>' +
+    '<div class="sig">' + echapper(a.signature) + '</div></div>' +
+    '<div class="exo">' +
+    // a gauche : ce qui est fourni
+    '<div>' +
     (vue.consigne_forme ? '<div class="tuteur hf"><b>Forme attendue</b>' +
-      'Écrivez cette fonction en distinguant explicitement le cas de la liste vide et ' +
-      'le cas où elle a au moins un élément. Une solution correcte écrite autrement ' +
+      'Écrivez cette fonction ' + (vue.texte_consigne_forme ||
+        'en distinguant explicitement le cas de base et le cas récursif') +
+      '. Une solution correcte écrite autrement ' +
       'sera acceptée et conservée, mais elle ne pourra pas être comparée aux autres.' +
       '<div><button class="sec" onclick="pourquoiForme()">Pourquoi cette forme ?</button>' +
       '</div><div id="pourquoi"></div></div>' : "") +
-    '<textarea id="code">' + a.amorce + '</textarea>' +
-    '<div><button onclick="soumettre()">Compiler et tester</button>' +
-    '<button class="sec" id="btnaide" onclick="demanderAide()">' + libelleAide() + '</button></div>' +
+    blocFourni(d) + '</div>' +
+    // a droite : ce qu'on ecrit, les boutons, et la reponse du tuteur
+    '<div>' + blocEcriture(d) +
+    '<div class="actions"><button onclick="soumettre()">Compiler et tester</button>' +
+    '<button class="indice" id="btnaide" onclick="demanderAide()">' + libelleAide() +
+    '</button></div>' +
     (vue.aide_proposee ? '<div class="note">Deux tentatives sans succès : vous pouvez ' +
-      'demander un étayage.</div>' : "") +
-    '<div id="aide"></div><div id="sortie"></div></div></div>';
+      'demander un indice.</div>' : "") +
+    '<div id="aide"></div><div id="sortie"></div></div>' +
+    '</div></div></div>';
 }
 
 function dessinerDecision() {
@@ -560,26 +935,15 @@ function dessinerDecision() {
 
 let minuteur = null;
 
+// Dans la barre de progression : seulement le bouton pour quitter. Le choix du
+// rythme a disparu : apres une reussite, le tuteur attend toujours un clic.
 function dessinerSeance() {
   const z = el("seance"); if (!z) return;
-  const auto = (vue.preferences || {}).avance !== "manuel";
-  el("tagseance").innerHTML = vue.delai_minutes ?
-    'délai de ' + vue.delai_minutes + ' min par activité' : 'sans contrainte de temps';
-  z.innerHTML =
-    'Après une réussite : ' +
-    '<span class="opt' + (auto ? " on" : "") + '" onclick="rythme(\'auto\')">' +
-    'enchaîner automatiquement</span>' +
-    '<span class="opt' + (auto ? "" : " on") + '" onclick="rythme(\'manuel\')">' +
-    'attendre que je continue</span>' +
-    '<span id="chrono" class="minuteur"></span>' +
-    '<div class="note">' +
-    (vue.sequence === "must-complete" ?
+  z.innerHTML = '<button class="sec"' + (vue.peut_quitter ? "" : " disabled") +
+    ' title="' + (vue.sequence === "must-complete" ?
       "Votre enseignant demande de terminer la séquence sur ce concept avant de quitter." :
-      "Vous pouvez quitter la séance à tout moment ; votre dossier est conservé.") +
-    '</div>' +
-    '<div><button class="sec"' + (vue.peut_quitter ? "" : " disabled") +
-    ' onclick="quitterSeance()">Quitter la séance</button></div>' +
-    '<div id="msgseance"></div>';
+      "Vous pouvez quitter à tout moment ; votre dossier est conservé.") +
+    '" onclick="quitterSeance()">Quitter</button>';
 }
 
 async function rythme(v) {
@@ -621,47 +985,49 @@ function lancerMinuteur() {
   minuteur = setInterval(peindre, 1000);
 }
 
+// La progression, toujours visible dans la barre du haut : l'etape en cours
+// (ecrire, comparer, reutiliser) et un compte en une ligne, avec sa jauge.
 function dessinerProgres() {
   const p = vue.progres; if (!p) return;
-  const z = el("progres"); if (!z) return;
+  const z = el("progres"), c = el("compte"); if (!z || !c) return;
   const etat = p.etat;
-  const pct = Math.min(100, Math.round(100 * p.solutions / Math.max(p.minimum, 1)));
-  el("tagprog").textContent = vue.libelle || "";
-  let h =
-    (p.objectif ? '<div class="note" style="margin-top:0">Ce qu\'il faut atteindre : ' +
-      p.objectif + '.</div>' : "") +
-    '<div class="etapem">' +
-    '<div class="' + (etat === "instances" ? "on" : "fait") + '">écrire</div>' +
-    '<div class="' + (etat === "generalised" ? "on" : etat === "acquired" ? "fait" : "") +
-      '">comparer</div>' +
-    '<div class="' + (etat === "acquired" ? "fait" : "") + '">réemployer</div></div>';
-  if (etat === "instances") {
-    h += '<div class="note">Solutions au dossier : <b>' + p.solutions + '</b> sur ' +
-      p.minimum + ' au minimum.</div>' +
-      (p.resolutions ? '<div class="note">Problèmes résolus autrement : <b>' +
-        p.resolutions + '</b>. Ces réussites sont enregistrées ; elles ne servent ' +
-        'simplement pas à la comparaison.</div>' : "") +
-      '<div class="jauge"><i style="width:' + pct + '%"></i></div>';
-    if (p.attendu !== null && p.solutions >= 2) {
-      const q = Math.min(100, Math.round(100 * p.points / Math.max(p.attendu, 1)));
-      h += '<div class="note">Ce qui change d\'une solution à l\'autre : <b>' + p.points +
-        '</b> ; le tuteur en cherche ' + p.attendu +
-        (p.stable ? ", et le compte ne bouge plus" : "") + '.</div>' +
-        '<div class="jauge v"><i style="width:' + q + '%"></i></div>';
-    }
-    h += '<div class="note">Le tuteur ne vous montrera vos solutions ensemble que lorsque ' +
-      'ce compte sera atteint et stable. Il n\'y a rien à mémoriser d\'ici là.</div>';
+  const atelier = vue.decision === "abstraction" || vue.decision === "guidance";
+  const etape = etat === "acquired" ? 3 : etat === "generalised" ? 3 : atelier ? 2 : 1;
+  const cls = k => k < etape || etat === "acquired" ? "fait" : (k === etape ? "on" : "");
+  z.innerHTML =
+    '<div class="' + cls(1) + '">1 · Écrire des solutions</div>' +
+    '<div class="' + cls(2) + '">2 · Trouver ce qu\'elles ont en commun</div>' +
+    // Etiquette neutre : affichee des le premier exercice, « Le reutiliser » disait
+    // d'avance a l'etudiant quoi faire de sa decouverte, alors que l'etude mesure
+    // s'il la reutilise de lui-meme dans les exercices de transfert.
+    '<div class="' + cls(3) + '">3 · Nouveaux exercices</div>';
+  // Un compte simple et une barre, avec une phrase courte. L'interface d'origine
+  // disait deja que le tuteur montre les solutions ensemble apres en avoir assez
+  // (« Solutions au dossier : n sur 3 au minimum ») : on garde l'idee, sans chiffre
+  // trompeur (l'atelier s'ouvre en general a la 4e solution, parfois a la 3e).
+  let texte, pct, aide;
+  if (etat === "acquired") {
+    texte = '<b>Palier acquis</b>'; pct = 100; aide = "Bravo : ce palier est terminé.";
   } else if (etat === "generalised") {
-    h += '<div class="note">Réemplois spontanés : <b>' + p.reemplois + '</b> sur ' +
-      p.reemplois_requis + '.</div>' +
-      '<div class="jauge v"><i style="width:' +
-      Math.round(100 * p.reemplois / p.reemplois_requis) + '%"></i></div>' +
-      '<div class="note">Un réemploi ne compte que si vous employez ce que vous venez ' +
-      'de trouver, plutôt qu\'une récursion écrite à la main.</div>';
+    texte = 'Réutilisations : <b>' + p.reemplois + '</b> sur ' + p.reemplois_requis;
+    pct = Math.round(100 * p.reemplois / Math.max(p.reemplois_requis, 1));
+    // Phrase de l'interface d'origine, reprise telle quelle : elle dit la regle sans
+    // donner de consigne de methode. « Resolvez ... en reutilisant » en etait une,
+    // affichee pendant l'exercice de transfert, qui mesure le reemploi spontane.
+    aide = "Une réutilisation ne compte que si vous employez ce que vous venez de " +
+      "trouver, plutôt qu'une récursion écrite à la main.";
+  } else if (atelier) {
+    texte = 'Solutions réussies : <b>' + p.solutions + '</b>'; pct = 100;
+    aide = "Le tuteur vous montre vos solutions ensemble : cherchez ce qu'elles ont en commun.";
   } else {
-    h += '<div class="note">Concept acquis.</div>';
+    texte = 'Solutions réussies : <b>' + p.solutions + '</b>';
+    pct = Math.min(100, Math.round(100 * p.solutions / (Math.max(p.minimum, 1) + 1)));
+    aide = "Quand vous en aurez écrit assez, le tuteur vous les montrera ensemble.";
   }
-  z.innerHTML = h;
+  c.innerHTML = texte + '<div class="jauge"><i style="width:' + pct + '%"></i></div>' +
+    '<div class="aide-ligne">' + aide +
+    (p.resolutions && etat === "instances" ? ' (' + p.resolutions +
+      ' exercice(s) réussi(s) autrement, enregistré(s) à part)' : "") + '</div>';
 }
 
 function dessinerSolutions() {
@@ -682,32 +1048,38 @@ async function voirSolution(nom) {
   if (r.refus) return;
   vue.activite = r.activite;
   vue.decision = vue.decision === "abstraction" ? vue.decision : vue.decision;
+  const d = decouperSolution(r.activite.amorce, r.activite.amorce_origine);
   el("centre").innerHTML =
-    '<div class="carte"><div class="titre or">Reprise <b>' + nom + '</b></div>' +
-    '<div class="corps"><div class="enonce">' + r.activite.enonce + '<br><code>' +
-    r.activite.signature + '</code></div>' +
+    '<div class="carte"><div class="titre">Reprise <b>' + nom + '</b></div>' +
+    '<div class="corps"><div class="exo"><div><div class="enonce">' + r.activite.enonce +
+    '<br><code>' + r.activite.signature + '</code></div>' +
     '<div class="note">Voici la solution que vous aviez écrite. Modifiez-la et ' +
-    'soumettez-la de nouveau si vous voulez l\'améliorer ; sinon, revenez au parcours.</div>' +
-    '<textarea id="code">' + r.activite.amorce + '</textarea>' +
-    '<div><button onclick="soumettre()">Compiler et tester</button>' +
-    '<button class="sec" onclick="rafraichir()">Revenir au parcours</button></div>' +
-    '<div id="aide"></div><div id="sortie"></div></div></div>';
+    'soumettez-la de nouveau si vous voulez l\'améliorer ; sinon, revenez aux exercices.</div>' +
+    blocFourni(d) + '</div><div>' + blocEcriture(d) +
+    '<div class="actions"><button onclick="soumettre()">Compiler et tester</button>' +
+    '<button class="sec" onclick="rafraichir()">Revenir aux exercices</button></div>' +
+    '<div id="aide"></div><div id="sortie"></div></div></div></div></div>';
+  ajusterZones();
+  traduireDOM();
 }
 
+// Le panneau d'indices a disparu (le bouton est dans l'exercice) : on ne dessine
+// plus rien si sa place n'existe pas.
 function dessinerEtayage() {
+  if (!el("etayage")) return;
   el("tagaide").textContent = vue.aides_max ?
     (vue.aides_prises || 0) + " / " + vue.aides_max : "fermé";
   const ouvert = vue.aides_max > 0;
   el("etayage").innerHTML =
     (ouvert ?
-      "Trois niveaux, à la demande. Aucun ne donne la solution ni ne nomme le schéma." :
+      "Trois indices par exercice, du plus général au plus précis. Aucun ne donne la solution." :
       "Votre enseignant a fermé l'assistance sur ce concept.") +
     '<div><button class="sec"' + (ouvert ? "" : " disabled") +
     ' onclick="demanderAide(' + (vue.decision === "abstraction" || vue.decision === "guidance" ?
       "'abstraction'" : "null") + ')">' + libelleAide() + '</button></div>' +
     '<div id="aidelat"></div>' +
     (vue.aide_proposee ? '<div class="note">Deux tentatives sans succès : ' +
-      'le tuteur vous propose un étayage.</div>' : "");
+      'le tuteur vous propose un indice.</div>' : "");
 }
 
 async function dessinerHistorique() {
@@ -716,7 +1088,10 @@ async function dessinerHistorique() {
   h.innerHTML = d.total + " soumission(s) enregistrée(s)." +
     (d.dernieres.length ? '<div class="note">' + d.dernieres.slice(-6).reverse().map(x =>
       x.horodatage.slice(11) + " · " + x.exercice + " · " +
-      (x.verdict === "reussite" ? "réussi" : x.categorie)).join("<br>") + '</div>' : "");
+      (x.verdict === "reussite" ? "réussi" :
+       String(x.categorie).startsWith("aide-niveau-") ?
+         "indice " + String(x.categorie).slice(12) :
+       libelleCategorie(x.categorie))).join("<br>") + '</div>' : "");
   traduireDOM();
 }
 
@@ -724,22 +1099,26 @@ async function soumettre() {
   const s = el("sortie");
   s.innerHTML = '<div class="note">compilation en cours…</div>';
   const r = await api("/api/soumettre",
-    {ident: ident, activite: vue.activite.id, code: el("code").value});
+    {ident: ident, activite: vue.activite.id, code: codeComplet()});
   const v = r.verdict;
   // la sortie brute du compilateur reste dans un pre, qui n'est pas traduit ;
   // les lignes d'etat sont du texte d'interface et le sont
   let html = "";
-  if (!v.compile) html += '<pre class="err">' + v.message + '</pre>';
+  if (!v.compile) html += '<pre class="err">' + echapper(v.message) + '</pre>';
   else if (v.reussite) html += '<div class="etat ok">Compilation réussie. ' +
-       v.attendu.length + ' tests réussis.</div>';
-  else html += '<div class="etat err">Compilation réussie, mais ' +
-       v.obtenu.map((o, i) => o + " au lieu de " + v.attendu[i]).join(" ; ") + '</div>';
+       v.attendu.length + ' tests réussis.</div>' +
+       tableauTests(r.tests, v, vue.activite.id);
+  else html += '<div class="etat err">Compilation réussie, mais certains tests ' +
+       'échouent :</div>' + tableauTests(r.tests, v, vue.activite.id);
   if (r.admission) html += '<div class="note">' +
-    (r.admission.admis ? "Soumission admise au corpus d'alignement." :
-     "Non admise à l'alignement : " + r.admission.motif) + '</div>';
-  if (r.reemploi) html += '<div class="note">Schéma employé : ' +
-    (r.reemploi.schema_employe ? "oui, réemploi compté" :
-     "non, récursion explicite ; le réemploi ne compte pas") + '</div>';
+    (r.admission.admis ? "Solution ajoutée à vos solutions comparables." :
+     "Solution juste, mais elle ne peut pas être comparée aux autres : " +
+     r.admission.motif) + '</div>';
+  if (r.reemploi) html += '<div class="note">' +
+    (r.reemploi.schema_employe ?
+     "Vous avez réutilisé votre découverte : la réutilisation est comptée." :
+     "Solution juste, mais écrite sans réutiliser votre découverte : " +
+     "la réutilisation n'est pas comptée.") + '</div>';
   if (r.tuteur) html = '<div class="tuteur' +
     (r.tuteur.ton === "echec" ? " ko" : r.tuteur.ton === "off_form" ? " hf" : "") + '">' +
     '<b>Le tuteur</b>' + r.tuteur.texte +
@@ -755,12 +1134,12 @@ async function soumettre() {
   if (r.hors_delai) html = '<div class="tuteur ko"><b>Le tuteur</b>Cette soumission arrive ' +
     'après le délai fixé par votre enseignant. Elle est enregistrée comme telle ; ' +
     'elle compte quand même.</div>' + html;
-  const horsForme = r.tuteur && r.tuteur.ton === "off_form";
-  const auto = (vue.preferences || {}).avance !== "manuel" && !horsForme;
+  // Apres une reussite, le tuteur attend toujours que l'etudiant clique : il a le
+  // temps de lire le message avant de passer a la suite.
+  const auto = false;
   if (v.reussite && !auto)
     html += '<div style="margin-top:9px"><button onclick="rafraichir()">' +
-      'Activité suivante</button><button class="sec" onclick="rafraichir()">' +
-      'Rester sur cet écran</button></div>';
+      'Exercice suivant</button></div>';
   if (r.verification) {
     html += '<div class="verif" id="verif"><p><b>Une question sur votre solution.</b> ' +
       'Le tuteur vous demande de temps à autre d\'expliquer ce que fait votre code. ' +
@@ -781,22 +1160,54 @@ async function soumettre() {
     z.className = "note";
     s.appendChild(z);
     const t = setInterval(() => {
-      z.innerHTML = "Activité suivante dans " + n + " s. " +
+      z.innerHTML = "Exercice suivant dans " + n + " s. " +
         "<button class=\"sec\" onclick=\"annulerEnchainement()\">Rester ici</button> " +
         "<button onclick=\"rafraichir()\">Continuer maintenant</button>";
       if (n-- <= 0) { clearInterval(t); rafraichir(); }
     }, 1000);
     window.__enchainement = t;
-    z.innerHTML = "Activité suivante dans " + n + " s.";
+    z.innerHTML = "Exercice suivant dans " + n + " s.";
   }
   traduireDOM();
+}
+
+// Le resultat de chaque test, sur une ligne : l'appel teste (par exemple
+// « bintree_count_leaves t0 »), la valeur obtenue, la valeur attendue. On extrait
+// l'appel de l'expression de test, qui l'entoure de conversions en texte
+// (string_of_int, String.concat...) dont l'etudiant n'a pas a se soucier.
+function appelTeste(expr, nom) {
+  const e = String(expr || ""), i = e.indexOf(nom + " ");
+  if (i < 0) return e;
+  let j = i + nom.length + 1;
+  while (e[j] === " ") j++;
+  if (e[j] === "(") {
+    let p = 0, k = j;
+    for (; k < e.length; k++) { if (e[k] === "(") p++; else if (e[k] === ")" && --p === 0) break; }
+    return e.slice(i, k + 1);
+  }
+  const m = /^[\w'.]+/.exec(e.slice(j));
+  return e.slice(i, j) + (m ? m[0] : "");
+}
+function tableauTests(tests, v, nom) {
+  if (!tests || !tests.length || !v.attendu) return "";
+  const vide = x => (x === "" ? "(vide)" : echapper(x));
+  return '<table class="al tests"><tr><th></th><th>Test</th><th>Obtenu</th>' +
+    '<th>Attendu</th></tr>' + tests.map((t, i) => {
+      const o = v.obtenu ? v.obtenu[i] : undefined, a = v.attendu[i];
+      const ok = o !== undefined && o === a;
+      return '<tr class="' + (ok ? "reussi" : "rate") + '"><td>' + (ok ? "✓" : "✗") +
+        '</td><td><code>' + echapper(appelTeste(t, nom)) + '</code></td><td>' +
+        (o === undefined ? "(aucun)" : vide(o)) + '</td><td>' + vide(a) + '</td></tr>';
+    }).join("") + '</table>' +
+    '<div class="legende">Les arbres t0, t1, t2, t3 et example_tree sont définis dans le ' +
+    'code fourni.</div>';
 }
 
 function annulerEnchainement() {
   if (window.__enchainement) clearInterval(window.__enchainement);
   const z = el("sortie");
   if (z) z.innerHTML += '<div class="note">Enchaînement suspendu. ' +
-    '<button onclick="rafraichir()">Activité suivante</button></div>';
+    '<button onclick="rafraichir()">Exercice suivant</button></div>';
 }
 
 async function repondreVerification(activite) {
@@ -830,19 +1241,34 @@ async function demanderAide(contexte) {
                                     activite: vue.activite ? vue.activite.id : null});
   if (r.refus) {
     z.innerHTML = '<div class="note">' + r.refus + '</div>' +
-      (r.rappel ? '<div class="enonce">' + r.rappel.map((t, k) =>
-        '<b>Niveau ' + (k + 1) + '.</b> ' + t).join("<br>") + '</div>' : "");
+      (r.rappel && r.rappel.length ? '<div class="enonce">' + r.rappel.map((t, k) =>
+        '<b>Indice ' + (k + 1) + '.</b> ' + t).join("<br>") + '</div>' : "");
     vue.aides_prises = r.sur;
   } else {
-    z.innerHTML = '<div class="enonce"><b>Étayage, niveau ' + r.niveau + ' sur ' + r.sur + '</b>' +
+    z.innerHTML = '<div class="enonce"><b>Indice ' + r.niveau + ' sur ' + r.sur + '</b>' +
       (r.fonde_sur && r.fonde_sur !== "none" ?
-        ' <span class="note">— fondé sur votre dernière erreur : ' + r.fonde_sur + '</span>' : "") +
+        ' <span class="note">(à propos de votre dernière erreur : ' +
+        libelleCategorie(r.fonde_sur) + ')</span>' : "") +
       '<br>' + r.texte + '</div>';
     vue.aides_prises = r.niveau;
   }
   const b = el("btnaide"); if (b) b.textContent = libelleAide();
   dessinerEtayage();
   traduireDOM();
+}
+
+// Ouvre la partie « Plus d'informations » et fait defiler jusqu'a « Mes solutions ».
+function ouvrirSolutions() {
+  const d = document.querySelector("details.plus");
+  if (d) d.open = true;
+  const s = el("solutions");
+  if (s) s.scrollIntoView({behavior: "smooth", block: "start"});
+}
+
+// « Pas encore » : le bouton existait, mais la fonction manquait (clic sans effet).
+async function refuserAtelier() {
+  const r = await api("/api/refus_atelier", {ident: ident});
+  if (r && r.etat) await rafraichir();
 }
 
 async function generaliser() {

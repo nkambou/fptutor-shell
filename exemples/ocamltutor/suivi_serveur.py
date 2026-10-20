@@ -65,16 +65,31 @@ ENONCES = {
     "ubtree_count_bin": "On considère un arbre dont chaque nœud a un ou deux "
                         "sous-arbres. Combien a-t-il de nœuds à deux sous-arbres ? "
                         "Toute solution correcte est acceptée.",
+    # Seance 2 : les deux reecritures de la derniere section du laboratoire 05,
+    # dont la forme est donnee (elles nomment fold_tree, apres sa presentation en
+    # classe), puis le second transfert, sans consigne de methode.
+    "bintree_count_internal_nodes_fold":
+        "Réécrivez la fonction qui compte les nœuds internes en employant fold_tree. "
+        "Définissez d'abord fold_tree (vous pouvez reprendre votre définition), puis "
+        "bintree_count_internal_nodes_fold, qui ne doit pas s'appeler elle-même.",
+    "bintree_collect_internal_nodes_fold":
+        "Réécrivez la fonction qui donne la liste des entiers portés par les nœuds "
+        "internes, dans un ordre quelconque, en employant fold_tree. Définissez d'abord "
+        "fold_tree, puis bintree_collect_internal_nodes_fold, qui ne doit pas "
+        "s'appeler elle-même.",
 }
-# Gradation voulue : meme forme que le laboratoire, puis type du resultat change,
-# puis type de l'arbre change. bintree_min reste disponible mais n'est plus servi :
-# la manipulation d'une option y ajoutait une difficulte etrangere au schema.
-ORDRE = ["bintree_count_even", "bintree_all_positive", "ubtree_count_bin"]
+# Plan de la seance 2 (docs/SEANCE2.md) : les deux premiers exercices sont des
+# reecritures dont la forme est donnee, le troisieme est le seul qui demande une
+# decision. La liste est celle de activities_ml.PHASE_2 : la page principale (apres
+# la bascule) et le suivi servent les memes exercices. L'ancienne gradation
+# (count_even, all_positive, ubtree_count_bin) faisait refaire count_even, deja
+# servi en phase 1.
+ORDRE = list(A.PHASE_2)
 
 
 def items():
     table = {}
-    for acts in A.REEMPLOIS.values():
+    for acts in A.EXERCICES_REEMPLOI.values():
         for (nom, _enonce, sig, amorce, tests) in acts:
             if nom in ENONCES:
                 table[nom] = dict(id=nom, enonce=ENONCES[nom], signature=sig,

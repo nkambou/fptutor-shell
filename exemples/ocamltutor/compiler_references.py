@@ -25,6 +25,10 @@ SOL = {
  "bintree_min": "let rec bintree_min a =\n  match a with\n  | Leaf -> None\n  | Node (x, g, d) ->\n    let m u v = match u, v with\n      | None, r -> r | r, None -> r\n      | Some p, Some q -> Some (min p q) in\n    m (Some x) (m (bintree_min g) (bintree_min d))",
  "bintree_all_positive": "let rec bintree_all_positive a =\n  match a with\n  | Leaf -> true\n  | Node (x, g, d) -> x > 0 && bintree_all_positive g && bintree_all_positive d",
  "ubtree_count_bin": "let rec ubtree_count_bin a =\n  match a with\n  | UbLeaf -> 0\n  | Un t -> ubtree_count_bin t\n  | Bin (g, d) -> 1 + ubtree_count_bin g + ubtree_count_bin d",
+ # exercices de la bascule : references ecrites en recursion explicite, pour
+ # verifier les tests sans deposer le corrige du laboratoire (qui emploie fold_tree)
+ "bintree_count_internal_nodes_fold": "let rec bintree_count_internal_nodes_fold a =\n  match a with\n  | Leaf -> 0\n  | Node (_, g, d) -> 1 + bintree_count_internal_nodes_fold g + bintree_count_internal_nodes_fold d",
+ "bintree_collect_internal_nodes_fold": "let rec bintree_collect_internal_nodes_fold a =\n  match a with\n  | Leaf -> []\n  | Node (x, g, d) -> x :: (bintree_collect_internal_nodes_fold g @ bintree_collect_internal_nodes_fold d)",
  "mille_sur_tete": "let mille_sur_tete l =\n  match premier l with\n  | None -> None\n  | Some x -> division 1000 x",
  "lier": "let lier r f =\n  match r with\n  | Erreur m -> Erreur m\n  | Ok x -> f x",
 }
@@ -50,7 +54,9 @@ def executer(code, expressions):
 
 def main():
     total = ok = 0
-    for pool, table in (("instance", A.ACTIVITES), ("reemploi", A.REEMPLOIS)):
+    # toute la reserve des reemplois, et pas seulement ceux de la phase en cours :
+    # les exercices de la bascule doivent etre justes avant d'etre servis
+    for pool, table in (("instance", A.ACTIVITES), ("reemploi", A.EXERCICES_REEMPLOI)):
         for famille, activites in table.items():
             for nom, _enonce, signature, amorce, tests in activites:
                 total += 1

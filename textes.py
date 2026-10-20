@@ -31,11 +31,11 @@ CATALOGUE = {
  "avant de vous les montrer ensemble.": "before showing them to you together.",
  "solutions au dossier. En les comparant, le tuteur y voit":
    "solutions in the dossier. Comparing them, the tutor sees",
- "chose qui change d'une solution a l'autre. Il en cherche":
+ "chose qui change d'une solution à l'autre. Il en cherche":
    "thing that changes from one solution to the next. It is looking for",
- "choses qui changent d'une solution a l'autre. Il en cherche":
+ "choses qui changent d'une solution à l'autre. Il en cherche":
    "things that change from one solution to the next. It is looking for",
- "Le tuteur verifie sur une solution de plus que ce compte ne bouge pas.":
+ "Le tuteur vérifie sur une solution de plus que ce compte ne bouge pas.":
    "The tutor checks on one more solution that this count does not move.",
  "et le compte ne bouge plus.": "and the count no longer moves.",
  "point de variation, et le compte ne bouge plus.":
@@ -45,94 +45,96 @@ CATALOGUE = {
  "c'est le compte attendu.": "that is the expected count.",
  "Vous allez pouvoir les regarder ensemble.":
    "You will be able to look at them together.",
- "Votre solution est enregistree.": "Your solution is recorded.",
- "Elle est conservee a part.": "It is kept separately.",
+ "Votre solution est enregistrée.": "Your solution is recorded.",
+ "Elle est conservée à part.": "It is kept separately.",
 
  # --- messages du tuteur, solution correcte mais hors forme
  "C'est juste, et votre solution fonctionne.":
    "That is right, and your solution works.",
- "Pour la suite, le tuteur a besoin de solutions ecrites de la meme maniere, parce qu'il va vous les montrer cote a cote : c'est en les comparant que vous trouverez ce qu'elles ont en commun.":
+ "Pour la suite, le tuteur a besoin de solutions écrites de la même manière, parce qu'il va vous les montrer côte à côte : c'est en les comparant que vous trouverez ce qu'elles ont en commun.":
    "For what follows, the tutor needs solutions written in the same way, because it is going to show them to you side by side: it is by comparing them that you will find what they have in common.",
- "La votre est correcte mais elle ne se compare pas terme a terme avec les autres.":
+ "La votre est correcte mais elle ne se compare pas terme à terme avec les autres.":
    "Yours is correct, but it does not compare term by term with the others.",
- "Le tuteur passe a un autre probleme de meme nature. Ecrivez-le en distinguant le cas de la liste vide et le cas ou elle a au moins un element : c'est cette forme-la qu'il faut pour la suite.":
+ "Le tuteur passe à un autre problème de même nature. Écrivez-le en distinguant le cas de la liste vide et le cas ou elle a au moins un élément : c'est cette forme-la qu'il faut pour la suite.":
    "The tutor moves to another problem of the same kind. Write it by distinguishing the case of the empty list from the case where it has at least one element: that is the form needed for what follows.",
- "Reecrivez la meme fonction en distinguant explicitement le cas de la liste vide et le cas ou elle a au moins un element.":
+ "Réécrivez la même fonction en distinguant explicitement le cas de la liste vide et le cas ou elle a au moins un élément.":
    "Write the same function again, distinguishing explicitly the case of the empty list from the case where it has at least one element.",
- "Vous savez visiblement deja obtenir ce resultat sans le detailler. Ecrivez-le maintenant detaille, et vous aurez les deux versions sous les yeux.":
+ "Vous savez visiblement déjà obtenir ce résultat sans le détailler. Écrivez-le maintenant detaille, et vous aurez les deux versions sous les yeux.":
    "You evidently already know how to obtain this result without spelling it out. Write it out now, and you will have both versions in front of you.",
  "Elle est correcte, mais elle n'entre pas dans la comparaison :":
    "It is correct, but it does not enter the comparison:",
  "correcte mais non alignable": "correct but not alignable",
- "correcte mais sans recursion explicite": "correct but without explicit recursion",
- "schema deja employe": "schema already used",
- "aucun cas recursif reconnu": "no recursive case recognised",
+ "correcte mais sans récursion explicite": "correct but without explicit recursion",
+ "schéma déjà employé": "schema already used",
+ "aucun cas récursif reconnu": "no recursive case recognised",
  "tests non reussis": "tests not passed",
- "Non admise a l'alignement :": "Not admitted to the alignment:",
+ "Non admise à l'alignement :": "Not admitted to the alignment:",
  "Soumission admise au corpus d'alignement.":
    "Submission admitted to the alignment corpus.",
  "Compilation reussie.": "Compiled successfully.",
  "tests reussis.": "tests passed.",
 
  # --- raisons de non-comparabilite
- "une comprehension donne le meme resultat et masque cet endroit precis":
+ "une compréhension donne le même résultat et masque cet endroit précis":
    "a comprehension gives the same result and hides that precise place",
- "un accumulateur applique l'operation avant l'appel recursif, ce qui est un autre schema":
+ "un accumulateur applique l'opération avant l'appel récursif, ce qui est un autre schéma":
    "an accumulator applies the operation before the recursive call, which is another schema",
- "une fonction toute faite donne le resultat sans montrer la marche":
+ "une fonction toute faite donne le résultat sans montrer la marche":
    "a library function gives the result without showing the procedure",
- "il n'y a pas de cas recursif a comparer":
+ "il n'y a pas de cas récursif a comparer":
    "there is no recursive case to compare",
 
  # --- etayage
- "Trois niveaux, a la demande. Aucun ne donne la solution ni ne nomme le schema.":
+ "Trois niveaux, à la demande. Aucun ne donne la solution ni ne nomme le schéma.":
    "Three levels, on request. None gives the solution or names the schema.",
- "Le compilateur signale un motif non couvert. Quelle forme d'entree votre definition ne traite-t-elle pas ?":
+ "Le compilateur signale un motif non couvert. Quelle forme d'entrée votre définition ne traite-t-elle pas ?":
    "The compiler reports an uncovered pattern. Which form of input does your definition not handle?",
- "Le compilateur signale qu'une forme d'entree n'est pas traitee.":
+ "Le compilateur signale qu'une forme d'entrée n'est pas traitée.":
    "The compiler reports that one form of input is not handled.",
- "Vous pouvez demander un etayage : trois niveaux, aucun ne donne la solution.":
+ "Vous pouvez demander un étayage : trois niveaux, aucun ne donne la solution.":
    "You may ask for scaffolding: three levels, none of which gives the solution.",
- "fonde sur votre derniere erreur :": "based on your last error:",
- "Il vous manque une equation dont le motif est":
+ "Vous pouvez demander un indice : trois niveaux, aucun ne donne la solution.":
+   "You may ask for a hint: three levels, none of which gives the solution.",
+ "fonde sur votre dernière erreur :": "based on your last error:",
+ "Il vous manque une équation dont le motif est":
    "You are missing an equation whose pattern is",
- "Sa valeur est celle qui ne change rien a l'operation que vous employez.":
+ "Sa valeur est celle qui ne change rien à l'opération que vous employez.":
    "Its value is the one that changes nothing in the operation you are using.",
- "Deux tentatives sans succes : vous pouvez":
+ "Deux tentatives sans succès : vous pouvez":
    "Two attempts without success: you may",
 
  # --- consigne de forme et explication epistemique
  "Forme attendue": "Expected form",
- "Ecrivez cette fonction en distinguant explicitement le cas de la liste vide et le cas ou elle a au moins un element. Une solution correcte ecrite autrement sera acceptee et conservee, mais elle ne pourra pas etre comparee aux autres.":
+ "Écrivez cette fonction en distinguant explicitement le cas de la liste vide et le cas ou elle a au moins un élément. Une solution correcte écrite autrement sera acceptee et conservée, mais elle ne pourra pas être comparee aux autres.":
    "Write this function by distinguishing explicitly the case of the empty list from the case where it has at least one element. A correct solution written otherwise will be accepted and kept, but it will not be comparable with the others.",
  "Pourquoi cette forme ?": "Why this form?",
  "Pour que la comparaison soit possible, il faut voir deux choses dans chaque solution :":
    "For the comparison to be possible, two things must be visible in each solution:",
  "Autrement dit, la contrainte de forme n'est pas une exigence de style : c'est ce qui rend la comparaison possible.":
    "The form requirement is therefore not a matter of style: it is what makes the comparison possible.",
- "La contrainte porte donc sur ce que la solution rend visible, pas sur sa qualite.":
+ "La contrainte porte donc sur ce que la solution rend visible, pas sur sa qualité.":
    "The requirement concerns what the solution makes visible, not its quality.",
- "Une comprehension donne le meme resultat et masque cet endroit precis.":
+ "Une compréhension donne le même résultat et masque cet endroit précis.":
    "A comprehension gives the same result and hides that precise place.",
 
  # --- verification par explication
- "Que rend votre fonction sur l'entree vide ?":
+ "Que rend votre fonction sur l'entrée vide ?":
    "What does your function return on the empty input?",
- "Dans votre cas recursif, quelle expression designe le resultat deja calcule sur le reste de l'entree ?":
+ "Dans votre cas récursif, quelle expression désigne le résultat déjà calculé sur le reste de l'entrée ?":
    "In your recursive case, which expression denotes the result already computed on the rest of the input?",
- "Cette valeur est celle qui ne change rien a l'operation que vous employez : c'est ainsi qu'on la trouve.":
+ "Cette valeur est celle qui ne change rien à l'opération que vous employez : c'est ainsi qu'on la trouve.":
    "That value is the one that changes nothing in the operation you are using, which is how it is found.",
- "C'est l'appel recursif : vous supposez que la fonction sait deja repondre sur le reste, et vous vous contentez de combiner ce resultat avec le premier element.":
+ "C'est l'appel récursif : vous supposez que la fonction sait déjà répondre sur le reste, et vous vous contentez de combiner ce résultat avec le premier élément.":
    "That is the recursive call: you assume the function already answers on the rest, and you simply combine that result with the first element.",
- "soumission tres rapide apres l'ouverture de l'activite":
+ "soumission très rapide après l'ouverture de l'activité":
    "submission arriving within seconds of the activity being opened",
- "aucune tentative intermediaire, aucun etayage":
+ "aucune tentative intermédiaire, aucun étayage":
    "no intermediate attempt, no scaffolding",
- "mise en forme inhabituelle pour une saisie au fil de l'ecriture":
+ "mise en forme inhabituelle pour une saisie au fil de l'écriture":
    "layout unusual for text typed as it is written",
- "Merci : votre explication correspond a ce que votre code fait.":
+ "Merci : votre explication correspond à ce que votre code fait.":
    "Thank you: your explanation matches what your code does.",
- "Votre reponse ne correspond pas a ce que votre code fait. La solution reste enregistree ; reprenez-la si vous voulez, et demandez un etayage au besoin.":
+ "Votre réponse ne correspond pas à ce que votre code fait. La solution reste enregistrée ; reprenez-la si vous voulez, et demandez un étayage au besoin.":
    "Your answer does not match what your code does. The solution stays recorded; revise it if you wish, and ask for scaffolding if you need it.",
 
  # --- decisions et motifs
@@ -145,7 +147,7 @@ CATALOGUE = {
  "plus d'ancrage disponible dans la famille":
    "no anchor left in the family",
  "plafond d'instances atteint": "instance ceiling reached",
- "reemploi a servir": "reuse item to serve",
+ "réemploi a servir": "reuse item to serve",
  "concept acquis": "concept acquired",
 
  # --- variantes accentuees, telles qu'elles figurent dans le referentiel
@@ -247,7 +249,7 @@ CATALOGUE = {
    "have written. The tutor has aligned their base cases and their recursive cases. Write a single definition that replaces them all.",
  "écrire assez de solutions comparables, y trouver ce qu'elles ont en commun, puis l'employer sans y être invité":
    "write enough comparable solutions, find what they share, then use it unprompted",
- "écrire assez de solutions comparables, y trouver ce qu'elles ont en commun, puis l'employer sans y etre invite":
+ "écrire assez de solutions comparables, y trouver ce qu'elles ont en commun, puis l'employer sans y être invite":
    "write enough comparable solutions, find what they share, then use it unprompted",
  "Cliquez sur une solution pour la revoir et la reprendre. La reprendre remplace votre version dans le dossier.":
    "Click a solution to review and revise it. Revising replaces your version in the dossier.",
@@ -478,7 +480,7 @@ CATALOGUE = {
 
  "Le tuteur vous demande de temps à autre d'expliquer ce que fait votre code. Cela ne met pas votre travail en doute : mettre une solution en mots est une des façons les plus efficaces de l'apprendre.":
    "The tutor asks from time to time what your code does. This does not call your work into question: putting a solution into words is one of the most effective ways of learning it.",
- "Multipliez chaque element par deux.":
+ "Multipliez chaque élément par deux.":
    "Multiply each element by two.",
  "Multipliez chaque élément par deux.":
    "Multiply each element by two.",
@@ -515,7 +517,7 @@ CATALOGUE = {
 
 
 
- "La votre est correcte mais elle ne distingue pas les cas : on n'y voit ni ce que vaut le resultat sur une liste vide, ni ce que vous faites du premier element.":
+ "La votre est correcte mais elle ne distingue pas les cas : on n'y voit ni ce que vaut le résultat sur une liste vide, ni ce que vous faites du premier élément.":
    "Yours is correct, but it does not distinguish the cases: it shows neither what the result is on an empty list nor what you do with the first element.",
 
  " sur 3 au minimum.": " of 3 at least.",
@@ -529,7 +531,7 @@ CATALOGUE = {
  "Votre solution est enregistrée.": "Your solution is recorded.",
 
  "Non admise à l'alignement :": "Not admitted to the alignment:",
- "Non admise a l'alignement :": "Not admitted to the alignment:",
+ "Non admise à l'alignement :": "Not admitted to the alignment:",
 
  "Non admise à l'alignement :":
    "Not admitted to the alignment:",
@@ -544,21 +546,21 @@ CATALOGUE = {
  "été produit": "been produced",
 
  # --- etayage et lectures d'erreur
- "L'auto-organisation ne s'exerce que dans l'ensemble eligible : seuls les pairs au meme etat sur le concept vise sont proposes.":
+ "L'auto-organisation ne s'exerce que dans l'ensemble eligible : seuls les pairs au même état sur le concept visé sont proposes.":
    "Self-organisation operates only within the eligible set: only peers at the same state on the target concept are offered.",
- "Il vous manque une equation dont le motif est [] . Sa valeur est celle qui ne change rien a l'operation que vous employez.":
+ "Il vous manque une équation dont le motif est [] . Sa valeur est celle qui ne change rien à l'opération que vous employez.":
    "You are missing an equation whose pattern is [] . Its value is the one that changes nothing in the operation you are using.",
- "seuls les pairs au meme etat sur le concept vise sont proposes.":
+ "seuls les pairs au même état sur le concept visé sont proposes.":
    "only peers at the same state on the target concept are offered.",
  "L'auto-organisation ne s'exerce que dans l'ensemble eligible :":
    "Self-organisation operates only within the eligible set:",
- "change rien a l'operation que vous employez.":
+ "change rien à l'opération que vous employez.":
    "changes nothing in the operation you are using.",
- "C'est l'appel recursif : vous supposez que la fonction sait deja repondre sur le reste, et vous vous contentez de combiner ce resultat avec le premier element.":
+ "C'est l'appel récursif : vous supposez que la fonction sait déjà répondre sur le reste, et vous vous contentez de combiner ce résultat avec le premier élément.":
    "That is the recursive call: you assume the function already answers on the rest, and you simply combine that result with the first element.",
- "Une liste est soit vide, soit un element suivi d'une liste. Vous avez ecrit une equation pour la seconde forme seulement.":
+ "Une liste est soit vide, soit un élément suivi d'une liste. Vous avez écrit une équation pour la seconde forme seulement.":
    "A list is either empty or an element followed by a list. You have written an equation for the second form only.",
- "Une liste en comprehension, ou un appel a une fonction toute faite, donne le bon resultat sans montrer ces deux choses.":
+ "Une liste en compréhension, ou un appel a une fonction toute faite, donne le bon résultat sans montrer ces deux choses.":
    "A list comprehension, or a call to a library function, gives the right result without showing those two things.",
  "Autrement dit, la contrainte de forme n'est pas une exigence de style : c'est ce qui rend la comparaison possible.":
    "The form requirement is therefore not a matter of style: it is what makes the comparison possible.",
@@ -566,7 +568,7 @@ CATALOGUE = {
    "The tutor has done the alignment for you: the columns above show the case",
  "Votre solution est juste. Mais ce que le cours construit ici est la comparaison":
    "Your solution is right. But what the course is building here is the comparison",
- "Vous savez deja obtenir ce resultat. Ce que le cours cherche a construire n'est":
+ "Vous savez déjà obtenir ce résultat. Ce que le cours cherche a construire n'est":
    "You already know how to obtain this result. What the course is trying to build is not",
  "Charpente : f [] = Z et f (x:xs) = ... x ... (f xs). Pour Z, cherchez la valeur":
    "Skeleton: f [] = Z and f (x:xs) = ... x ... (f xs). For Z, look for the value",
@@ -576,87 +578,87 @@ CATALOGUE = {
    "Compare the expected type with the type found, then ask GHCi for the type of the",
  "Charpente : f [] = [] puis f (x:xs) avec deux gardes, dont l'une conserve x et":
    "Skeleton: f [] = [] then f (x:xs) with two guards, one of which keeps x and",
- "fois que vous resolvez un probleme autrement que ce que la comparaison attend.":
+ "fois que vous résolvez un problème autrement que ce que la comparaison attend.":
    "time you have solved a problem otherwise than the comparison expects.",
- "Votre solution est juste. La forme demandee n'est pas une question de style :":
+ "Votre solution est juste. La forme demandée n'est pas une question de style :":
    "Your solution is right. The form asked for is not a matter of style:",
- "Le desaccord porte sur l'argument que le message nomme. Verifiez ce que votre":
+ "Le désaccord porte sur l'argument que le message nomme. Vérifiez ce que votre":
    "The disagreement concerns the argument the message names. Check what your",
- "Ecrivez une definition qui recoit en arguments ce qui varie, et qui garde tel":
+ "Écrivez une définition qui reçoit en arguments ce qui varie, et qui garde tel":
    "Write a definition that takes what varies as arguments, and keeps as it is",
- "Il vous manque une equation dont le motif est [] . Sa valeur est celle qui ne":
+ "Il vous manque une équation dont le motif est [] . Sa valeur est celle qui ne":
    "You are missing an equation whose pattern is [] . Its value is the one that",
- "Une equation tient sur une ligne, ou ses suites sont indentees davantage que":
+ "Une équation tient sur une ligne, ou ses suites sont indentées davantage que":
    "An equation fits on one line, or its continuations are indented more than",
- "Ecrite en distinguant le cas vide et le cas ou il reste un element, avec une":
+ "Écrite en distinguant le cas vide et le cas ou il reste un élément, avec une":
    "Written by distinguishing the empty case from the case where an element remains, with a",
  "Pour que la comparaison soit possible, il faut voir deux choses dans chaque":
    "For the comparison to be possible, two things must be visible in each",
- "Comparez le resultat obtenu et le resultat attendu sur le premier test qui":
+ "Comparez le résultat obtenu et le résultat attendu sur le premier test qui":
    "Compare the result obtained with the result expected on the first test that",
- "Ecrivez vos definitions les unes sous les autres et rayez tout ce qui est":
+ "Écrivez vos définitions les unes sous les autres et rayez tout ce qui est":
    "Write your definitions one below the other and strike out everything that is",
- "Verifiez l'orthographe et la casse : un nom de fonction commence par une":
+ "Vérifiez l'orthographe et la casse : un nom de fonction commence par une":
    "Check the spelling and the case: a function name begins with a",
- "Deroulez votre definition a la main sur l'entree du test qui echoue, en":
+ "Déroulez votre définition à la main sur l'entrée du test qui échoue, en":
    "Unfold your definition by hand on the input of the failing test,",
- "Un entier et un nombre fractionnaire se rencontrent dans la meme":
+ "Un entier et un nombre fractionnaire se rencontrent dans la même":
    "An integer and a fractional number meet in the same",
- "Cette valeur est celle qui ne change rien a l'operation que":
+ "Cette valeur est celle qui ne change rien à l'opération que":
    "That value is the one that changes nothing in the operation you",
- "Dans votre cas recursif, quelle expression designe le":
+ "Dans votre cas récursif, quelle expression désigne le":
    "In your recursive case, which expression denotes the",
  "C'est juste, et votre solution fonctionne. C'est la":
    "That is right, and your solution works. This is the",
- "Cette fonction produit une liste plus courte, sans modifier les elements gardes.":
+ "Cette fonction produit une liste plus courte, sans modifier les éléments gardes.":
    "This function produces a shorter list, without modifying the elements it keeps.",
- "Deux conduites sont possibles pour un element : le garder ou l'ignorer. Une ":
+ "Deux conduites sont possibles pour un élément : le garder ou l'ignorer. Une ":
    "Two courses of action are available for an element, keeping it or ignoring it. One ",
- "Cette fonction produit une liste de meme longueur que celle qu'elle recoit.":
+ "Cette fonction produit une liste de même longueur que celle qu'elle reçoit.":
    "This function produces a list of the same length as the one it receives.",
- "Deux choses sont a decider : ce que vaut le resultat sur la liste vide, et ":
+ "Deux choses sont a decider : ce que vaut le résultat sur la liste vide, et ":
    "Two things have to be decided: what the result is on the empty list, and ",
- "Traitez le premier element, puis laissez la recursion s'occuper du reste.":
+ "Traitez le premier élément, puis laissez la récursion s'occuper du reste.":
    "Deal with the first element, then let the recursion take care of the rest.",
  "Cette fonction ne produit pas une liste : elle produit une seule valeur.":
    "This function does not produce a list: it produces a single value.",
- "Si la fonction vient d'un module, il faut l'importer en tete de fichier.":
+ "Si la fonction vient d'un module, il faut l'importer en tête de fichier.":
    "If the function comes from a module, it must be imported at the top of the file.",
- "Mettez chaque chaine en majuscules. import Data.Char (toUpper) autorise.":
+ "Mettez chaque chaîne en majuscules. import Data.Char (toUpper) autorise.":
    "Put each string in upper case. import Data.Char (toUpper) is allowed.",
- "Enveloppez chaque operande entier dans fromIntegral avant de diviser.":
+ "Enveloppez chaque opérande entier dans fromIntegral avant de diviser.":
    "Wrap each integer operand in fromIntegral before dividing.",
- "Les resultats de plusieurs verifications : toutes ont-elles reussi ?":
+ "Les résultats de plusieurs verifications : toutes ont-elles réussi ?":
    "The results of several checks: did they all pass?",
  "Votre code compile : l'erreur n'est pas de forme mais de calcul.":
    "Your code compiles: the error is not one of form but of computation.",
- "Le compilateur a trouve un type la ou il en attendait un autre.":
+ "Le compilateur a trouvé un type là où il en attendait un autre.":
    "The compiler found one type where it expected another.",
- "Le fichier ne s'analyse pas : le probleme est en amont du sens.":
+ "Le fichier ne s'analyse pas : le problème est en amont du sens.":
    "The file does not parse: the problem lies upstream of meaning.",
- "Verifiez l'indentation et les parentheses de la ligne signalee.":
+ "Vérifiez l'indentation et les parenthèses de la ligne signalée.":
    "Check the indentation and the parentheses of the reported line.",
  "Votre code compile. L'erreur n'est pas de forme mais de calcul.":
    "Your code compiles. The error is not one of form but of computation.",
- "Une division exige des nombres fractionnaires des deux cotes.":
+ "Une division exige des nombres fractionnaires des deux côtés.":
    "Division requires fractional numbers on both sides.",
- "Un nom employe dans votre code n'est defini nulle part.":
+ "Un nom employé dans votre code n'est défini nulle part.":
    "A name used in your code is not defined anywhere.",
  "Charpente : f [] = ... et f (x:xs) = ... x ... : f xs":
    "Skeleton: f [] = ... and f (x:xs) = ... x ... : f xs",
  "Ne gardez que les mots de moins de quatre lettres.":
    "Keep only the words of fewer than four letters.",
- "Le compilateur a refuse votre definition.":
+ "Le compilateur a refusé votre définition.":
    "The compiler rejected your definition.",
  "Aucun indice supplementaire a ce niveau.":
    "No further hint at this level.",
- "Remplacez chaque element par son carre.":
+ "Remplacez chaque élément par son carre.":
    "Replace each element by its square.",
- "Recollez des mots en une seule chaine.":
+ "Recollez des mots en une seule chaîne.":
    "Join words into a single string.",
  "Un texte : ne gardez que les voyelles.":
    "A text: keep only the vowels.",
- "Un nom employe n'est pas defini.":
+ "Un nom employé n'est pas défini.":
    "A name you used is not defined.",
  "Compile et passe les tests.":
    "Compiles and passes the tests.",
@@ -812,9 +814,9 @@ CATALOGUE = {
  "Contrat : assistance guidage": "Contract: scaffolding proactive",
  "Contrat : assistance aucune": "Contract: scaffolding none",
  "Contrat : assistance": "Contract: scaffolding",
- "remontee decouverte": "abstraction discovery",
- "remontee guidee": "abstraction guided",
- "remontee exposee": "abstraction exposed",
+ "remontée decouverte": "abstraction discovery",
+ "remontée guidee": "abstraction guided",
+ "remontée exposee": "abstraction exposed",
  "regime libre": "regime free",
  "regime solo": "regime solo",
  "sequence libre": "sequence free",
@@ -824,56 +826,56 @@ CATALOGUE = {
  "mode decouverte": "discovery mode",
  "mode guide": "guided mode",
  "sans contrainte de temps": "no time allowance",
- "Aucune solution enregistree pour ce concept.":
+ "Aucune solution enregistrée pour ce concept.":
    "No solution recorded for this concept.",
  "Ecartees de l'alignement :": "Set aside from the alignment:",
  "Problemes resolus autrement :": "Problems solved otherwise:",
- "Ces reussites sont enregistrees ; elles ne servent simplement pas a la comparaison.":
+ "Ces reussites sont enregistrees ; elles ne servent simplement pas à la comparaison.":
    "These successes are recorded; they simply do not serve the comparison.",
  "Solutions au dossier :": "Solutions in the dossier:",
  "au minimum.": "at least.",
- "Ce qui change d'une solution a l'autre :":
+ "Ce qui change d'une solution à l'autre :":
    "What varies from one solution to the next:",
  "le tuteur en cherche": "the tutor is looking for",
  "et le compte ne bouge plus": "and the count no longer moves",
- "Ce qu'il faut atteindre : ecrire assez de solutions comparables, y trouver ce qu'elles ont en commun, puis l'employer sans y etre invite.":
+ "Ce qu'il faut atteindre : écrire assez de solutions comparables, y trouver ce qu'elles ont en commun, puis l'employer sans y être invite.":
    "What has to be reached: write enough comparable solutions, find what they share, then use it unprompted.",
- "Le tuteur ne vous montrera vos solutions ensemble que lorsque ce compte sera atteint et stable. Il n'y a rien a memoriser d'ici la.":
+ "Le tuteur ne vous montrera vos solutions ensemble que lorsque ce compte sera atteint et stable. Il n'y a rien à mémoriser d'ici la.":
    "The tutor will show your solutions together only once that count is reached and stable. There is nothing to memorise until then.",
- "Une activite de plus vous est servie.": "One more activity is served to you.",
+ "Une activité de plus vous est servie.": "One more activity is served to you.",
 
  # --- libelles de concepts
  "Expressions, valeurs, types": "Expressions, values, types",
  "Listes et filtrage par motifs": "Lists and pattern matching",
- "Recursion structurelle": "Structural recursion",
+ "Récursion structurelle": "Structural recursion",
  "Les trois schemas": "The three schemas",
- "Ordre superieur": "Higher order",
+ "Ordre supérieur": "Higher order",
  "Types definis par l'utilisateur": "User-defined types",
  "Classes de types": "Type classes",
- "Echec, choix, effets": "Failure, choice, effects",
+ "Échec, choix, effets": "Failure, choice, effects",
  "Evaluation paresseuse": "Lazy evaluation",
- "Le compilateur connait le type avant l'execution":
+ "Le compilateur connaît le type avant l'exécution":
    "The compiler knows the type before execution",
  "Une liste est une structure recursive, pas un tableau":
    "A list is a recursive structure, not an array",
- "Cas de base, cas recursif, decroissance sur la structure":
+ "Cas de base, cas récursif, decroissance sur la structure":
    "Base case, recursive case, decrease on the structure",
- "Transformer chaque element": "Transform each element",
+ "Transformer chaque élément": "Transform each element",
  "Garder ou ecarter selon une condition": "Keep or discard on a condition",
- "Reduire une liste a une valeur": "Reduce a list to a value",
- "Une fonction a deux arguments en est une a un argument":
+ "Réduire une liste a une valeur": "Reduce a list to a value",
+ "Une fonction à deux arguments en est une a un argument":
    "A two-argument function is a one-argument function",
- "Enchainer deux fonctions sans nommer la valeur intermediaire":
+ "Enchainer deux fonctions sans nommer la valeur intermédiaire":
    "Chain two functions without naming the intermediate value",
  "Un type est une somme de constructeurs": "A type is a sum of constructors",
- "La recursion suit la forme du type, pas celle de la liste":
+ "La récursion suit la forme du type, pas celle de la liste":
    "Recursion follows the shape of the type, not that of the list",
- "Une meme operation sur des types differents":
+ "Une même opération sur des types differents":
    "One operation on several types",
  "map se generalise au-dela des listes": "map generalises beyond lists",
- "Une fonction qui peut echouer le dit dans son type":
+ "Une fonction qui peut échouer le dit dans son type":
    "A function that may fail says so in its type",
- "Enchainer des calculs qui peuvent echouer":
+ "Enchainer des calculs qui peuvent échouer":
    "Chain computations that may fail",
  "Ce qui sort du programme est marque dans le type":
    "What leaves the program is marked in the type",
@@ -883,46 +885,199 @@ CATALOGUE = {
    "Two folds, two behaviours in memory",
 
  # --- enonces d'activite, familles executables
- "Des quantites a convertir : multipliez chaque element par deux.":
+ "Des quantites a convertir : multipliez chaque élément par deux.":
    "Quantities to convert: multiply each element by two.",
- "Mettez chaque chaine en majuscules.": "Put each string in upper case.",
- "Donnez la premiere lettre de chaque chaine.":
+ "Mettez chaque chaîne en majuscules.": "Put each string in upper case.",
+ "Donnez la premiere lettre de chaque chaîne.":
    "Give the first letter of each string.",
  "Une liste de prenoms : donnez la premiere lettre de chacun.":
    "A list of first names: give the first letter of each.",
  "Des mesures a mettre au carre.": "Measurements to square.",
- "Un releve nom-note. Ne gardez que les notes.":
+ "Un relevé nom-note. Ne gardez que les notes.":
    "A name-and-mark record. Keep only the marks.",
- "Un releve de couples (nom, note) : ne gardez que les notes.":
+ "Un relevé de couples (nom, note) : ne gardez que les notes.":
    "A record of (name, mark) pairs: keep only the marks.",
- "Des numeros de place : ne gardez que les pairs.":
+ "Des numéros de place : ne gardez que les pairs.":
    "Seat numbers: keep only the even ones.",
- "Des champs de formulaire : ecartez ceux laisses vides.":
+ "Des champs de formulaire : écartez ceux laisses vides.":
    "Form fields: discard those left empty.",
  "Des notes sur cent : ne gardez que celles qui atteignent soixante.":
    "Marks out of a hundred: keep only those that reach sixty.",
  "Des mots : ne gardez que ceux de plus de trois lettres.":
    "Words: keep only those longer than three letters.",
- "Le total des releves de temperature.": "The total of the temperature readings.",
- "Des releves de temperature : donnez le total.":
+ "Le total des relevés de temperature.": "The total of the temperature readings.",
+ "Des relevés de temperature : donnez le total.":
    "Temperature readings: give the total.",
- "Un facteur d'echelle par etage : donnez le facteur global.":
+ "Un facteur d'echelle par étage : donnez le facteur global.":
    "One scale factor per floor: give the overall factor.",
- "Un inventaire dont les elements importent peu : comptez-les.":
+ "Un inventaire dont les éléments importent peu : comptez-les.":
    "An inventory whose items matter little: count them.",
- "Des paragraphes decoupes en listes de mots : remettez-les bout a bout.":
+ "Des paragraphes découpés en listes de mots : remettez-les bout a bout.":
    "Paragraphs split into word lists: put them end to end.",
- "Des morceaux de texte : recollez-les en une seule chaine.":
+ "Des morceaux de texte : recollez-les en une seule chaîne.":
    "Pieces of text: join them into a single string.",
- "Changez le signe de chaque element.": "Change the sign of each element.",
- "Donnez la longueur de chaque chaine.": "Give the length of each string.",
+ "Changez le signe de chaque élément.": "Change the sign of each element.",
+ "Donnez la longueur de chaque chaîne.": "Give the length of each string.",
  "Ne gardez que les nombres strictement positifs.":
    "Keep only the strictly positive numbers.",
  "Ne gardez que les voyelles d'un texte.": "Keep only the vowels of a text.",
- "Le plus grand element d'une liste non vide.":
+ "Le plus grand élément d'une liste non vide.":
    "The largest element of a non-empty list.",
- "Plusieurs verifications : toutes ont-elles reussi ?":
+ "Plusieurs verifications : toutes ont-elles réussi ?":
    "Several checks: did they all pass?",
+
+ # --- interface etudiante simplifiee (2026-10-20) : vocabulaire et disposition
+ "2 · Mode de travail": "2 · Way of working",
+ "Mode de travail": "Way of working",
+ "4 · Exercices": "4 · Exercises",
+ "Ce que vous apprenez": "What you are learning",
+ "Les paliers s'ouvrent dans l'ordre : un palier marqué « plus tard » s'ouvre quand "
+ "le précédent est acquis. Un palier est acquis quand vous réutilisez par vous-même ce "
+ "que vous avez découvert, pas seulement quand vous réussissez les exercices.":
+   "Stages open in order: a stage marked \"later\" opens once the previous one is "
+   "acquired. A stage is acquired when you reuse what you discovered on your own, "
+   "not just when you solve the exercises.",
+ "Nouvel exercice": "New exercise",
+ "Code fourni : il est déjà là, vous n'avez pas à le modifier.":
+   "Provided code: it is already there, you do not need to change it.",
+ "Écrivez votre fonction ici": "Write your function here",
+ ", à la place de": ", in place of",
+ "Dans les messages d'erreur, les numéros de ligne comptent aussi les lignes de ce code "
+ "fourni.": "In error messages, line numbers also count the lines of this provided code.",
+ "Demander un indice": "Ask for a hint",
+ "Indices épuisés": "Hints used up",
+ "Trois indices par exercice, du plus général au plus précis. Aucun ne donne la solution.":
+   "Three hints per exercise, from the most general to the most precise. None gives "
+   "the solution.",
+ "le tuteur vous propose un indice.": "the tutor offers you a hint.",
+ "demander un indice.": "ask for a hint.",
+ "à propos de votre dernière erreur :": "about your last error:",
+ "Atelier : ce que vos fonctions ont en commun": "Workshop: what your functions share",
+ "Comparer vos solutions, avec le tuteur": "Comparing your solutions, with the tutor",
+ "élément(s) qui changent d'une fonction à l'autre":
+   "element(s) that change from one function to the next",
+ "Votre fonction": "Your function",
+ "Cas récursif": "Recursive case",
+ "désigne un appel récursif de la fonction sur une partie plus petite de l'entrée. "
+ "Les valeurs propres à chaque fonction sont gardées telles que vous les avez écrites.":
+   "stands for a recursive call of the function on a smaller part of the input. The "
+   "values specific to each function are kept as you wrote them.",
+ "Écrivez ici une seule fonction qui peut remplacer toutes celles du tableau":
+   "Write here a single function that can replace all those in the table",
+ "Elle est conservée, et servira si vous travaillez en groupe.":
+   "It is kept, and will be used if you work in a group.",
+ "Valider ma fonction": "Submit my function",
+ "Pas encore : un exercice de plus": "Not yet: one more exercise",
+ "Quand un exercice est réussi :": "When an exercise is solved:",
+ "passer au suivant": "go to the next one",
+ "attendre que je clique": "wait for my click",
+ "Exercice suivant": "Next exercise",
+ "Exercice suivant dans": "Next exercise in",
+ "Solutions comparables :": "Comparable solutions:",
+ "Réutilisations de votre découverte :": "Reuses of your discovery:",
+ "Une réutilisation ne compte que si vous employez ce que vous venez de trouver, "
+ "plutôt qu'une récursion écrite à la main.":
+   "A reuse only counts if you use what you have just found, rather than recursion "
+   "written by hand.",
+ "Palier acquis.": "Stage acquired.",
+ "Solution ajoutée à vos solutions comparables.":
+   "Solution added to your comparable solutions.",
+ "Solution juste, mais elle ne peut pas être comparée aux autres :":
+   "Correct solution, but it cannot be compared with the others:",
+ "Vous avez réutilisé votre découverte : la réutilisation est comptée.":
+   "You reused your discovery: the reuse is counted.",
+ "Solution juste, mais écrite sans réutiliser votre découverte : la réutilisation "
+ "n'est pas comptée.":
+   "Correct solution, but written without reusing your discovery: the reuse is not "
+   "counted.",
+ "Détails techniques (pour l'enseignant)": "Technical details (for the teacher)",
+ "Revenir aux exercices": "Back to the exercises",
+ "Le tuteur ne va pas plus loin : la suite vous appartient. Voici les indices déjà reçus.":
+   "The tutor goes no further: the rest is up to you. Here are the hints already "
+   "received.",
+ "un exercice de plus avant l'atelier, à votre demande":
+   "one more exercise before the workshop, at your request",
+ "en distinguant explicitement le cas de base et le cas récursif":
+   "explicitly distinguishing the base case and the recursive case",
+ "1 · Écrire des solutions": "1 · Write solutions",
+ "2 · Trouver ce qu'elles ont en commun": "2 · Find what they share",
+ "3 · Nouveaux exercices": "3 · New exercises",
+ "Palier acquis": "Stage acquired",
+ "Réutilisations :": "Reuses:",
+ "solutions comparées : à vous de trouver ce qui leur est commun":
+   "solutions compared: your turn to find what they share",
+ "Solutions écrites :": "Solutions written:",
+ "la comparaison s'ouvre après 3 ou 4 solutions":
+   "the comparison opens after 3 or 4 solutions",
+ "exercice(s) réussi(s) autrement, enregistré(s) à part":
+   "exercise(s) solved another way, recorded separately",
+ "Plus d'informations : mes solutions, ce que j'apprends, mon groupe":
+   "More information: my solutions, what I am learning, my group",
+ "Solutions réussies :": "Solutions solved:",
+ "Bravo : ce palier est terminé.": "Well done: this stage is complete.",
+ "Le tuteur vous montre vos solutions ensemble : cherchez ce qu'elles ont en commun.":
+   "The tutor shows you your solutions together: look for what they share.",
+ "Quand vous en aurez écrit assez, le tuteur vous les montrera ensemble.":
+   "Once you have written enough of them, the tutor will show them to you together.",
+ "Pseudonyme": "Pseudonym",
+ "Un pseudonyme, sans votre nom": "A pseudonym, not your name",
+ "Code du cours": "Course code",
+ "Retenez bien votre pseudonyme.": "Remember your pseudonym.",
+ "Il vous servira à reprendre votre travail, et à la séance de suivi la semaine prochaine. "
+ "Notez-le quelque part dès maintenant.":
+   "You will need it to resume your work, and for the follow-up session next week. "
+   "Write it down now.",
+ "Notez votre identifiant :": "Write down your identifier:",
+ "il vous permet de retrouver votre travail depuis un autre poste, et à la séance de suivi.":
+   "it lets you find your work again from another computer, and at the follow-up session.",
+ "Ce navigateur s'en souvient, mais un autre poste ne le saura pas.":
+   "This browser remembers it, but another computer will not.",
+ "Votre enseignant peut vous le redonner si vous l'oubliez.":
+   "Your instructor can give it back to you if you forget it.",
+ "Vous reprenez votre travail exactement où vous en êtes.":
+   "You resume your work exactly where you left off.",
+ "Vous travaillez depuis un autre poste ?": "Working from another computer?",
+ "Saisissez l'identifiant de quatre caractères reçu à l'inscription.":
+   "Enter the four-character identifier you received when you registered.",
+ "Il figure aussi en haut de la page des exercices, à côté de votre pseudonyme.":
+   "It also appears at the top of the exercise page, next to your pseudonym.",
+ "Quatre caractères, par exemple a3f9": "Four characters, for example a3f9",
+ "Reprendre avec cet identifiant": "Resume with this identifier",
+ "Compilation réussie, mais certains tests échouent :":
+   "Compilation succeeded, but some tests fail:",
+ "Obtenu": "Got",
+ "Attendu": "Expected",
+ "Les arbres t0, t1, t2, t3 et example_tree sont définis dans le code fourni.":
+   "The trees t0, t1, t2, t3 and example_tree are defined in the provided code.",
+ "Terminé pour aujourd'hui": "Done for today",
+ "Bravo, vous avez fait tous les exercices prévus pour cette séance.":
+   "Well done, you have completed all the exercises planned for this session.",
+ "Votre travail est enregistré. D'autres exercices vous seront proposés lors de la prochaine "
+ "séance : gardez votre pseudonyme et votre identifiant.":
+   "Your work is saved. More exercises will be offered at the next session: keep your "
+   "pseudonym and your identifier.",
+ "Vous pouvez revoir vos solutions dans « Plus d'informations », plus bas, ou retourner au "
+ "laboratoire.": "You can review your solutions under \"More information\" below, or go back "
+   "to the lab.",
+ "Plus de nouvel exercice": "No new exercise",
+ "Vous avez résolu les exercices, mais d'une autre manière que celle que le tuteur peut "
+ "comparer. Pour continuer, reprenez un ou deux exercices et réécrivez-les":
+   "You solved the exercises, but in a way other than the one the tutor can compare. To "
+   "continue, go back to one or two exercises and rewrite them",
+ "Choisir un exercice à reprendre": "Choose an exercise to redo",
+ "Ce pseudonyme est déjà pris. Si c'est le vôtre, revenez à l'écran de reprise et "
+ "saisissez votre identifiant ; sinon, choisissez-en un autre.":
+   "This pseudonym is already taken. If it is yours, go back to the resume screen and "
+   "enter your identifier; otherwise, choose another one.",
+ "Chaque pseudonyme ne peut servir qu'une fois": "Each pseudonym can only be used once",
+ "s'il est déjà pris, le tuteur vous demandera d'en choisir un autre.":
+   "if it is already taken, the tutor will ask you to choose another one.",
+ "Que rend votre fonction dans le cas de base ?":
+   "What does your function return in the base case?",
+ "C'est la valeur de votre cas de base : ce que la fonction doit rendre sur l'entrée la "
+ "plus simple, d'après l'énoncé.":
+   "It is the value of your base case: what the function must return on the simplest "
+   "input, according to the statement.",
 }
 
 # etiquettes courtes, substituees en mot entier seulement

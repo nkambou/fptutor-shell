@@ -9,6 +9,10 @@ sauvegardes/
 exports/
 *.log
 COLLECTE_EN_COURS
+# extension de suivi (seance 2) : etat, journal et ouverture, ecrits en seance
+suivi_etat.json
+suivi_journal.jsonl
+suivi_config.json
 
 # Python
 __pycache__/

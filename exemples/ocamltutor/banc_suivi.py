@@ -16,14 +16,42 @@ def post(c,d):
     r=urllib.request.Request(B+c,data=json.dumps(d).encode(),headers={"Content-Type":"application/json"},method="POST")
     return json.load(urllib.request.urlopen(r))
 sys.path.insert(0,T); import activities_ml as A
-AMORCE={a[0]:a[3] for a in A.REEMPLOIS["F-arbre"]}
-def entete(item): return AMORCE[item].rsplit("let rec",1)[0]
+# Les exercices du suivi viennent de la reserve EXERCICES_REEMPLOI (et non plus de
+# REEMPLOIS, reduit a la phase 1). L'entete est l'amorce privee de la fonction a
+# completer et des commentaires qui la precedent.
+AMORCE={a[0]:a[3] for a in A.EXERCICES_REEMPLOI["F-arbre"]}
+def entete(item):
+    lignes = AMORCE[item].split("\n")
+    i = max(k for k, l in enumerate(lignes) if "a completer" in l)
+    while i > 0 and lignes[i - 1].strip().startswith("(*"):
+        i -= 1
+    return "\n".join(lignes[:i]) + "\n"
 
 PLI = """let rec plier f z a = match a with
   | Leaf -> z
   | Node (x, g, d) -> f x (plier f z g) (plier f z d)
 """
-CAS = {
+CI, CO = "bintree_count_internal_nodes_fold", "bintree_collect_internal_nodes_fold"
+TOUS = {
+CI: [
+ ("compte les feuilles", PLI + "let %s a = plier (fun _ g d -> g + d) 1 a" % CI, False, None),
+ ("oublie le noeud courant", PLI + "let %s a = plier (fun _ g d -> g + d) 0 a" % CI, False, None),
+ ("recursion a la main, juste", "let rec %s a = match a with Leaf -> 0 | Node (_,g,d) -> 1 + %s g + %s d" % (CI, CI, CI), True, False),
+ ("enveloppe d'une recursion a la main", "let rec aux a = match a with Leaf -> 0 | Node (_,g,d) -> 1 + aux g + aux d\nlet %s a = aux a" % CI, True, False),
+ ("pli redefini", PLI + "let %s a = plier (fun _ g d -> 1 + g + d) 0 a" % CI, True, True),
+],
+CO: [
+ ("racine seulement", "let %s a = match a with Leaf -> [] | Node (x,_,_) -> [x]" % CO, False, None),
+ ("gauche seulement", PLI + "let %s a = plier (fun x g _ -> x :: g) [] a" % CO, False, None),
+ ("recursion a la main, juste", "let rec %s a = match a with Leaf -> [] | Node (x,g,d) -> %s g @ (x :: %s d)" % (CO, CO, CO), True, False),
+ ("pli redefini, ordre prefixe", PLI + "let %s a = plier (fun x g d -> x :: (g @ d)) [] a" % CO, True, True),
+ ("pli redefini, ordre infixe", PLI + "let %s a = plier (fun x g d -> g @ (x :: d)) [] a" % CO, True, True),
+],
+"bintree_all_positive": [
+ ("enveloppe d'une recursion a la main", "let rec aux a = match a with Leaf -> true | Node (x,g,d) -> x > 0 && aux g && aux d\nlet bintree_all_positive a = aux a", True, False),
+],
+}
+TOUS_ANCIENS = {
 "bintree_count_even": [
  ("compte tous les noeuds", "let rec bintree_count_even a = match a with Leaf -> 0 | Node (_,g,d) -> 1 + bintree_count_even g + bintree_count_even d", False, None),
  ("racine seulement", "let bintree_count_even a = match a with Node (x,_,_) when x mod 2 = 0 -> 1 | _ -> 0", False, None),
@@ -51,6 +79,11 @@ CAS = {
 let ubtree_count_bin a = plier_ub (fun n -> n) (fun g d -> 1 + g + d) 0 a""", True, True),
 ],
 }
+for _item, _cas in TOUS_ANCIENS.items():
+    TOUS.setdefault(_item, [])[0:0] = _cas
+# On ne soumet que les exercices que le suivi sert (liste ORDRE = PHASE_2) : un
+# exercice absent du suivi est refuse par le serveur.
+CAS = {item: TOUS[item] for item in A.PHASE_2 if item in TOUS}
 post("/api/ext/admin/apercu/entrer", {"nom":"banc"})
 defaut = 0
 for item, cas in CAS.items():

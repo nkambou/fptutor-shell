@@ -31,6 +31,15 @@
   ["Error: This pattern-matching is not exhaustive.", "missing-base-case"],
   ["Error: Unbound value sommee", "unknown-name"],
   ["Error: Syntax error", "syntax"],
-  ["Error: This expression has type int but an expression was expected of type string", "incompatible-types"]
+  ["Error: This expression has type int but an expression was expected of type string", "incompatible-types"],
+  ["Warning 8 [partial-match]: this pattern-matching is not exhaustive.\nHere is an example of a case that is not matched:\nLeaf\nException: Match_failure (\"Soumission.ml\", 7, 2).", "missing-base-case"],
+  ["Error: This expression has type float but an expression was expected of type\n         int", "int-float-mix"],
+  ["Error: This expression has type int but an expression was expected of type\n         float", "int-float-mix"],
+  ["Error: This function has type bintree -> int\n       It is applied to too many arguments; maybe you forgot a `;'.", "incompatible-types"],
+  ["Error: The constructor Node expects 3 argument(s),\n       but is applied here to 2 argument(s)", "incompatible-types"],
+  ["Error: Unbound value bintree_count_leaves\nHint: If this is a recursive definition,\nyou should add the 'rec' keyword on line 6", "unknown-name"],
+  ["Error: Unbound constructor Noed\nHint: Did you mean Node?", "unknown-name"],
+  ["Error: Syntax error: ')' expected\n  This '(' might be unmatched", "syntax"],
+  ["Warning 8 [partial-match]: this pattern-matching is not exhaustive.\nHere is an example of a case that is not matched:\nNode (_, _, _)\nError: This expression has type float but an expression was expected of type\n         int", "int-float-mix"]
  ]
 }

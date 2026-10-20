@@ -108,7 +108,7 @@ def carte(r, ap):
 # ------------------------------------------------------------------ groupes
 
 def mode_groupes(r, e):
-    """Mode autorise par l'administrateur dans le referentiel, ajuste par l'enseignant."""
+    """Mode autorise par l'administrateur dans le référentiel, ajuste par l'enseignant."""
     g = dict(r.get("groupes", {}))
     g.update(e.get("groupes_reglages", {}))
     return g
@@ -122,7 +122,7 @@ def groupe_de(e, ident, cid):
 
 
 def pairs_eligibles(e, ap, cid):
-    """Auto-organisation bornee : seuls les pairs au meme etat sur le concept vise."""
+    """Auto-organisation bornée : seuls les pairs au même état sur le concept visé."""
     mien = ap["etats"].get(cid, "instances")
     out = []
     for ident, autre in e["apprenants"].items():
@@ -147,7 +147,7 @@ def former_groupe(e, ap, cid, invites, mode):
 
 
 def atelier(e, ap, cid):
-    """Consolidation : les generalisations reellement produites par le groupe."""
+    """Consolidation : les généralisations réellement produites par le groupe."""
     g = groupe_de(e, ap["ident"], cid)
     if not g or g["statut"] != "valide":
         return None
@@ -172,7 +172,7 @@ def vue_apprenant(r, e, ap):
     corpus = ap["corpus"].get(cid, []) if cid else []
     ct = contrat(e, cid) if cid else DEFAUT_CONTRAT
     decision, motif = (K.decider(r, ap, cid) if cid
-                       else ("fin", "tous les concepts executables sont acquis"))
+                       else ("fin", "tous les concepts exécutables sont acquis"))
 
     vue = {"ident": ap["ident"], "nom": ap["nom"], "cohorte": ap["cohorte"],
            "regime": ap["regime"], "concept": cid,
@@ -207,6 +207,7 @@ def vue_apprenant(r, e, ap):
                          "ont en commun, puis l'employer sans y être invité"
                          if gen else "pratiquer jusqu'à ce que la forme soit acquise")}
         vue["consigne_forme"] = ap.get("consignes", {}).get(cid)
+        vue["texte_consigne_forme"] = K.CONSIGNE_FORME
         vue["politique_hors_forme"] = ct.get("off_form", "explain_and_continue")
         vue["solutions"] = [{"activite": x["nom"], "code": x["code"],
                              "forme": x.get("canon"), "statut": "au dossier"}
@@ -219,12 +220,32 @@ def vue_apprenant(r, e, ap):
         ap["etats"][cid] = "acquired"
         return vue_apprenant(r, e, ap)
 
+    # « Pas encore » dans l'atelier : l'etudiant demande un exercice de plus avant de
+    # generaliser. La decision reste celle de decider (non modifie) ; on sert
+    # seulement l'exercice suivant de la famille, jusqu'a ce qu'il soit reussi.
+    if decision == "abstraction" and ap.get("atelier_differe", {}).get(cid):
+        a = K.prochaine_activite(c["famille"], set(ap["servis"].get(cid, [])), "instances")
+        if a:
+            decision = "instance"
+            vue["decision"] = decision
+            vue["motif"] = "un exercice de plus avant l'atelier, à votre demande"
+        else:
+            ap["atelier_differe"].pop(cid, None)
+
     if decision in ("instance", "reuse"):
         pool = "instances" if decision == "instance" else "reemplois"
         cle = cid if pool == "instances" else cid + "@reemploi"
         a = K.prochaine_activite(c["famille"], set(ap["servis"].get(cle, [])), pool)
         if a:
             vue["activite"] = {"id": a[0], "enonce": a[1], "signature": a[2], "amorce": a[3]}
+        elif decision == "reuse":
+            # Plus d'exercice de reemploi : en phase 1, il n'y en a qu'un, et le tuteur
+            # s'arrete apres lui (docs/SEANCE2.md). Il basculait ici en guidage, qui
+            # reaffichait le tableau de l'atelier comme si l'etudiant etait bloque
+            # avant la generalisation.
+            vue["activite"] = None
+            vue["fin_reemplois"] = True
+            vue["motif"] = "plus d'exercice de réemploi pour le moment"
         else:
             vue["activite"] = None
             vue["decision"] = decision = "guidance"
@@ -335,9 +356,20 @@ def _api(chemin, params, corps):
                            "groupes", "cohorte", "activites", "journal"]}
 
     if chemin == "/api/inscription":
+        # « refus » et non « erreur » : la page prend toute « erreur » pour un
+        # serveur trop ancien et affichait un bandeau trompeur.
         refus = pseudonyme_refuse(corps.get("nom", ""))
         if refus:
-            return {"erreur": refus}
+            return {"refus": refus}
+        # Un pseudonyme ne peut servir qu'une fois : la seance de suivi relie les
+        # deux seances par le pseudonyme (sans tenir compte de la casse ni des
+        # espaces), deux apprenants au meme pseudonyme seraient confondus.
+        voulu = corps["nom"].strip().casefold()
+        if any((x.get("nom") or "").strip().casefold() == voulu
+               for x in e["apprenants"].values()):
+            return {"refus": "Ce pseudonyme est déjà pris. Si c'est le vôtre, revenez à "
+                             "l'écran de reprise et saisissez votre identifiant ; sinon, "
+                             "choisissez-en un autre."}
         ap = K.nouvel_apprenant(corps["nom"].strip(), corps["cohorte"])
         ap["regime"] = corps.get("regime", "solo")
         amorcer(r, ap)
@@ -383,11 +415,14 @@ def _api(chemin, params, corps):
         else:
             ap.setdefault("derniere_erreur", {})[k] = categorie
             ap.setdefault("echecs", {})[k] = ap.get("echecs", {}).get(k, 0) + 1
-        rep = {"verdict": verdict, "hors_delai": hors}
+        # « tests » : les expressions de test, pour que la page affiche un tableau
+        # (quel arbre, valeur obtenue, valeur attendue) au lieu d'une suite de valeurs
+        # dont l'etudiant ne savait pas a quel test elles correspondaient.
+        rep = {"verdict": verdict, "hors_delai": hors, "tests": [x for x, _ in act[4]]}
         if not verdict["reussite"]:
             rep["tuteur"] = {"ton": "echec", "texte": K.lecture(categorie),
                              "categorie": categorie,
-                             "invite": ("Vous pouvez demander un etayage : trois niveaux, "
+                             "invite": ("Vous pouvez demander un indice : trois niveaux, "
                                         "aucun ne donne la solution.")}
         if verdict["reussite"]:
             deja = act[0] in ap["servis"].get(cle, [])
@@ -438,6 +473,7 @@ def _api(chemin, params, corps):
                 else:
                     corpus.append(entree)
                 ap.get("consignes", {}).pop(cid, None)
+                ap.get("atelier_differe", {}).pop(cid, None)   # l'exercice de plus est fait
                 mode_v = ct.get("verification", "on-doubt")
                 if mode_v != "never":
                     secondes = None
@@ -482,10 +518,11 @@ def _api(chemin, params, corps):
         c, _ = K.concept(r, cid)
         ap.setdefault("refus_atelier", {})[cid] = \
             ap.get("refus_atelier", {}).get(cid, 0) + 1
+        ap.setdefault("atelier_differe", {})[cid] = True
         K.journaliser(ap, cid, "", r["familles"][c["famille"]].get("chapitre"),
                       {"reussite": True, "compile": True, "message": ""},
                       "refus-atelier")
-        return fin({"message": "Une activite de plus vous est servie.",
+        return fin({"message": "Une activité de plus vous est servie.",
                     "etat": vue_apprenant(r, e, ap)})
 
     if chemin == "/api/generalisation":
@@ -493,7 +530,7 @@ def _api(chemin, params, corps):
         cid = concept_courant(r, ap)
         texte = (corps.get("texte") or "").strip()
         if not texte:
-            return {"refus": "Ecrivez votre definition avant de valider la remontee."}
+            return {"refus": "Écrivez votre définition avant de valider la remontée."}
         ap.setdefault("generalisations", {})[cid] = texte
         ap["etats"][cid] = "generalised"
         ap["reemplois"].setdefault(cid, 0)
@@ -508,13 +545,14 @@ def _api(chemin, params, corps):
         if not act:
             act = next((a for a in K.REEMPLOIS.get(c["famille"], []) if a[0] == nom), None)
         if not act:
-            return {"refus": "activite inconnue"}
+            return {"refus": "activité inconnue"}
         ancienne = next((x["code"] for x in ap["corpus"].get(cid, []) if x["nom"] == nom), None)
         if ancienne is None:
             ancienne = next((x[2] for x in ap.get("ecartes", {}).get(cid, [])
                              if x[0] == nom and len(x) > 2), None)
+        # amorce_origine permet a la page de separer le code fourni du code ecrit
         return {"activite": {"id": act[0], "enonce": act[1], "signature": act[2],
-                             "amorce": ancienne or act[3]},
+                             "amorce": ancienne or act[3], "amorce_origine": act[3]},
                 "reprise": True}
 
     if chemin == "/api/preference":
@@ -529,7 +567,7 @@ def _api(chemin, params, corps):
         if corps.get("action") == "quitter":
             if ct.get("sequence") == "must-complete" and ap["etats"].get(cid) != "acquired":
                 return {"refus": "Votre enseignant demande de terminer la sequence sur ce "
-                                 "concept avant de quitter la seance."}
+                                 "concept avant de quitter la séance."}
             ap["suspendu"] = True
         else:
             ap["suspendu"] = False
@@ -542,7 +580,7 @@ def _api(chemin, params, corps):
         k = cle_aide(cid, corps["activite"])
         v = ap.get("verifications", {}).get(k)
         if not v:
-            return {"refus": "aucune verification en attente"}
+            return {"refus": "aucune vérification en attente"}
         justes = 0
         retours = []
         for q in v["questions"]:
@@ -559,11 +597,11 @@ def _api(chemin, params, corps):
                       "verification-" + v["statut"].replace(" ", "-"))
         return fin({"statut": v["statut"], "justes": justes,
                     "total": len(v["questions"]), "retours": retours,
-                    "message": ("Merci : votre explication correspond a ce que votre code "
+                    "message": ("Merci : votre explication correspond à ce que votre code "
                                 "fait." if v["statut"] == "expliquee" else
-                                "Votre reponse ne correspond pas a ce que votre code fait. "
-                                "La solution reste enregistree ; reprenez-la si vous "
-                                "voulez, et demandez un etayage au besoin."),
+                                "Votre réponse ne correspond pas à ce que votre code fait. "
+                                "La solution reste enregistrée ; reprenez-la si vous "
+                                "voulez, et demandez un étayage au besoin."),
                     "etat": vue_apprenant(r, e, ap)})
 
     if chemin == "/api/pourquoi":
@@ -590,18 +628,32 @@ def _api(chemin, params, corps):
         niveau = ap.setdefault("aides", {}).get(cle, 0) + 1
         categorie = ap.get("derniere_erreur", {}).get(cle_aide(cid, activite), "none")
         if niveau > nmax:
-            return {"refus": "Vous avez pris les %d niveaux d'etayage prevus. "
-                             "Le tuteur ne va pas plus loin : la suite vous appartient." % nmax,
+            # Le rappel reaffiche les indices deja donnes, tels qu'ils ont ete lus.
+            # Il les recalculait avec la derniere erreur : apres une nouvelle erreur,
+            # il affichait trois indices jamais demandes, et non journalises.
+            return {"refus": "Vous avez pris les %d indices prévus pour cet exercice. "
+                             "Le tuteur ne va pas plus loin : la suite vous appartient. "
+                             "Voici les indices déjà reçus." % nmax,
                     "niveau": nmax, "sur": nmax,
-                    "rappel": [K.aide(c["famille"], categorie, x, contexte)
-                               for x in range(1, nmax + 1)]}
-        texte = K.aide(c["famille"], categorie, niveau, contexte)
+                    "rappel": ap.get("aides_textes", {}).get(cle, [])}
+        # La limite reste de nmax indices par exercice (niveau = rang de la demande),
+        # mais le texte monte par erreur : apres une nouvelle erreur, on repart du
+        # niveau 1 de sa categorie. Le niveau 2 d'une categorie supposait que
+        # l'etudiant avait lu son niveau 1, qu'il n'avait parfois jamais recu.
+        par_cat = ap.setdefault("aides_par_categorie", {}).setdefault(cle, {})
+        palier = min(par_cat.get(categorie, 0) + 1, K.NIVEAUX_MAX)
+        texte = K.aide(c["famille"], categorie, palier, contexte,
+                       activite=activite if contexte == "activite" else None)
         ap["aides"][cle] = niveau
+        par_cat[categorie] = palier
+        ap.setdefault("aides_textes", {}).setdefault(cle, []).append(texte)
+        # le journal porte le niveau du texte reellement affiche
         K.journaliser(ap, cid, activite or "abstraction",
                       r["familles"][c["famille"]].get("chapitre"),
                       {"reussite": False, "compile": True, "message": ""},
-                      "aide-niveau-%d" % niveau)
-        return fin({"niveau": niveau, "sur": nmax, "texte": texte, "fonde_sur": categorie})
+                      "aide-niveau-%d" % palier)
+        return fin({"niveau": niveau, "sur": nmax, "texte": texte, "fonde_sur": categorie,
+                    "palier": palier})
 
     # ---------------- groupes, cote apprenant
 
@@ -623,7 +675,7 @@ def _api(chemin, params, corps):
                     del e["groupes"][g["id"]]
             return fin({"etat": vue_apprenant(r, e, ap)})
         if mode.get("formation") == "enseignant":
-            return {"refus": "La composition des groupes est reservee a l'enseignant."}
+            return {"refus": "La composition des groupes est réservée à l'enseignant."}
         invites = corps.get("invites", [])
         if not (mode["taille_min"] - 1 <= len(invites) <= mode["taille_max"] - 1):
             return {"refus": "Un groupe compte de %d a %d membres."

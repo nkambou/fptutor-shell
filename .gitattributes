@@ -1,0 +1,4 @@
+# Les scripts shell gardent des fins de ligne Unix, quel que soit le systeme :
+# sous Windows, une conversion en CRLF les empeche de tourner dans WSL
+# (« /usr/bin/env: 'bash\r': No such file or directory »).
+*.sh text eol=lf

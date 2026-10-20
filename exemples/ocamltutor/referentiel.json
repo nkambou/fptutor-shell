@@ -13,11 +13,11 @@
  "paliers": [
   {
    "id": "P1",
-   "titre": "Recursion structurelle sur un type somme",
+   "titre": "Récursion structurelle sur un type somme",
    "concepts": [
     {
      "id": "arbre-pli",
-     "libelle": "Les definitions recursives sur un arbre partagent une structure",
+     "libelle": "Les définitions récursives sur un arbre partagent une structure",
      "prerequis": [],
      "famille": "F-arbre",
      "generalisation": {
@@ -36,7 +36,7 @@
    "concepts": [
     {
      "id": "option-chaine",
-     "libelle": "Les enchainements sur option partagent une structure",
+     "libelle": "Les enchaînements sur option partagent une structure",
      "prerequis": [
       "arbre-pli"
      ],

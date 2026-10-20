@@ -26,8 +26,8 @@ SCENARIO = [
     ("bintree_count_leaves", "reference"),
     ("bintree_count_internal_nodes", "bibliotheque"),   # correcte mais non comparable
     ("bintree_count_internal_nodes", "reference"),
+    ("bintree_count_nodes", "reference"),          # ordre du laboratoire 05
     ("bintree_height", "reference"),
-    ("bintree_count_nodes", "reference"),
 ]
 # solutions sans recursion sur l'arbre : une par valeur collectee, soit un par
 # noeud interne ; un arbre ayant n noeuds internes porte n + 1 feuilles, donc
@@ -106,13 +106,19 @@ def main():
                                  "Leaf -> z | Node (x, g, d) -> f x (fold_tree f z g) (fold_tree f z d)")
     print("    generalisation ecrite par l'apprenant : acceptee")
 
-    print("\n  REEMPLOIS")
-    for nom, avec_schema in (("bintree_min", False), ("bintree_all_positive", True)):
+    # Phase 1 : un seul exercice de reemploi, le transfert bintree_count_even. On le
+    # soumet d'abord ecrit a la main (juste, mais pas un reemploi), puis avec le
+    # schema (reemploi compte). Le tuteur annonce alors un reemploi sur deux et
+    # s'arrete : c'est le comportement voulu en phase 1 (docs/SEANCE2.md).
+    print("\n  REEMPLOIS (phase 1)")
+    APPELS = {"bintree_count_even":
+              "fold_tree (fun x g d -> (if x mod 2 = 0 then 1 else 0) + g + d) 0 a"}
+    for nom, avec_schema in (("bintree_count_even", False), ("bintree_count_even", True)):
         famille, act = activite(nom, "reemplois")
         if avec_schema:
             code = (preambule(act[3], nom) + "\n"
                     + ap["generalisations"][cid] + "\n\n"
-                    + "let %s a = fold_tree (fun x g d -> x > 0 && g && d) true a\n" % nom)
+                    + "let %s a = %s\n" % (nom, APPELS[nom]))
         else:
             code = preambule(act[3], nom) + "\n" + SOL[nom] + "\n"
         verdict = N.evaluer(code, act[4])
