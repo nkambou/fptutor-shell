@@ -6,8 +6,8 @@
 
 | | |
 |---|---|
-| Salle et date | |
-| Adresse étudiante | `https://gdac.uqam.ca/ocamltutor/` |
+| Salle et date | Local S1580 Pavillon Président-Kennedy, 22/10/2026, 13h30 |
+| Adresse étudiante | `https://gdac.uqam.ca/ocamltutor/index.html` |
 | Console enseignante | `https://gdac.uqam.ca/ocamltutor/enseignant` |
 | Serveur, machine et compte | |
 | Port | 8081 |
@@ -22,7 +22,7 @@
 - [ ] Une inscription d'essai faite, puis une soumission fausse et une juste
 - [ ] Console ouverte sur un second écran, contrats vérifiés (onglet Contrats, concept
       `arbre-pli`) : assistance `on-request`, abstraction `discovery`, régime `free`,
-      séquence `free`, off_form `explain_and_continue`, vérification `never`, délai 0
+      séquence `free`, off_form `explain_and_rewrite`, vérification `never`, délai 0
 - [ ] Phase 1 : `BASCULE_FAITE = False` dans `exemples/ocamltutor/activities_ml.py`
 - [ ] Adresse écrite au tableau
 

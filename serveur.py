@@ -220,6 +220,16 @@ def vue_apprenant(r, e, ap):
         ap["etats"][cid] = "acquired"
         return vue_apprenant(r, e, ap)
 
+    # Heure de la premiere ouverture de l'atelier, gardee une fois : rien ne
+    # l'enregistrait, alors que l'analyse situe la generalisation et le reemploi
+    # par rapport a ce moment (et a l'heure de la presentation de fold_tree).
+    if decision == "abstraction" and cid not in ap.get("atelier_ouvert", {}):
+        ap.setdefault("atelier_ouvert", {})[cid] = \
+            datetime.datetime.now().isoformat(timespec="seconds")
+        K.journaliser(ap, cid, "", r["familles"][c["famille"]].get("chapitre"),
+                      {"reussite": True, "compile": True, "message": ""},
+                      "atelier-ouvert")
+
     # « Pas encore » dans l'atelier : l'etudiant demande un exercice de plus avant de
     # generaliser. La decision reste celle de decider (non modifie) ; on sert
     # seulement l'exercice suivant de la famille, jusqu'a ce qu'il soit reussi.
@@ -257,6 +267,8 @@ def vue_apprenant(r, e, ap):
         al["guide"] = decision == "guidance"
         if al["mode"] == "exposed":
             al["squelette"] = K.squelette(al["forme"])
+        # titres des colonnes du tableau, si le fournisseur les donne (motifs du langage)
+        al["entetes"] = getattr(K.LANGUE, "ENTETES_ALIGNEMENT", None)
         vue["abstraction"] = al
 
     if cid and vue.get("activite"):
@@ -280,7 +292,11 @@ def vue_apprenant(r, e, ap):
         vue["suspendu"] = bool(ap.get("suspendu"))
         k = cle_aide(cid, vue["activite"]["id"] if vue.get("activite") else None)
         vue["aides_prises"] = ap.get("aides", {}).get(k, 0)
+        # les indices deja recus pour cette etape, reaffiches ensemble par la page
+        vue["aides_recues"] = ap.get("aides_textes", {}).get(k, [])
         vue["echecs"] = ap.get("echecs", {}).get(k, 0)
+        # Les indices partent de la derniere erreur : sans test rate, rien a dire.
+        vue["erreur_connue"] = k in ap.get("derniere_erreur", {})
         vue["aide_proposee"] = (ct["assistance"] == "guidance" and vue["echecs"] >= 2
                                 and vue["aides_prises"] < vue["aides_max"])
         vue["groupe"] = groupe_de(e, ap["ident"], cid)
@@ -432,6 +448,14 @@ def _api(chemin, params, corps):
                 emploie = K.schema_employe(act[0], corps["code"])
                 if emploie:
                     ap["reemplois"][cid] = ap["reemplois"].get(cid, 0) + 1
+                # Trace de chaque solution juste d'un exercice de reemploi, reemploi ou
+                # non, avec son code : seul le compteur etait garde, donc on ne pouvait
+                # ni distinguer « resolu a la main » de « pas resolu », ni reverifier
+                # la regle apres coup (par exemple pour la question pli_arbre).
+                ap.setdefault("reemplois_detail", []).append({
+                    "horodatage": datetime.datetime.now().isoformat(timespec="seconds"),
+                    "concept": cid, "exercice": act[0], "schema_employe": bool(emploie),
+                    "deja_servi": deja, "code": corps["code"]})
                 rep["reuse"] = {"schema_employe": emploie,
                                    "compte": ap["reemplois"].get(cid, 0)}
             else:
@@ -532,6 +556,14 @@ def _api(chemin, params, corps):
         if not texte:
             return {"refus": "Écrivez votre définition avant de valider la remontée."}
         ap.setdefault("generalisations", {})[cid] = texte
+        # heure de la validation, et trace dans le journal : le texte etait garde
+        # sans date, on ne pouvait pas le situer dans la seance
+        ap.setdefault("generalisation_horodatage", {})[cid] = \
+            datetime.datetime.now().isoformat(timespec="seconds")
+        c, _ = K.concept(r, cid)
+        K.journaliser(ap, cid, "", r["familles"][c["famille"]].get("chapitre"),
+                      {"reussite": True, "compile": True, "message": ""},
+                      "generalisation")
         ap["etats"][cid] = "generalised"
         ap["reemplois"].setdefault(cid, 0)
         return fin(vue_apprenant(r, e, ap))
@@ -627,13 +659,30 @@ def _api(chemin, params, corps):
                     "niveau": 0, "sur": 0}
         niveau = ap.setdefault("aides", {}).get(cle, 0) + 1
         categorie = ap.get("derniere_erreur", {}).get(cle_aide(cid, activite), "none")
+        if contexte == "activite" and categorie == "none":
+            # Avant tout test rate : un indice pour commencer (le niveau 1 de
+            # « not-started » si l'instance le declare), qui ne compte pas parmi les
+            # indices de l'exercice. C'est toujours le meme texte d'orientation ; les
+            # indices suivants porteront sur les erreurs. Avant, le serveur servait
+            # « Aucun indice supplementaire » et comptait quand meme un indice.
+            depart = (K.AIDES_ERREUR.get("not-started") or [None])[0] or (
+                "Écrivez votre fonction " + K.CONSIGNE_FORME + ", puis cliquez sur "
+                "« Compiler et tester ».")
+            K.journaliser(ap, cid, activite or "",
+                          r["familles"][c["famille"]].get("chapitre"),
+                          {"reussite": False, "compile": True, "message": ""},
+                          "aide-demarrage")
+            return fin({"demarrage": True, "texte": depart,
+                        "niveau": niveau - 1, "sur": nmax})
         if niveau > nmax:
             # Le rappel reaffiche les indices deja donnes, tels qu'ils ont ete lus.
             # Il les recalculait avec la derniere erreur : apres une nouvelle erreur,
             # il affichait trois indices jamais demandes, et non journalises.
-            return {"refus": "Vous avez pris les %d indices prévus pour cet exercice. "
+            return {"refus": "Vous avez pris les %d indices prévus pour %s. "
                              "Le tuteur ne va pas plus loin : la suite vous appartient. "
-                             "Voici les indices déjà reçus." % nmax,
+                             "Voici les indices déjà reçus."
+                             % (nmax, "cet exercice" if contexte == "activite"
+                                else "cette étape"),
                     "niveau": nmax, "sur": nmax,
                     "rappel": ap.get("aides_textes", {}).get(cle, [])}
         # La limite reste de nmax indices par exercice (niveau = rang de la demande),
@@ -653,7 +702,7 @@ def _api(chemin, params, corps):
                       {"reussite": False, "compile": True, "message": ""},
                       "aide-niveau-%d" % palier)
         return fin({"niveau": niveau, "sur": nmax, "texte": texte, "fonde_sur": categorie,
-                    "palier": palier})
+                    "palier": palier, "recus": ap["aides_textes"][cle]})
 
     # ---------------- groupes, cote apprenant
 

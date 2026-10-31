@@ -119,11 +119,15 @@ def table_concepts(etat, aff):
                 len(verifs),
                 sum(1 for v in verifs if v.get("statut") == "non expliquee"),
                 ap.get("stabilite", {}).get(cid, ""),
+                ap.get("atelier_ouvert", {}).get(cid, ""),
+                ap.get("generalisation_horodatage", {}).get(cid, ""),
+                ap.get("refus_atelier", {}).get(cid, 0),
             ])
     return (["code", "concept", "etat_final", "solutions_au_corpus",
              "solutions_ecartees", "reemplois", "etayages", "echecs_compilation",
              "generalisation_ecrite", "verifications_demandees",
-             "verifications_non_expliquees", "dernier_compte_alignement"], lignes)
+             "verifications_non_expliquees", "dernier_compte_alignement",
+             "atelier_ouvert_a", "generalisee_a", "pas_encore"], lignes)
 
 
 def table_generalisations(etat, aff):
@@ -132,8 +136,9 @@ def table_generalisations(etat, aff):
         code = aff.get(ident, {}).get("code", ident)
         for cid, texte in ap.get("generalisations", {}).items():
             t = texte if isinstance(texte, str) else texte.get("texte", "")
-            lignes.append([code, cid, len(t.split()), t.replace("\n", " \\n ")])
-    return (["code", "concept", "mots", "texte_generalisation"], lignes)
+            lignes.append([code, cid, ap.get("generalisation_horodatage", {}).get(cid, ""),
+                           len(t.split()), t.replace("\n", " \\n ")])
+    return (["code", "concept", "horodatage", "mots", "texte_generalisation"], lignes)
 
 
 def table_solutions(etat, aff):
@@ -167,6 +172,22 @@ def table_etayages(etat, aff):
                            ap.get("derniere_erreur", {}).get(cle, "")])
     return (["code", "concept", "activite", "niveaux_pris",
              "derniere_categorie_erreur"], lignes)
+
+
+def table_reemplois(etat, aff):
+    """Chaque solution juste d'un exercice de reemploi, avec le verdict de la regle
+    (schema_employe) et le code, pour pouvoir reverifier la regle apres coup."""
+    lignes = []
+    for ident, ap in etat["apprenants"].items():
+        code = aff.get(ident, {}).get("code", ident)
+        for x in ap.get("reemplois_detail", []):
+            lignes.append([code, x.get("concept", ""), x.get("exercice", ""),
+                           x.get("horodatage", ""),
+                           "oui" if x.get("schema_employe") else "non",
+                           "oui" if x.get("deja_servi") else "non",
+                           x.get("code", "").replace("\n", " \\n ")])
+    return (["code", "concept", "exercice", "horodatage", "reemploi",
+             "resoumission", "code_soumis"], lignes)
 
 
 def table_verifications(etat, aff):
@@ -220,6 +241,13 @@ derniere erreur. Sert a l'analyse de la demande d'aide.
 Chaque demande d'explication, son statut et les indices qui l'ont declenchee.
 Sert a estimer le taux de declenchement et le taux d'explications non
 concordantes.
+
+## reemplois.csv
+Chaque solution juste d'un exercice de reemploi (servi apres l'atelier), avec
+le verdict de la regle de reemploi (`reemploi` : oui ou non), une colonne
+`resoumission` (exercice deja resolu) et le code soumis. Porte la mesure
+principale : « non » distingue un exercice resolu sans reemploi d'un exercice
+non resolu (absent du fichier). Le code permet de reverifier la regle.
 """
 
 
@@ -241,7 +269,8 @@ def main():
             ("generalisations.csv", table_generalisations, (etat, aff)),
             ("solutions.csv", table_solutions, (etat, aff)),
             ("etayages.csv", table_etayages, (etat, aff)),
-            ("verifications.csv", table_verifications, (etat, aff))):
+            ("verifications.csv", table_verifications, (etat, aff)),
+            ("reemplois.csv", table_reemplois, (etat, aff))):
         entetes, lignes = fabrique(*args)
         ecrire(dossier, nom, entetes, lignes)
 

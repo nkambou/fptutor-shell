@@ -360,7 +360,16 @@ class Rendu:
         if t == "fun":
             return "(LAM %s)" % self.rendre(e[2])
         if t == "letin":
-            return self.rendre(e[5])
+            # « let x = f g in let y = f d in x + y » : la valeur liee etait perdue,
+            # le cas Node devenait (x + y), sans REC, et une solution juste et
+            # structurelle etait ecartee (« aucun cas recursif reconnu »). Une
+            # valeur liee sans parametre est remplacee par son expression.
+            _, nom, params, _, corps, suite = e
+            if params or nom == self.fonction:
+                return self.rendre(suite)
+            interieur = Rendu(self.fonction, dict(self.champs))
+            interieur.champs[nom] = self.rendre(corps)
+            return interieur.rendre(suite)
         if t == "match":
             branches = sorted(self.rendre(b[2]) for b in e[2])
             return "(CASE %s)" % " ".join(branches)

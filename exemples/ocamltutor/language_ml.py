@@ -101,6 +101,12 @@ def categorise(message, compile_mais_faux=False):
     if compile_mais_faux:
         return "wrong-result"
     m = message or ""
+    # La ligne failwith "a completer" du code fourni est encore executee : code
+    # soumis tel quel, cas Node laisse a failwith, ou ligne fournie gardee sous la
+    # fonction (elle la remplace). Sans ce cas, l'etudiant tombait dans
+    # « unclassified » et recevait un indice sur les boucles sans fin.
+    if 'Failure "a completer"' in m:
+        return "not-started"
     # Une erreur (« Error: ») empeche le code de s'executer ; un avertissement
     # (Warning 8, filtrage non exhaustif) ne l'empeche pas. Quand OCaml signale
     # les deux, on classe d'apres l'erreur, qui est ce qui bloque l'etudiant.
@@ -136,6 +142,17 @@ def categorise(message, compile_mais_faux=False):
 #   niveau 3 : la charpente, jamais le corps.
 # Aucun niveau ne donne la valeur du cas Leaf ni ne nomme le schema vise.
 AIDES_ERREUR = {
+ # code fourni soumis sans modification : indices pour demarrer, pour l'etudiant
+ # qui ne sait pas par ou commencer (les autres categories supposent un essai)
+ "not-started": [
+   "Une fonction sur un arbre distingue deux cas : une feuille (Leaf) et un nœud "
+   "(Node (x, g, d)). Écrivez un match a with qui donne une valeur à chacun des deux "
+   "cas, et supprimez la ligne failwith \"a completer\".",
+   "Pour le cas Leaf : que doit rendre la fonction sur t0 = Leaf ? L'énoncé le dit. "
+   "Pour le cas Node : supposez que l'appel sur g et l'appel sur d donnent déjà le bon "
+   "résultat. Que faut-il en faire ?",
+   "Charpente : let rec nom a = match a with | Leaf -> ... | Node (x, g, d) -> ... "
+   "nom g ... nom d ..."],
  "missing-base-case": [
    "Votre match oublie une des deux formes d'arbre : Leaf ou Node. Laquelle n'a pas "
    "de cas ?",
@@ -146,8 +163,10 @@ AIDES_ERREUR = {
  "incompatible-types": [
    "Comparez ce que rend chaque cas de votre match avec la signature de la fonction : "
    "un cas produit-il autre chose que le type attendu ?",
-   "Dans le message, 'has type' est ce que vous avez écrit, 'was expected' ce qu'il "
-   "fallait. La partie fautive est soulignée (^).",
+   "Si le message dit 'has type ... but ... was expected', 'has type' est ce que vous "
+   "avez écrit et 'was expected' ce qu'il fallait. S'il parle d'arguments ('expects 3 "
+   "argument(s)', 'too many arguments'), c'est le nombre d'éléments donnés à Node ou à "
+   "la fonction. La partie fautive est soulignée (^).",
    "Node a trois champs : Node (valeur, gauche, droit). Chaque appel récursif prend "
    "un seul sous-arbre."],
  "int-float-mix": [
@@ -158,36 +177,44 @@ AIDES_ERREUR = {
    "Ces exercices n'utilisent que des int : écrivez 1 et non 1.0, et + et non +. "
    "(avec un point)."],
  "unknown-name": [
-   "OCaml ne connaît pas un nom. Le plus souvent : le mot rec oublié, ou une faute "
+   "OCaml ne connaît pas un nom. Le plus souvent : le mot rec oublié, un nom de fonction incorrect, ou une faute "
    "de frappe.",
-   "Lisez la ligne 'Hint:' du message : OCaml y propose souvent la correction.",
+   "Le message dit quel nom est inconnu (Unbound value ...). Comparez-le, lettre par "
+   "lettre, au nom donné dans l'énoncé. S'il y a une ligne 'Hint:', OCaml y propose une "
+   "piste (ajouter rec, ou un nom proche) : vérifiez qu'elle correspond à ce que vous "
+   "vouliez.",
    "Une fonction qui s'appelle elle-même s'écrit let rec nom a = ... Les "
    "constructeurs prennent une majuscule : Leaf, Node."],
  "syntax": [
    "OCaml n'arrive pas à lire votre code. Par exemple, with oublié après "
    "match a, ou une parenthèse non fermée.",
-   "Le message d'erreur de OCaml recopie la ligne où le compilateur s'est arrêté (le ^ la souligne). La faute "
-   "est souvent indiquée juste avant : retrouvez cette ligne dans votre code et relisez celle "
-   "du dessus (with, -> ou parenthèse fermante oublié ?).",
+   "Le message d'erreur d'OCaml recopie la ligne où le compilateur s'est arrêté (le ^ "
+   "la souligne). La faute se trouve souvent juste avant : retrouvez cette ligne dans "
+   "votre code et relisez celle du dessus (with, -> ou parenthèse fermante oublié ?).",
    "Forme attendue : let rec nom a = match a with | Leaf -> ... | Node (x, g, d) -> ..."],
  "wrong-result": [
    "Dans le tableau des résultats, regardez la ligne t0 : t0 est une simple feuille. "
    "Si elle est fausse, c'est votre cas Leaf qui ne retourne pas la bonne valeur.",
    "Si la ligne t0 est juste mais pas les autres, c'est votre cas Node qui combine mal "
-   "les résultats de g et de d. Relisez l'énoncé; que doit-on en faire ?",
+   "les résultats de g et de d. Relisez l'énoncé : que doit-on en faire ? Si OCaml "
+   "affiche 'this match case is unused', vérifiez la majuscule : leaf attrape tous les "
+   "arbres, Leaf seulement les feuilles.",
    # La premiere ligne fausse, et non t1 : selon l'erreur, t1 peut etre juste (par
    # exemple 1 + g + d pour la hauteur) et l'ecart n'apparaitre que sur t2.
    "Prenez la première ligne fausse du tableau et calculez à la main sur cet arbre : "
    "d'abord chaque feuille (votre cas Leaf), puis chaque nœud en remontant (votre cas "
    "Node). Où vous écartez-vous de la valeur attendue ?"],
  "unclassified": [
-   "Si le tuteur indique un délai dépassé, votre fonction s'appelle sans fin : "
-   "vérifiez vos appels récursifs.",
+   "Si le message parle de délai dépassé ou de 'Stack overflow', votre fonction "
+   "s'appelle sans fin : un appel récursif porte-t-il sur l'arbre entier a, au lieu de "
+   "g ou de d ?",
    "Sinon, lisez la ligne qui commence par 'Error:' : elle dit ce qu'OCaml reproche.",
    "Chaque appel récursif doit porter sur g ou d, jamais sur l'arbre entier."],
 }
 
 LECTURES = {
+ "not-started": "La ligne failwith \"a completer\" du code fourni est encore exécutée : "
+                "la fonction n'est pas encore entièrement écrite.",
  "missing-base-case": "OCaml signale qu'un cas n'est pas traité dans votre match.",
  "incompatible-types": "Une valeur n'a pas le type attendu à cet endroit du code.",
  "int-float-mix": "Un entier et un nombre à virgule se rencontrent dans la même opération.",
@@ -208,6 +235,13 @@ RAISONS = {
  "no-pattern": "elle ne distingue pas les cas : on n'y voit ni ce que vaut le résultat "
                "sur une feuille (Leaf), ni ce que vous faites d'un nœud (Node) et de "
                "ses deux sous-arbres",
+ # motifs rendus par admettre : « correcte mais non alignable (no-recursion) », etc.
+ # Sans eux, le message disait seulement « elle ne se compare pas terme a terme ».
+ "no-recursion": "elle passe par une fonction toute faite (List.fold_left, List.map, "
+                 "...) ou par une fonction auxiliaire, au lieu de se rappeler "
+                 "elle-même sur g et sur d",
+ "iterative": "elle utilise une boucle (for, while), au lieu de se rappeler elle-même "
+              "sur g et sur d",
 }
 
 # Indices propres a un exercice (noyau.aide) : ils remplacent l'indice general
@@ -270,6 +304,33 @@ AIDES_EXERCICE = {
    "valeur d'un nœud avec les listes de ses deux sous-arbres. Pour mettre deux listes "
    "bout à bout, OCaml fournit @."]},
 }
+
+
+# Indices de l'atelier (generalisation), a la place des textes neutres du noyau.
+# Ceux du noyau repetaient ce que le tableau montre deja (niveaux 1 et 2) et ne
+# disaient pas la vraie difficulte : ce qui varie dans le cas Node est un calcul,
+# qu'on passe en argument sous forme de fonction. Aucun ne donne le corps de la
+# solution ni le nom fold_tree. Le niveau 3 fait garder x : les quatre fonctions du
+# tableau l'ignorent (Node (_, g, d)), et une generalisation sans x ne sert pas
+# aux exercices qui ont besoin de la valeur du noeud (bintree_count_even).
+# Titres des colonnes du tableau de l'atelier. Le tableau ne montre que les
+# expressions, jamais le motif : x n'y apparaissait donc nulle part, puisque les
+# quatre fonctions l'ignorent. Le titre rappelle que le cas Node dispose aussi de x.
+ENTETES_ALIGNEMENT = ("Cas Leaf ->", "Cas Node (x, g, d) ->")
+
+AIDES_REMONTEE = [
+  "Dans le tableau, une seule chose change dans le cas Leaf (la valeur rendue), et une "
+  "seule dans le cas Node (la façon de combiner les résultats de g et de d). Votre "
+  "fonction doit recevoir ces deux choses en arguments, en plus de l'arbre.",
+  "Ce qui change dans le cas Node est un calcul, pas une simple valeur. En OCaml, un "
+  "calcul se passe en argument sous forme de fonction : par exemple (fun g d -> g + d). "
+  "Vérifiez votre idée : bintree_count_leaves doit s'obtenir en donnant à votre "
+  "fonction 1 et (fun g d -> g + d).",
+  "Commencez par la première ligne : let rec nom z f a = match a with ..., où z est la "
+  "valeur d'une feuille et f la fonction qui combine. Le cas Leaf est immédiat. Pour le "
+  "cas Node, demandez-vous ce que f doit recevoir. Écrivez Node (x, g, d) plutôt que "
+  "Node (_, g, d), et donnez aussi x à f : votre fonction sera plus générale.",
+]
 
 
 # formes rendues par analyser qui sont admissibles a l'alignement

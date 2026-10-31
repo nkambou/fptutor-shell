@@ -480,6 +480,8 @@ CATALOGUE = {
 
  "Le tuteur vous demande de temps à autre d'expliquer ce que fait votre code. Cela ne met pas votre travail en doute : mettre une solution en mots est une des façons les plus efficaces de l'apprendre.":
    "The tutor asks from time to time what your code does. This does not call your work into question: putting a solution into words is one of the most effective ways of learning it.",
+ "Le tuteur vous demande de temps à autre d'expliquer ce que fait votre code. Cela ne met pas votre travail en doute : mettre une solution en mots est une des façons les plus efficaces de l'apprendre. Répondez pour passer à l'exercice suivant.":
+   "The tutor asks from time to time what your code does. This does not call your work into question: putting a solution into words is one of the most effective ways of learning it. Answer to move on to the next exercise.",
  "Multipliez chaque élément par deux.":
    "Multiply each element by two.",
  "Multipliez chaque élément par deux.":
@@ -1070,6 +1072,39 @@ CATALOGUE = {
    "This pseudonym is already taken. If it is yours, go back to the resume screen and "
    "enter your identifier; otherwise, choose another one.",
  "Chaque pseudonyme ne peut servir qu'une fois": "Each pseudonym can only be used once",
+ "fonction pas encore entièrement écrite": "function not fully written yet",
+ "Votre version actuelle est conservée dans vos solutions, mais elle ne compte pas pour "
+ "la comparaison.":
+   "Your current version is kept in your solutions, but it does not count for the "
+   "comparison.",
+ "Si la prochaine version n'a pas non plus cette forme, elle ne comptera pas davantage, "
+ "et le tuteur passera à l'exercice suivant.":
+   "If the next version does not have this form either, it will not count either, and "
+   "the tutor will move on to the next exercise.",
+ "Votre solution est conservée dans vos solutions, mais elle ne compte pas pour la "
+ "comparaison.":
+   "Your solution is kept in your solutions, but it does not count for the comparison.",
+ "Comme la précédente, cette version est juste mais n'a pas la forme demandée : elle ne "
+ "compte pas pour la comparaison. Le tuteur ne la redemande pas une troisième fois et "
+ "passe à l'exercice suivant.":
+   "Like the previous one, this version is correct but does not have the requested "
+   "form: it does not count for the comparison. The tutor does not ask for it a third "
+   "time and moves on to the next exercise.",
+ "Réécrivez votre fonction dans la zone ci-dessus, puis cliquez de nouveau sur "
+ "« Compiler et tester ».":
+   "Rewrite your function in the box above, then click \"Compile and test\" again.",
+ "Pour commencer": "To get started",
+ "Commencez à coder et testez votre code : si une erreur apparaît, cliquez de nouveau "
+ "sur « Demander un indice » pour un indice adapté à cette erreur.":
+   "Start coding and test your code: if an error appears, click \"Ask for a hint\" "
+   "again for a hint suited to that error.",
+ "Cet indice ne compte pas parmi vos": "This hint does not count among your",
+ "Une fonction sur un arbre distingue deux cas : une feuille (Leaf) et un nœud "
+ "(Node (x, g, d)). Écrivez un match a with qui donne une valeur à chacun des deux "
+ "cas, et supprimez la ligne failwith \"a completer\".":
+   "A function on a tree distinguishes two cases: a leaf (Leaf) and a node "
+   "(Node (x, g, d)). Write a match a with that gives a value to each of the two "
+   "cases, and delete the line failwith \"a completer\".",
  "s'il est déjà pris, le tuteur vous demandera d'en choisir un autre.":
    "if it is already taken, the tutor will ask you to choose another one.",
  "Que rend votre fonction dans le cas de base ?":

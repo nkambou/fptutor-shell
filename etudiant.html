@@ -680,7 +680,8 @@ const CATEGORIES = {
   "missing-base-case": "cas non traité", "incompatible-types": "types incompatibles",
   "int-float-mix": "entier et nombre à virgule", "unknown-name": "nom inconnu",
   "syntax": "erreur d'écriture", "wrong-result": "résultat faux",
-  "unclassified": "autre erreur", "none": "aucune erreur"};
+  "unclassified": "autre erreur", "none": "aucune erreur",
+  "not-started": "fonction pas encore entièrement écrite"};
 function libelleCategorie(c) { return CATEGORIES[c] || c; }
 function echapper(t) {
   return String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
@@ -716,8 +717,10 @@ function libelleAide() {
 }
 
 function tableauAlignement(r) {
-  return '<table class="al"><tr><th>Votre fonction</th><th>Cas de base</th>' +
-    '<th>Cas récursif</th></tr>' + r.lignes.map(l =>
+  // les titres viennent du fournisseur s'il les donne (OCaml : « Cas Node (x, g, d) -> »)
+  const t = r.entetes || ["Cas de base", "Cas récursif"];
+  return '<table class="al"><tr><th>Votre fonction</th><th>' + echapper(t[0]) + '</th>' +
+    '<th>' + echapper(t[1]) + '</th></tr>' + r.lignes.map(l =>
     '<tr><td class="n">' + l.nom + '</td><td>' + echapper(l.base || "(aucun)") +
     '</td><td>' + echapper(l.pas || "(aucun)") + '</td></tr>').join("") + '</table>' +
     '<div class="legende"><b>REC</b> désigne un appel récursif de la fonction sur une ' +
@@ -853,9 +856,12 @@ function dessinerCentre() {
      echapper(vue.generalisation || "") + '</textarea>' +
      '<div class="legende">Elle est conservée, et servira si vous travaillez en groupe.</div>' +
      '<div class="actions"><button onclick="generaliser()">Valider ma fonction</button>' +
-     '<button class="indice" onclick="demanderAide(\'remontee\')">' + libelleAide() + '</button>' +
+     // contexte « abstraction », celui qu'attend le serveur : l'interface d'origine
+     // envoyait « remontee », et le serveur servait un indice d'exercice vide
+     '<button class="indice" id="btnaide" onclick="demanderAide(\'abstraction\')">' +
+     libelleAide() + '</button>' +
      '<button class="sec" onclick="refuserAtelier()">Pas encore : un exercice de plus</button></div>' +
-     '<div id="aide"></div><div id="msg"></div>' +
+     '<div id="aide">' + indicesPrecedents(vue.aides_recues) + '</div><div id="msg"></div>' +
      '</div></div></div></div>';
     return;
   }
@@ -916,7 +922,8 @@ function blocActivite() {
     '</button></div>' +
     (vue.aide_proposee ? '<div class="note">Deux tentatives sans succès : vous pouvez ' +
       'demander un indice.</div>' : "") +
-    '<div id="aide"></div><div id="sortie"></div></div>' +
+    '<div id="aide">' + indicesPrecedents(vue.aides_recues) + '</div>' +
+    '<div id="sortie"></div></div>' +
     '</div></div></div>';
 }
 
@@ -1127,8 +1134,10 @@ async function soumettre() {
       '<div><button class="sec" onclick="pourquoiForme()">Pourquoi cette forme ?</button>' +
       '</div><div id="pourquoi"></div>' : "") +
     '</div>' + html;
-  if (r.desescalade) html = '<div class="note">Le tuteur ne redemande pas une ' +
-    'troisième fois : il passe à un autre problème de même nature.</div>' + html;
+  if (r.desescalade) html = '<div class="tuteur hf"><b>Le tuteur</b>Comme la ' +
+    'précédente, cette version est juste mais n\'a pas la forme demandée : elle ne ' +
+    'compte pas pour la comparaison. Le tuteur ne la redemande pas une troisième fois ' +
+    'et passe à l\'exercice suivant.</div>' + html;
   if (r.revision) html = '<div class="note">Votre version précédente a été remplacée ' +
     'dans le dossier.</div>' + html;
   if (r.hors_delai) html = '<div class="tuteur ko"><b>Le tuteur</b>Cette soumission arrive ' +
@@ -1137,14 +1146,25 @@ async function soumettre() {
   // Apres une reussite, le tuteur attend toujours que l'etudiant clique : il a le
   // temps de lire le message avant de passer a la suite.
   const auto = false;
-  if (v.reussite && !auto)
+  // Avec des questions de verification, pas de bouton « Exercice suivant » : on
+  // continue apres avoir repondu (bouton « Continuer »), comme dans l'interface
+  // d'origine. Le serveur ne bloque rien : recharger la page fait passer.
+  // Hors forme avec réécriture demandée : le même exercice reste à faire. Le bouton
+  // « Exercice suivant » réaffichait ce même exercice (zone remise à zéro), ce qui
+  // trompait l'étudiant ; il réécrit directement dans la zone, son code y reste.
+  const reecrire = r.off_form && r.off_form.politique === "explain_and_rewrite";
+  if (v.reussite && !auto && !r.verification && !reecrire)
     html += '<div style="margin-top:9px"><button onclick="rafraichir()">' +
       'Exercice suivant</button></div>';
+  if (reecrire)
+    html += '<div class="note">Réécrivez votre fonction dans la zone ci-dessus, puis ' +
+      'cliquez de nouveau sur « Compiler et tester ».</div>';
   if (r.verification) {
     html += '<div class="verif" id="verif"><p><b>Une question sur votre solution.</b> ' +
       'Le tuteur vous demande de temps à autre d\'expliquer ce que fait votre code. ' +
       'Cela ne met pas votre travail en doute : mettre une solution en mots est ' +
-      'une des façons les plus efficaces de l\'apprendre.</p>' +
+      'une des façons les plus efficaces de l\'apprendre. ' +
+      'Répondez pour passer à l\'exercice suivant.</p>' +
       r.verification.questions.map(q =>
         '<div class="q"><b>' + q.question + '</b></div>' +
         q.options.map((o, k) =>
@@ -1235,6 +1255,13 @@ async function pourquoiForme() {
   traduireDOM();
 }
 
+// Les indices déjà reçus pour l'étape en cours, en plus discret que le dernier.
+function indicesPrecedents(liste) {
+  if (!liste || !liste.length) return "";
+  return '<div class="note">' + liste.map((t, k) =>
+    '<b>Indice ' + (k + 1) + '.</b> ' + t).join("<br>") + '</div>';
+}
+
 async function demanderAide(contexte) {
   const z = el("aide") || el("aidelat");
   const r = await api("/api/aide", {ident: ident, contexte: contexte || "activite",
@@ -1243,9 +1270,22 @@ async function demanderAide(contexte) {
     z.innerHTML = '<div class="note">' + r.refus + '</div>' +
       (r.rappel && r.rappel.length ? '<div class="enonce">' + r.rappel.map((t, k) =>
         '<b>Indice ' + (k + 1) + '.</b> ' + t).join("<br>") + '</div>' : "");
-    vue.aides_prises = r.sur;
+    if (r.sur !== undefined) vue.aides_prises = r.sur;
+  } else if (r.demarrage) {
+    // avant tout test raté : un indice pour commencer, qui ne compte pas parmi les
+    // indices de l'exercice ; les suivants porteront sur les erreurs
+    z.innerHTML = '<div class="enonce"><b>Pour commencer</b><br>' + r.texte + '</div>' +
+      '<div class="note">Cet indice ne compte pas parmi vos ' + r.sur + ' indices. ' +
+      'Commencez à coder et testez votre code : si une erreur apparaît, cliquez de ' +
+      'nouveau sur « Demander un indice » pour un indice adapté à cette erreur.</div>';
   } else {
-    z.innerHTML = '<div class="enonce"><b>Indice ' + r.niveau + ' sur ' + r.sur + '</b>' +
+    // Les indices s'ajoutent les uns aux autres : le nouvel indice est mis en
+    // avant, les précédents restent lisibles au-dessus. Avant, chaque indice
+    // remplaçait le précédent, qui n'était plus visible qu'une fois tous épuisés.
+    const recus = r.recus || [r.texte];
+    vue.aides_recues = recus;
+    z.innerHTML = indicesPrecedents(recus.slice(0, -1)) +
+      '<div class="enonce"><b>Indice ' + r.niveau + ' sur ' + r.sur + '</b>' +
       (r.fonde_sur && r.fonde_sur !== "none" ?
         ' <span class="note">(à propos de votre dernière erreur : ' +
         libelleCategorie(r.fonde_sur) + ')</span>' : "") +

@@ -413,15 +413,21 @@ def commentaire_hors_forme(motif, politique, n_resolutions):
            "C'est juste, et votre solution fonctionne. "
     besoin = ("Pour la suite, le tuteur a besoin de solutions écrites de la même "
               "manière, parce qu'il va vous les montrer côte à côte : c'est en les "
-              "comparant que vous trouverez ce qu'elles ont en commun. La votre est "
+              "comparant que vous trouverez ce qu'elles ont en commun. La vôtre est "
               "correcte mais " + raison(motif) + ".")
+    # Les suites disent ce qu'il advient de la solution : elle est gardée, mais ne
+    # compte pas pour la comparaison. L'etudiant ne le comprenait pas, et ne savait
+    # pas qu'une seconde version hors forme fait passer a l'exercice suivant.
     suites = {
      "explain_and_rewrite":
         " Réécrivez la même fonction " + CONSIGNE_FORME + ". Votre version actuelle "
-        "est conservée : vous la retrouverez dans vos solutions.",
+        "est conservée dans vos solutions, mais elle ne compte pas pour la comparaison. "
+        "Si la prochaine version n'a pas non plus cette forme, elle ne comptera pas "
+        "davantage, et le tuteur passera à l'exercice suivant.",
      "explain_and_continue":
-        " Le tuteur passe à un autre problème de même nature. Écrivez-le " +
-        CONSIGNE_FORME + " : c'est cette forme-la qu'il faut pour la suite.",
+        " Votre solution est conservée dans vos solutions, mais elle ne compte pas pour "
+        "la comparaison. Le tuteur passe à un autre problème de même nature. Écrivez-le " +
+        CONSIGNE_FORME + " : c'est cette forme-là qu'il faut pour la suite.",
      "confront":
         " Vous savez visiblement déjà obtenir ce résultat sans le détailler. Écrivez "
         "maintenant la même fonction en la détaillant : vous aurez les deux versions "

@@ -128,10 +128,11 @@ def exporter(e, etat, journal_chemin):
               ("generalisations.csv", X.table_generalisations, (restreint, aff)),
               ("solutions.csv", X.table_solutions, (restreint, aff)),
               ("etayages.csv", X.table_etayages, (restreint, aff)),
-              ("verifications.csv", X.table_verifications, (restreint, aff)))
+              ("verifications.csv", X.table_verifications, (restreint, aff)),
+              ("reemplois.csv", X.table_reemplois, (restreint, aff)))
     for nom, fabrique, args in tables:
         entetes, lignes = fabrique(*args)
-        if nom == "solutions.csv" and not e.get("inclure_code", True):
+        if nom in ("solutions.csv", "reemplois.csv") and not e.get("inclure_code", True):
             k = entetes.index("code_soumis")
             entetes = entetes[:k]
             lignes = [l[:k] for l in lignes]
