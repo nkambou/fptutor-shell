@@ -264,7 +264,7 @@ if __name__ == "__main__":
     def aligner(corpus):
         formes, bases = [], []
         for n, c in corpus:
-            a = analyser(n, c)
+            a = analyse(n, c)
             if a["pas"] is None:
                 continue
             formes.append(R.parse(R.tokens(a["pas"])))
@@ -292,7 +292,7 @@ if __name__ == "__main__":
                                    ("famille du pli", PLI, 3)):
         print("\n%s" % titre)
         for n, c in corpus:
-            a = analyser(n, c)
+            a = analyse(n, c)
             print("  %-11s base %-4s pas %s" % (n, a["base"], a["pas"]))
         pts, forme = aligner(corpus)
         print("  -> %d point(s) de variation, attendu %d : %s   forme %s"
@@ -300,5 +300,5 @@ if __name__ == "__main__":
 
     print("\nsoumissions correctes mais non comparables")
     for n, c in HORS_FORME:
-        a = analyser(n, c)
+        a = analyse(n, c)
         print("  %-11s forme %-16s %s" % (n, a["forme"], a.get("motif", "")))
